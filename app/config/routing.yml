@@ -1,0 +1,12 @@
+seguridad:
+    resource: "@seguridadBundle/Resources/config/routing.yml"
+    prefix:   /
+
+administrativo:
+    resource: "@administrativoBundle/Resources/config/routing.yml"
+    prefix:   /
+
+academico:
+    resource: "@academicoBundle/Resources/config/routing.yml"
+    prefix:   /
+

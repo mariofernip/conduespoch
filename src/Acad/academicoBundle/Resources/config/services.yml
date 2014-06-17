@@ -1,0 +1,7 @@
+parameters:
+#    academico.example.class: Acad\academicoBundle\Example
+
+services:
+#    academico.example:
+#        class: %academico.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
