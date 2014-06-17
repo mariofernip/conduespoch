@@ -1,6 +1,6 @@
 <?php
 
-namespace yony\academicoBundle\Entity;
+namespace Acad\administrativoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 

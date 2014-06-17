@@ -2,4 +2,4 @@ _assetic:
     resource: .
     type: assetic
 _app:
-    resource: 'C:/xampp/htdocs/academico/app/config/routing_dev.yml'
+    resource: 'D:/Mis Documentos/Documentos/GitHub/conduespoch/app/config/routing_dev.yml'

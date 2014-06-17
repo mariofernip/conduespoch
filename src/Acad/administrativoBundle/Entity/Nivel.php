@@ -1,9 +1,9 @@
 <?php
 
-namespace yony\academicoBundle\Entity;
+namespace Acad\administrativoBundle\Entity;
 
-use yony\academicoBundle\Entity\Curso;
-use yony\academicoBundle\Entity\Paralelo;
+use Acad\administrativoBundle\Entity\Curso;
+use Acad\administrativoBundle\Entity\Paralelo;
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -34,13 +34,13 @@ class Nivel {
     protected $descripcion;
     
     /**
-     * @ORM\ManyToOne(targetEntity="yony\academicoBundle\Entity\Curso") 
+     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Curso") 
      * @ORM\JoinColumn(name="curso_id", referencedColumnName="id")
      */
     protected $curso;
     
     /**
-     * @ORM\ManyToOne(targetEntity="yony\academicoBundle\Entity\Paralelo")      
+     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Paralelo")      
      * @ORM\JoinColumn(name="paralelo_id", referencedColumnName="id")
      */
     protected $paralelo;
@@ -84,10 +84,10 @@ class Nivel {
     /**
      * Set curso
      *
-     * @param \yony\academicoBundle\Entity\Curso $curso
+     * @param \Acad\administrativoBundle\Entity\Curso $curso
      * @return Nivel
      */
-    public function setCurso(\yony\academicoBundle\Entity\Curso $curso = null)
+    public function setCurso(\Acad\administrativoBundle\Entity\Curso $curso = null)
     {
         $this->curso = $curso;
     
@@ -97,7 +97,7 @@ class Nivel {
     /**
      * Get curso
      *
-     * @return \yony\academicoBundle\Entity\Curso 
+     * @return \Acad\administrativoBundle\Entity\Curso 
      */
     public function getCurso()
     {
@@ -107,10 +107,10 @@ class Nivel {
     /**
      * Set paralelo
      *
-     * @param \yony\academicoBundle\Entity\Paralelo $paralelo
+     * @param \Acad\administrativoBundle\Entity\Paralelo $paralelo
      * @return Nivel
      */
-    public function setParalelo(\yony\academicoBundle\Entity\Paralelo $paralelo = null)
+    public function setParalelo(\Acad\administrativoBundle\Entity\Paralelo $paralelo = null)
     {
         $this->paralelo = $paralelo;
     
@@ -120,7 +120,7 @@ class Nivel {
     /**
      * Get paralelo
      *
-     * @return \yony\academicoBundle\Entity\Paralelo 
+     * @return \Acad\administrativoBundle\Entity\Paralelo 
      */
     public function getParalelo()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace yony\academicoBundle\Entity;
+namespace Acad\academicoBundle\Entity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,19 +26,19 @@ class Matricula {
     protected $id;
     
     /**
-     * @ORM\ManyToOne(targetEntity="yony\academicoBundle\Entity\Nivel") 
+     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Nivel") 
      * @ORM\JoinColumn(name="nivel_id", referencedColumnName="id")
      */
     protected $nivel;
     
     /**
-     * @ORM\ManyToOne(targetEntity="yony\academicoBundle\Entity\Periodo") 
+     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Periodo") 
      * @ORM\JoinColumn(name="periodo_id", referencedColumnName="id")
      */
     protected $periodo;
     
     /**
-     * @ORM\ManyToOne(targetEntity="yony\academicoBundle\Entity\Estudiante") 
+     * @ORM\ManyToOne(targetEntity="Acad\academicoBundle\Entity\Estudiante") 
      * @ORM\JoinColumn(name="estudiante_id", referencedColumnName="id")
      */
     protected $estudiante;
@@ -176,10 +176,10 @@ class Matricula {
     /**
      * Set nivel
      *
-     * @param \yony\academicoBundle\Entity\Nivel $nivel
+     * @param \Acad\academicoBundle\Entity\Nivel $nivel
      * @return Matricula
      */
-    public function setNivel(\yony\academicoBundle\Entity\Nivel $nivel = null)
+    public function setNivel(\Acad\administrativoBundle\Entity\Nivel $nivel = null)
     {
         $this->nivel = $nivel;
     
@@ -189,7 +189,7 @@ class Matricula {
     /**
      * Get nivel
      *
-     * @return \yony\academicoBundle\Entity\Nivel 
+     * @return \Acad\administrativoBundle\Entity\Nivel 
      */
     public function getNivel()
     {
@@ -199,10 +199,10 @@ class Matricula {
     /**
      * Set periodo
      *
-     * @param \yony\academicoBundle\Entity\Periodo $periodo
+     * @param \Acad\administrativoBundle\Entity\Periodo $periodo
      * @return Matricula
      */
-    public function setPeriodo(\yony\academicoBundle\Entity\Periodo $periodo = null)
+    public function setPeriodo(\Acad\administrativoBundle\Entity\Periodo $periodo = null)
     {
         $this->periodo = $periodo;
     
@@ -212,7 +212,7 @@ class Matricula {
     /**
      * Get periodo
      *
-     * @return \yony\academicoBundle\Entity\Periodo 
+     * @return \Acad\administrativoBundle\Entity\Periodo 
      */
     public function getPeriodo()
     {
@@ -222,10 +222,10 @@ class Matricula {
     /**
      * Set estudiante
      *
-     * @param \yony\academicoBundle\Entity\Estudiante $estudiante
+     * @param \Acad\academicoBundle\Entity\Estudiante $estudiante
      * @return Matricula
      */
-    public function setEstudiante(\yony\academicoBundle\Entity\Estudiante $estudiante = null)
+    public function setEstudiante(\Acad\academicoBundle\Entity\Estudiante $estudiante = null)
     {
         $this->estudiante = $estudiante;
     
@@ -235,7 +235,7 @@ class Matricula {
     /**
      * Get estudiante
      *
-     * @return \yony\academicoBundle\Entity\Estudiante 
+     * @return \Acad\academicoBundle\Entity\Estudiante 
      */
     public function getEstudiante()
     {

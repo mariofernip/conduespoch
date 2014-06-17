@@ -1,6 +1,6 @@
 <?php
 
-namespace yony\academicoBundle\Entity;
+namespace Acad\academicoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,31 +22,32 @@ class Dictadomateria
     
     /**
      *
-     * @ORM\ManyToOne(targetEntity="yony\academicoBundle\Entity\Nivel") 
+     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Nivel") 
      * @ORM\JoinColumn(name="nivel_id", referencedColumnName="id")
      */
     protected $nivel;
 
     /**
      * 
-     * @ORM\ManyToOne(targetEntity="yony\academicoBundle\Entity\Docente") 
+     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Docente") 
      * @ORM\JoinColumn(name="docente_id", referencedColumnName="id")
      */
     protected $docente;
 
     /**
      * 
-     * @ORM\ManyToOne(targetEntity="yony\academicoBundle\Entity\Periodo") 
+     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Periodo") 
      * @ORM\JoinColumn(name="periodo_id", referencedColumnName="id")
      */
     protected $periodo;
 
     /**
      * 
-     * @ORM\ManyToOne(targetEntity="yony\academicoBundle\Entity\Materia") 
+     * @ORM\ManyToOne(targetEntity="Acad\academicoBundle\Entity\Materia") 
      * @ORM\JoinColumn(name="materia_id", referencedColumnName="id")
      */
     protected $materia;
 
+    
    
 }
