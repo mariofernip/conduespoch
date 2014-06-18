@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Acad\administrativoBundle\Entity\Materia;
 use Acad\academicoBundle\Entity\Matricula;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="materiaasignada",
