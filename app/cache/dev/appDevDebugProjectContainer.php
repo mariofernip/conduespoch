@@ -517,7 +517,7 @@ class appDevDebugProjectContainer extends Container
         $b = new \Doctrine\DBAL\Configuration();
         $b->setSQLLogger($a);
 
-        return $this->services['doctrine.dbal.default_connection'] = $this->get('doctrine.dbal.connection_factory')->createConnection(array('dbname' => 'test_academico', 'host' => '127.0.0.1', 'port' => '5434', 'user' => 'postgres', 'password' => 'sql1', 'charset' => 'UTF8', 'driver' => 'pdo_pgsql', 'driverOptions' => array()), $b, new \Symfony\Bridge\Doctrine\ContainerAwareEventManager($this), array());
+        return $this->services['doctrine.dbal.default_connection'] = $this->get('doctrine.dbal.connection_factory')->createConnection(array('dbname' => 'bdconduespoch', 'host' => '127.0.0.1', 'port' => '1433', 'user' => 'yonynet', 'password' => 'qwerty', 'charset' => 'UTF8', 'driver' => 'pdo_sqlsrv', 'driverOptions' => array()), $b, new \Symfony\Bridge\Doctrine\ContainerAwareEventManager($this), array());
     }
 
     /**
@@ -3296,12 +3296,12 @@ class appDevDebugProjectContainer extends Container
             ),
             'kernel.charset' => 'UTF-8',
             'kernel.container_class' => 'appDevDebugProjectContainer',
-            'database_driver' => 'pdo_pgsql',
+            'database_driver' => 'pdo_sqlsrv',
             'database_host' => '127.0.0.1',
-            'database_port' => '5434',
-            'database_name' => 'test_academico',
-            'database_user' => 'postgres',
-            'database_password' => 'sql1',
+            'database_port' => '1433',
+            'database_name' => 'bdconduespoch',
+            'database_user' => 'yonynet',
+            'database_password' => 'qwerty',
             'mailer_transport' => 'smtp',
             'mailer_host' => '127.0.0.1',
             'mailer_user' => NULL,

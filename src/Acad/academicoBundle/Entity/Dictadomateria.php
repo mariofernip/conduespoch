@@ -51,7 +51,7 @@ class Dictadomateria
 
     /**
      * 
-     * @ORM\ManyToOne(targetEntity="Acad\academicoBundle\Entity\Materia") 
+     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Materia") 
      * @ORM\JoinColumn(name="materia_id", referencedColumnName="id")
      * @Assert\NotBlank(message="Por favor seleccione una materia")
      */
