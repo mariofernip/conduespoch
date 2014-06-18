@@ -4,7 +4,9 @@
 namespace Acad\administrativoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * @ORM\Table(name="materia")
  * @UniqueEntity(fields={"nombre"}, message="El nombre a insertar ya existe")

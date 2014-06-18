@@ -2,6 +2,7 @@
 
 namespace Acad\academicoBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
