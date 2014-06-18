@@ -41,4 +41,60 @@ class MateriaAsignada {
     protected $materia;
     
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set matricula
+     *
+     * @param \Acad\academicoBundle\Entity\Matricula $matricula
+     * @return MateriaAsignada
+     */
+    public function setMatricula(\Acad\academicoBundle\Entity\Matricula $matricula = null)
+    {
+        $this->matricula = $matricula;
+    
+        return $this;
+    }
+
+    /**
+     * Get matricula
+     *
+     * @return \Acad\academicoBundle\Entity\Matricula 
+     */
+    public function getMatricula()
+    {
+        return $this->matricula;
+    }
+
+    /**
+     * Set materia
+     *
+     * @param \Acad\administrativoBundle\Entity\Materia $materia
+     * @return MateriaAsignada
+     */
+    public function setMateria(\Acad\administrativoBundle\Entity\Materia $materia = null)
+    {
+        $this->materia = $materia;
+    
+        return $this;
+    }
+
+    /**
+     * Get materia
+     *
+     * @return \Acad\administrativoBundle\Entity\Materia 
+     */
+    public function getMateria()
+    {
+        return $this->materia;
+    }
 }

@@ -53,4 +53,129 @@ class Materia {
      */
     private $estado;
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     * @return Materia
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+    
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string 
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set numerocreditos
+     *
+     * @param integer $numerocreditos
+     * @return Materia
+     */
+    public function setNumerocreditos($numerocreditos)
+    {
+        $this->numerocreditos = $numerocreditos;
+    
+        return $this;
+    }
+
+    /**
+     * Get numerocreditos
+     *
+     * @return integer 
+     */
+    public function getNumerocreditos()
+    {
+        return $this->numerocreditos;
+    }
+
+    /**
+     * Set descripcion
+     *
+     * @param string $descripcion
+     * @return Materia
+     */
+    public function setDescripcion($descripcion)
+    {
+        $this->descripcion = $descripcion;
+    
+        return $this;
+    }
+
+    /**
+     * Get descripcion
+     *
+     * @return string 
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param integer $estado
+     * @return Materia
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+    
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return integer 
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set area
+     *
+     * @param \Acad\administrativoBundle\Entity\Area $area
+     * @return Materia
+     */
+    public function setArea(\Acad\administrativoBundle\Entity\Area $area = null)
+    {
+        $this->area = $area;
+    
+        return $this;
+    }
+
+    /**
+     * Get area
+     *
+     * @return \Acad\administrativoBundle\Entity\Area 
+     */
+    public function getArea()
+    {
+        return $this->area;
+    }
 }

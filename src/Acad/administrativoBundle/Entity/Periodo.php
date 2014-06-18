@@ -82,4 +82,198 @@ class Periodo {
      */
     protected $estado;
     
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     * @return Periodo
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+    
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string 
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set finicioperiodo
+     *
+     * @param \DateTime $finicioperiodo
+     * @return Periodo
+     */
+    public function setFinicioperiodo($finicioperiodo)
+    {
+        $this->finicioperiodo = $finicioperiodo;
+    
+        return $this;
+    }
+
+    /**
+     * Get finicioperiodo
+     *
+     * @return \DateTime 
+     */
+    public function getFinicioperiodo()
+    {
+        return $this->finicioperiodo;
+    }
+
+    /**
+     * Set ffinperiodo
+     *
+     * @param \DateTime $ffinperiodo
+     * @return Periodo
+     */
+    public function setFfinperiodo($ffinperiodo)
+    {
+        $this->ffinperiodo = $ffinperiodo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ffinperiodo
+     *
+     * @return \DateTime 
+     */
+    public function getFfinperiodo()
+    {
+        return $this->ffinperiodo;
+    }
+
+    /**
+     * Set finiciomatricula
+     *
+     * @param \DateTime $finiciomatricula
+     * @return Periodo
+     */
+    public function setFiniciomatricula($finiciomatricula)
+    {
+        $this->finiciomatricula = $finiciomatricula;
+    
+        return $this;
+    }
+
+    /**
+     * Get finiciomatricula
+     *
+     * @return \DateTime 
+     */
+    public function getFiniciomatricula()
+    {
+        return $this->finiciomatricula;
+    }
+
+    /**
+     * Set ffinmatricula
+     *
+     * @param \DateTime $ffinmatricula
+     * @return Periodo
+     */
+    public function setFfinmatricula($ffinmatricula)
+    {
+        $this->ffinmatricula = $ffinmatricula;
+    
+        return $this;
+    }
+
+    /**
+     * Get ffinmatricula
+     *
+     * @return \DateTime 
+     */
+    public function getFfinmatricula()
+    {
+        return $this->ffinmatricula;
+    }
+
+    /**
+     * Set finicioinscripcion
+     *
+     * @param \DateTime $finicioinscripcion
+     * @return Periodo
+     */
+    public function setFinicioinscripcion($finicioinscripcion)
+    {
+        $this->finicioinscripcion = $finicioinscripcion;
+    
+        return $this;
+    }
+
+    /**
+     * Get finicioinscripcion
+     *
+     * @return \DateTime 
+     */
+    public function getFinicioinscripcion()
+    {
+        return $this->finicioinscripcion;
+    }
+
+    /**
+     * Set ffininscripcion
+     *
+     * @param \DateTime $ffininscripcion
+     * @return Periodo
+     */
+    public function setFfininscripcion($ffininscripcion)
+    {
+        $this->ffininscripcion = $ffininscripcion;
+    
+        return $this;
+    }
+
+    /**
+     * Get ffininscripcion
+     *
+     * @return \DateTime 
+     */
+    public function getFfininscripcion()
+    {
+        return $this->ffininscripcion;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param integer $estado
+     * @return Periodo
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+    
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return integer 
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
 }
