@@ -21,7 +21,7 @@ class Periodo {
      */
     protected $id;
     
-    /** @ORM\Column(type="string", length=32, unique=true, nullable=false, ) 
+    /** @ORM\Column(type="string", length=32, unique=true, nullable=false) 
      *  @Assert\NotBlank(message="Por favor ingrese el nombre del Período")
     */    
     
