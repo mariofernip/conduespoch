@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * uniqueConstraints={
  * @ORM\UniqueConstraint(name="unique_nivel", columns={"curso_id","paralelo_id"})
  *  })
- * @UniqueEntity(fields={"curso_id","paralelo_id"}, message="UniqueEntity_validator")
+ * @UniqueEntity(fields={"curso_id","paralelo_id"}, message="El registro a insertar ya existe")
  * @ORM\Entity
  */
 
@@ -30,18 +30,22 @@ class Nivel {
     protected $id;     
     
     
-    /** @ORM\Column(type="string", length=128, nullable=true) */    
+    /** @ORM\Column(type="string", length=128, nullable=true) 
+     * @Assert\Blank()
+     */    
     protected $descripcion;
     
     /**
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Curso") 
      * @ORM\JoinColumn(name="curso_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Por favor seleccione un curso")
      */
     protected $curso;
     
     /**
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Paralelo")      
      * @ORM\JoinColumn(name="paralelo_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Por favor seleccione un paralelo")
      */
     protected $paralelo;
     

@@ -2,14 +2,19 @@
 
 namespace Acad\academicoBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Evaluacion
- *
- * @ORM\Table(name="evaluacion")
+ * @ORM\Table(name="evaluacion", 
+ * uniqueConstraints={
+ * @ORM\UniqueConstraint(name="unique_evaluacion", columns={"materiaasignada_id", "mes_id", "tiponota_id"})
+ *  })
+ * @UniqueEntity(fields={"materiaasignada_id", "mes_id", "tiponota_id"}, message="El registro a insertar ya existe")
  * @ORM\Entity
  */
+
 class Evaluacion
 {
     /**
@@ -24,6 +29,7 @@ class Evaluacion
      *
      * @ORM\ManyToOne(targetEntity="Acad\academicoBundle\Entity\MateriaAsignada") 
      * @ORM\JoinColumn(name="materiaasignada_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Por favor llene el campo")
      */
     protected $materiaasignada;
     
@@ -33,9 +39,9 @@ class Evaluacion
      */
     protected $promedio;
 
-    /**
-     *
+    /**     
      * @ORM\Column(type="string", length=128, nullable=true)
+     * @Assert\Blank()
      */
     protected $descripcion;
 
@@ -43,6 +49,7 @@ class Evaluacion
      *
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Mes") 
      * @ORM\JoinColumn(name="mes_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Por favor seleccione un mes")
      */
     protected $mes;
     
@@ -50,6 +57,7 @@ class Evaluacion
      *
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Tiponota") 
      * @ORM\JoinColumn(name="tiponota_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Por favor seleccione el tipo de nota")
      */
     protected $tiponota;
 

@@ -28,18 +28,21 @@ class Matricula {
     /**
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Nivel") 
      * @ORM\JoinColumn(name="nivel_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Por favor seleccione un curso")
      */
     protected $nivel;
     
     /**
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Periodo") 
      * @ORM\JoinColumn(name="periodo_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Por favor seleccione un periodo")
      */
     protected $periodo;
     
     /**
      * @ORM\ManyToOne(targetEntity="Acad\academicoBundle\Entity\Estudiante") 
      * @ORM\JoinColumn(name="estudiante_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Por favor seleccionar un estudiante")
      */
     protected $estudiante;
     
@@ -47,24 +50,28 @@ class Matricula {
      /**
      *
      * @ORM\Column(type="string", length=32, nullable=false)
+     * @Assert\Choice(choices = {"Diurna", "Vespertina","Nocturna"})
+     * @Assert\NotBlank(message="Por favor seleccione una sección")
      */
      protected $seccion;
 
     /**
      *
      * @ORM\Column(type="date", nullable=false)
+     * @Assert\NotBlank(message="Por favor ingrese una fecha")
      */
     protected $fechamatricula;
 
     /**
      *
-     * @ORM\Column(type="string", length=16, nullable=false)
+     * @ORM\Column(type="integer", length=16, nullable=false)
      */
     protected $estado;
 
     /**
      *
      * @ORM\Column(type="string", length=128, nullable=true)
+     * @Assert\Blank()
      */
     protected $observaciones;
     

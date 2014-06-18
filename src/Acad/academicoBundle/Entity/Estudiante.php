@@ -1,13 +1,17 @@
 <?php
 
-namespace Acad\academicoBundle\Entity;;
+namespace Acad\academicoBundle\Entity;
+
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 
 /**
  * @ORM\Table(name="estudiante")
  * @ORM\Entity
+ * @UniqueEntity(fields={"email"}, message="UniqueEntity_validator")
+ * @UniqueEntity(fields={"cedula"}, message="UniqueEntity_validator")
  */
 class Estudiante {
     
@@ -18,7 +22,7 @@ class Estudiante {
      */
    protected $id;
    
-   /** @ORM\Column(type="string", length=10, nullable=false, unique=true, nullable=false) 
+   /** @ORM\Column(type="integer", nullable=false, unique=true) 
     * @Assert\NotBlank(message="Por favor ingrese el número de cédula")
     */    
    protected $cedula;
@@ -63,9 +67,8 @@ class Estudiante {
     */    
    protected $ciudad;
    
-   /** @ORM\Column(type="string", length=128, nullable=true) 
-    *  @Assert\Email()
-    
+   /** @ORM\Column(type="string", length=128, nullable=false) 
+    *  @Assert\Email()    
     */    
    protected $email;
    

@@ -1,12 +1,16 @@
 <?php
 
 namespace Acad\administrativoBundle\Entity;
+
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 
 /**
  * @ORM\Table(name="requisito")
  * @ORM\Entity
+ * @UniqueEntity(fields={"descripcion"}, message="El registro a insertar ya existe")
  */
 class Requisito {
     
@@ -18,10 +22,13 @@ class Requisito {
     
     protected $id;
     
-    /** @ORM\Column(type="string", length=128, nullable=false) */
+    /** @ORM\Column(type="string", length=128, nullable=false, unique=true)
+     * @Assert\NotBlank(message="Por favor ingrese un nombre")
+     *  */
     protected $descripcion;
     
-    /** @ORM\Column(type="smallint", length=128, nullable=false) */
+    /** @ORM\Column(type="integer", length=128, nullable=false) 
+     */
     protected $estado;
     
     
