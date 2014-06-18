@@ -1,11 +1,12 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_driver: pdo_pgsql
+#    database_driver: pdo_pgsql
+    database_driver: pdo_sqlsrv
     database_host: 127.0.0.1
-    database_port: '5434'
-    database_name: test_academico
-    database_user: postgres
-    database_password: sql1
+    database_port: '1433'
+    database_name: bdconduespoch
+    database_user: yonynet
+    database_password: qwerty
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: null
