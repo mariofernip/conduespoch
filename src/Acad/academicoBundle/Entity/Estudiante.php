@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="estudiante")
  * @ORM\Entity
- * @UniqueEntity(fields={"email"}, message="UniqueEntity_validator")
- * @UniqueEntity(fields={"cedula"}, message="UniqueEntity_validator")
+ * @UniqueEntity(fields={"email"}, message="El correo ingresado ya existe")
+ * @UniqueEntity(fields={"cedula"}, message="El número de cédula ingresada ya existe")
  */
 class Estudiante {
     
@@ -38,32 +38,26 @@ class Estudiante {
    protected $apellido;
    
    /** @ORM\Column(type="string", length=13, nullable=true) 
-    *  @Assert\Blank()
     */    
    protected $telefonofijo;
    
    /** @ORM\Column(type="string", length=13, nullable=true) 
-    *  @Assert\Blank()
     */    
    protected $celular;
    
    /** @ORM\Column(type="string", length=128, nullable=true) 
-    *  @Assert\Blank()
     */    
    protected $calle;
    
    /** @ORM\Column(type="string", length=64, nullable=true) 
-    *  @Assert\Blank()
     */    
    protected $barrio;
    
    /** @ORM\Column(type="string", length=64, nullable=true)
-    *  @Assert\Blank() 
     */    
    protected $parroquia;
    
    /** @ORM\Column(type="string", length=32, nullable=true) 
-    *  @Assert\Blank()
     */    
    protected $ciudad;
    
@@ -73,12 +67,10 @@ class Estudiante {
    protected $email;
    
    /** @ORM\Column(type="string", length=64, nullable=true) 
-    * @Assert\Blank()
     */    
    protected $ocupacion;
    
    /** @ORM\Column(type="string", length=32, nullable=true) 
-    *  @Assert\Blank()
     */    
    protected $lugarnacimiento;
    

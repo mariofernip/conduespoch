@@ -2,6 +2,9 @@
 
 namespace Acad\academicoBundle\Controller;
 
+use Acad\academicoBundle\Entity\Estudiante;
+use Acad\academicoBundle\Entity\Inscripcion;
+use Acad\academicoBundle\Form\EstudianteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DefaultController extends Controller
