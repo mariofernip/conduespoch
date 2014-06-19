@@ -28,7 +28,7 @@ class __TwigTemplate_a82aa4ad457e63a376f69ac0c72d05f1914f5fd1f19e49a2a65b4eed47a
         <title>";
         // line 5
         $this->displayBlock('title', $context, $blocks);
-        echo " | Cupon</title>
+        echo " | ACADÉMICO</title>
         ";
         // line 6
         $this->displayBlock('stylesheets', $context, $blocks);
@@ -103,6 +103,6 @@ class __TwigTemplate_a82aa4ad457e63a376f69ac0c72d05f1914f5fd1f19e49a2a65b4eed47a
 
     public function getDebugInfo()
     {
-        return array (  90 => 19,  85 => 11,  69 => 5,  63 => 20,  61 => 19,  52 => 13,  47 => 11,  34 => 6,  24 => 1,  95 => 28,  92 => 27,  87 => 23,  81 => 31,  79 => 9,  74 => 6,  72 => 23,  58 => 11,  55 => 10,  49 => 12,  40 => 5,  37 => 4,  32 => 3,  50 => 9,  45 => 6,  42 => 9,  36 => 7,  30 => 5,);
+        return array (  90 => 19,  85 => 11,  79 => 9,  74 => 6,  69 => 5,  63 => 20,  61 => 19,  52 => 13,  49 => 12,  47 => 11,  42 => 9,  36 => 7,  34 => 6,  30 => 5,  24 => 1,);
     }
 }

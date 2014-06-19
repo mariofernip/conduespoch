@@ -38,15 +38,15 @@ class __TwigTemplate_997d4c45cdb33801b9b52b503f48318e49e48afe495c6851b8c468bad9e
     {
         // line 5
         echo "<link href=\"";
-        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("bundles/Acadcademico/css/normalizar.css"), "html", null, true);
+        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("bundles/academico/css/normalizar.css"), "html", null, true);
         echo "\" rel=\"stylesheet\" type=\"text/css\">
 <link href=\"";
         // line 6
-        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("bundles/Acadacademico/css/comun.css"), "html", null, true);
+        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("bundles/academico/css/comun.css"), "html", null, true);
         echo "\" rel=\"stylesheet\" type=\"text/css\">
 <link href=\"";
         // line 7
-        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("bundles/Acadacademico/css/frontend.css"), "html", null, true);
+        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("bundles/academico/css/frontend.css"), "html", null, true);
         echo "\" rel=\"stylesheet\" type=\"text/css\">
 ";
     }
@@ -59,7 +59,10 @@ class __TwigTemplate_997d4c45cdb33801b9b52b503f48318e49e48afe495c6851b8c468bad9e
         <h1><a href=\"#\">ACADÉMICO</a></h1>
         <nav>
             <ul>
-                <li><a href=\"#\">Inscripciones</a></li>
+                <li><a href=\"";
+        // line 15
+        echo $this->env->getExtension('routing')->getPath("_portada");
+        echo "\">Inscripciones</a></li>
                 <li><a href=\"#\">Matriculas</a></li>
                 <li><a href=\"#\">Mis ofertas</a></li>                
             </ul>
@@ -109,6 +112,6 @@ class __TwigTemplate_997d4c45cdb33801b9b52b503f48318e49e48afe495c6851b8c468bad9e
 
     public function getDebugInfo()
     {
-        return array (  95 => 28,  92 => 27,  87 => 23,  81 => 31,  79 => 27,  74 => 24,  72 => 23,  58 => 11,  55 => 10,  49 => 7,  40 => 5,  37 => 4,  32 => 3,  50 => 9,  45 => 6,  42 => 5,  36 => 4,  30 => 3,);
+        return array (  98 => 28,  95 => 27,  90 => 23,  84 => 31,  82 => 27,  77 => 24,  75 => 23,  64 => 15,  58 => 11,  55 => 10,  49 => 7,  45 => 6,  40 => 5,  37 => 4,  32 => 3,);
     }
 }

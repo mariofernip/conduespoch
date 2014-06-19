@@ -2,9 +2,9 @@
 
 {% block stylesheets %}{% endblock %}
 {% block javascripts %}
-<link href="{{ asset('bundles/Acadcademico/css/normalizar.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ asset('bundles/Acadacademico/css/comun.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ asset('bundles/Acadacademico/css/frontend.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('bundles/academico/css/normalizar.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('bundles/academico/css/comun.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('bundles/academico/css/frontend.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block body %}
@@ -12,7 +12,7 @@
         <h1><a href="#">ACADÉMICO</a></h1>
         <nav>
             <ul>
-                <li><a href="#">Inscripciones</a></li>
+                <li><a href="{{path('_portada')}}">Inscripciones</a></li>
                 <li><a href="#">Matriculas</a></li>
                 <li><a href="#">Mis ofertas</a></li>                
             </ul>

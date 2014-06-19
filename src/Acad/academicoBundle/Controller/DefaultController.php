@@ -58,9 +58,8 @@ class DefaultController extends Controller
             $this->get('session')->getFlashBag()->add('Info',
                     'Felicitaciones! El estudiante ha sido ingresado satisfatoriamente'
              );
-                            
-            $test='hola';
-            return $this->redirect($this->generateUrl('estudiante_requisito',array('estudiante'=>$estudiante)));
+                                        
+            return $this->redirect($this->generateUrl('estudiante_requisito'));
         }
         
         return $this->render('academicoBundle:Default:registroestudiante.html.twig',array(
