@@ -2,12 +2,20 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}{% endblock %} | Cupon</title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
-    <body>
+    <body id="{% block id '' %} ">
+        <div id="contenedor">
         {% block body %}{% endblock %}
+            <footer>
+                &copy;  {{ 'now' | date('Y') }} - Cupon <br>
+                <a href="#"> Ayuda </a> 
+                <a href="#"> Contacto </a>
+                <a href="#"> Privacidad </a>
+                <a href="#"> Sobre nosotros </a>
+            </footer>
         {% block javascripts %}{% endblock %}
-    </body>
+        </div>></body>
 </html>

@@ -1,0 +1,34 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}{% endblock %}
+{% block javascripts %}
+<link href="{{ asset('bundles/acadacademico/css/normalizar.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('bundles/acadacademico/css/comun.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('bundles/acadacademico/css/frontend.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block body %}
+    <header>
+        <h1><a href="#">ACADÉMICO</a></h1>
+        <nav>
+            <ul>
+                <li><a href="#">Inscripciones</a></li>
+                <li><a href="#">Matriculas</a></li>
+                <li><a href="#">Mis ofertas</a></li>                
+            </ul>
+        </nav>
+    </header>
+
+    <article class="oferta">
+        {% block article %}{% endblock%}
+    </article>
+
+    <aside>
+        {% block aside %}
+            
+            
+        {% endblock %}
+            
+     </aside>
+{% endblock %}
+       
