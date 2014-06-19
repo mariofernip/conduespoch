@@ -1,0 +1,42 @@
+{% extends '::frontend.html.twig' %}
+
+{% block id 'estudiante' %}
+
+{% block title %}Registro de un nuevo estudiante{% endblock%}
+
+{% block article %}
+<h1>PERIODO ACADÉMICO ACTUAL {{periodo.nombre}}</h1><br><br>
+<h1>{{ block ('title')}}</h1>
+
+<form action="{{ path('estudiante_registro') }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_label(formulario.cedula,'Número de cédula:')}}{{form_widget(formulario.cedula)}}
+                  {{form_row(formulario.nombre)}}                       
+                  {{form_row(formulario.apellido)}}
+                  {{form_label(formulario.telefonofijo,'Teléfono fijo')}}{{form_widget(formulario.telefonofijo)}}
+                  {{form_row(formulario.celular)}}
+                  {{form_row(formulario.calle)}}
+                  {{form_row(formulario.barrio)}}
+                  {{form_row(formulario.parroquia)}}
+                  {{form_row(formulario.ciudad)}}
+                  {{form_label(formulario.email,'Correo')}}{{form_widget(formulario.email)}}
+                  {{form_row(formulario.ocupacion)}}
+                  {{form_label(formulario.lugarnacimiento,'Lugar de nacimiento')}}{{form_widget(formulario.lugarnacimiento)}}
+
+              
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+          </form>
+
+
+
+
+
+{% endblock%}
+
+{% block aside %}
+mensaje
+{% endblock%}

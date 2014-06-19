@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="inscripcion",
  * uniqueConstraints={
- * @ORM\UniqueConstraint(name="unique_materiaasignada", columns={"periodo_id","estudiante_id"})
+ * @ORM\UniqueConstraint(name="unique_inscripcion", columns={"periodo_id","estudiante_id"})
  *  })
  * @UniqueEntity(fields={"periodo_id","estudiante_id"}, message="El registro a insertar ya existe")
  * @ORM\Entity
@@ -47,16 +47,6 @@ class Inscripcion
      * @Assert\NotBlank()
      */
     protected $periodo;
-
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Requisito") 
-     * @ORM\JoinColumn(name="requisito_id", referencedColumnName="id")
-     * @Assert\NotBlank()
-     */
-    protected $requisito;
-    
-    
 
 
     /**
@@ -138,26 +128,5 @@ class Inscripcion
         return $this->periodo;
     }
 
-    /**
-     * Set requisito
-     *
-     * @param \Acad\administrativoBundle\Entity\Requisito $requisito
-     * @return Inscripcion
-     */
-    public function setRequisito(\Acad\administrativoBundle\Entity\Requisito $requisito = null)
-    {
-        $this->requisito = $requisito;
-    
-        return $this;
-    }
-
-    /**
-     * Get requisito
-     *
-     * @return \Acad\administrativoBundle\Entity\Requisito 
-     */
-    public function getRequisito()
-    {
-        return $this->requisito;
-    }
+  
 }

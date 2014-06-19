@@ -1,3 +1,15 @@
 academico_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: academicoBundle:Default:index }
+
+_portada:    
+    pattern:  /inicio
+    defaults: {_controller: academicoBundle:Default:portada }
+
+estudiante_registro:
+    pattern:  /estudiante/registro
+    defaults: { _controller: academicoBundle:default:registroEstudiante}
+    
+estudiante_requisito:
+    pattern:  /estudiante/requisito
+    defaults: { _controller: academicoBundle:default:requisitoEstudiante}

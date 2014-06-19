@@ -1,0 +1,19 @@
+{% extends '::frontend.html.twig' %}
+
+{% block id 'estudiante' %}
+
+{% block title %}Requisito del estudiante{% endblock%}
+
+{% block article %}
+
+<h1>{{ block ('title')}}</h1>
+
+{{estudiante.nombre}}
+
+
+
+{% endblock%}
+
+{% block aside %}
+mensaje
+{% endblock%}
