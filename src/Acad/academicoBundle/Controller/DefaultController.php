@@ -56,7 +56,7 @@ class DefaultController extends Controller
             $em->flush();
             
             $this->get('session')->getFlashBag()->add('Info',
-                    'Felicitaciones! El estudiante ha sido ingresado satisfatoriamente'
+                    'Felicitaciones! El estudiante ha sido ingresado satisfactoriamente'
              );
                                         
             return $this->redirect($this->generateUrl('estudiante_requisito'));
@@ -70,10 +70,27 @@ class DefaultController extends Controller
     }
     
     public function requisitoEstudianteAction() {
+
+        //CODIGO ANTERIOR
+ 
+//        $em= $this->getDoctrine()->getEntityManager();
+//        $estudiante= $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
+//           'id'=>1
+//            ));
+//        
         $em= $this->getDoctrine()->getEntityManager();
-        $estudiante= $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
-           'id'=>1
-            ));
+        $consulta = $em->createQuery('SELECT u FROM academicoBundle:Estudiante u ORDER BY u.id DESC');
+        $consulta->setMaxResults(1);
+        $estudiante= $consulta->getResult();
+        
+        
+        $emm= $this->getDoctrine()->getManager();
+        $requisito= $emm->getRepository('administrativoBundle:Requisito')->findBy(array('estado'=>1));
+        return $this->render('academicoBundle:Default:requisitoestudiante.html.twig',array(
+            'estudiante'=>$estudiante,
+            'requisito'=>$requisito
+        ));
+        
         
         return $this->render('academicoBundle:Default:requisitoestudiante.html.twig',array(
             'estudiante'=>$estudiante
