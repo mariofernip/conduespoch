@@ -16,12 +16,12 @@ estudiante_requisito:
         
 estudiante_registro_p:
     pattern:  /estudiante/registro/{cedula}
-    defaults: { _controller: AcadacademicoBundle:default:registroEstudiantep}    
+    defaults: { _controller: academicoBundle:default:registroEstudiantep}    
     
 estudiante_busqueda:
     pattern:  /estudiante/consulta/inscripcion
-    defaults: { _controller: AcadacademicoBundle:default:buscarEst}
+    defaults: { _controller: academicoBundle:default:buscarEst}
     
 estudiante_buscar:
     pattern:  /estudiante/consulta/matricula
-    defaults: { _controller: AcadacademicoBundle:default:buscarE}    
+    defaults: { _controller: academicoBundle:default:buscarE}    
