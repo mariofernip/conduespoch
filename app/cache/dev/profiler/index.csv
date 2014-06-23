@@ -34,3 +34,6 @@ eaf3a3,::1,POST,http://localhost:8081/academico/academico/web/app_dev.php/estudi
 6d9095,::1,POST,http://localhost:8081/academico/academico/web/app_dev.php/estudiante/requisito,1403520972,
 699b14,::1,POST,http://localhost:8081/academico/academico/web/app_dev.php/estudiante/requisito,1403520979,
 f57e2e,::1,POST,http://localhost:8081/academico/academico/web/app_dev.php/estudiante/requisito,1403521000,
+ac8694,::1,GET,http://localhost:8081/academico/web/app_dev.php/inicio,1403560009,
+94c263,::1,GET,http://localhost:8081/academico/web/app_dev.php/estudiante/requisito,1403560254,
+e55531,::1,GET,http://localhost:8081/academico/web/app_dev.php/estudiante/registro,1403560423,

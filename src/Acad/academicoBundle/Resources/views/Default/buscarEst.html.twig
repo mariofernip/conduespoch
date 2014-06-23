@@ -1,0 +1,26 @@
+{% extends '::frontend.html.twig' %}
+
+{% block id 'estudiante' %}
+
+{% block title %}Buscar estudiante{% endblock%}
+
+{% block article %}
+
+<h1>{{ block ('title')}}</h1>
+
+
+<form action="{{ path('estudiante_busqueda') }}" method="post" {{
+        form_enctype(formulario) }} >
+          {{form_row(formulario.cedula)}}
+    {{form_rest(formulario)}}    
+    <input class="boton" type="submit" value="Buscar" />
+</form>
+
+
+
+
+{% endblock%}
+
+{% block aside %}
+mensaje
+{% endblock%}

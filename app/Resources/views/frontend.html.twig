@@ -9,12 +9,13 @@
 
 {% block body %}
     <header>
-        <h1><a href="#">ACADÉMICO</a></h1>
+        <h1><a href="{{path('_portada')}}">ACADÉMICO</a></h1>
         <nav>
             <ul>
-                <li><a href="{{path('_portada')}}">Inscripciones</a></li>
-                <li><a href="#">Matriculas</a></li>
-                <li><a href="#">Mis ofertas</a></li>                
+                <li><a href="{{path ('estudiante_busqueda')}}">Inscripciones</a></li>
+                <li><a href="{{path('estudiante_buscar')}}">Matriculas</a></li>
+                <li><a href="#">Consultas</a></li>                
+                <li><a href="#">Reportes</a></li>                
             </ul>
         </nav>
     </header>
