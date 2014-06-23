@@ -6,6 +6,7 @@ use Acad\academicoBundle\Entity\Estudiante;
 use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Form\EstudianteType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Acad\academicoBundle\Form\RequisitosType;
 
 class DefaultController extends Controller
 {
@@ -86,9 +87,12 @@ class DefaultController extends Controller
         
         $emm= $this->getDoctrine()->getManager();
         $requisito= $emm->getRepository('administrativoBundle:Requisito')->findBy(array('estado'=>1));
+        $form = $this->createForm(new RequisitosType(), $requisito);
+        
         return $this->render('academicoBundle:Default:requisitoestudiante.html.twig',array(
             'estudiante'=>$estudiante,
-            'requisito'=>$requisito
+            'requisito'=>$requisito,
+            'form' => $form->createView(),
         ));
         
         

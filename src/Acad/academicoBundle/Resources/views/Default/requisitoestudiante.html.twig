@@ -59,6 +59,18 @@
 </article>
 
 
+
+{#Formulario con checkBox para requisitos#}
+
+<form action="{{ path('estudiante_requisito') }}" method="post"{{
+form_enctype(form) }}>
+    {{ form_widget(form) }}
+    <input class="boton" type="submit" value="Guardar" />
+</form>
+
+
+
+
 {# CODIGO DE PRUEBA SIN CHECK BOX
 {% for entity in requisito %}
 <tr>
