@@ -33,11 +33,11 @@ class DefaultController extends Controller
 
         $formulario->handleRequest($peticion);
 
-        $periodo = $em->getRepository('AcadadministrativoBundle:Periodo')->findOneBy(array(
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
             'estado' => 1
                 ));
         
-       $req = $em->getRepository('AcadadministrativoBundle:Requisito')->findBy(array('estado' => 1));
+       $req = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => 1));
         
         if ($formulario->isValid()) {
 
@@ -79,7 +79,7 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('estudiante_requisito', array('estudiante' => $estudiante)));
         }
 
-        return $this->render('AcadacademicoBundle:Default:registroestudiante.html.twig', array(
+        return $this->render('academicoBundle:Default:registroestudiante.html.twig', array(
                     'periodo' => $periodo,
                     'formulario' => $formulario->createView())
         );
@@ -97,7 +97,7 @@ class DefaultController extends Controller
         
         $peticion = $this->getRequest();
         
-        $estud=$em->getRepository('AcadadministrativoBundle:Requisito')->findBy(array(
+        $estud=$em->getRepository('administrativoBundle:Requisito')->findBy(array(
             'estado'=>1
         ));
         $formulario = $this->createFormBuilder($estud)
@@ -108,14 +108,14 @@ class DefaultController extends Controller
          ;
         
         
-        $consulta = $em->createQuery('SELECT u FROM AcadacademicoBundle:Estudiante u ORDER BY u.id DESC');
+        $consulta = $em->createQuery('SELECT u FROM academicoBundle:Estudiante u ORDER BY u.id DESC');
         $consulta->setMaxResults(1);
         $estudiante = $consulta->getResult();
 
 
         $emm = $this->getDoctrine()->getManager();
-        $requisito = $emm->getRepository('AcadadministrativoBundle:Requisito')->findBy(array('estado' =>1));
-        return $this->render('AcadacademicoBundle:Default:requisitoestudiante.html.twig', array(
+        $requisito = $emm->getRepository('administrativoBundle:Requisito')->findBy(array('estado' =>1));
+        return $this->render('academicoBundle:Default:requisitoestudiante.html.twig', array(
                     'estudiante' => $estudiante,
                     'requisito' => $requisito,
                     'estud'=>$estud,
@@ -124,7 +124,7 @@ class DefaultController extends Controller
                 ));
 
 
-        return $this->render('AcadacademicoBundle:Default:requisitoestudiante.html.twig', array(
+        return $this->render('academicoBundle:Default:requisitoestudiante.html.twig', array(
                     'estudiante' => $estudiante
                 ));
     }
@@ -149,7 +149,7 @@ class DefaultController extends Controller
 
             $cedula = $formulario->getData()->getCedula();
 
-            $est = $em->getRepository('AcadacademicoBundle:Estudiante')->findOneBy(array(
+            $est = $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
                 'cedula' => $cedula
                     ));
 
@@ -159,7 +159,7 @@ class DefaultController extends Controller
                 return $this->redirect($this->generateUrl('estudiante_registro'));
             }
         }
-        return $this->render('AcadacademicoBundle:Default:buscarEst.html.twig', array(
+        return $this->render('academicoBundle:Default:buscarEst.html.twig', array(
                     'formulario' => $formulario->createView()
                 ));
     }
@@ -168,12 +168,12 @@ class DefaultController extends Controller
         
         $em =  $this->getDoctrine()->getEntityManager();
         
-        $estudiante= $em->getRepository('AcadacademicoBundle:Estudiante')->findOneBy(array(
+        $estudiante= $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
             'cedula'=>$cedula
         ));
                 
         
-        $periodo = $em->getRepository('AcadadministrativoBundle:Periodo')->findOneBy(array(
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
             'estado' => 1
                 ));
 
@@ -210,7 +210,7 @@ class DefaultController extends Controller
 
             $cedula = $formulario->getData()->getCedula();
 
-            $est = $em->getRepository('AcadacademicoBundle:Estudiante')->findEstudiantexInscripcion($cedula);
+            $est = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexInscripcion($cedula);
 
             if ($est) {
                 return $this->redirect($this->generateUrl('_portada'));
@@ -218,7 +218,7 @@ class DefaultController extends Controller
                 return $this->redirect($this->generateUrl('estudiante_registro'));
             }
         }
-        return $this->render('AcadacademicoBundle:Default:buscarE.html.twig', array(
+        return $this->render('academicoBundle:Default:buscarE.html.twig', array(
                     'formulario' => $formulario->createView()
                 ));
         
