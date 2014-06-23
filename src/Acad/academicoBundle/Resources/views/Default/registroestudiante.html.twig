@@ -1,4 +1,6 @@
+{% set  iactiva=  'now' | date('Ymd') <= periodo.ffininscripcion | date('Ymd') %}
 {% extends '::frontend.html.twig' %}
+
 
 {% block id 'estudiante' %}
 
@@ -7,6 +9,7 @@
 {% block article %}
 <h1>PERIODO ACADÉMICO ACTUAL {{periodo.nombre}}</h1><br><br>
 <h1>{{ block ('title')}}</h1>
+{% if  iactiva %}
 
 <form action="{{ path('estudiante_registro') }}" method="post" {{
         form_enctype(formulario) }}>
@@ -31,12 +34,17 @@
           <input class="boton" type="submit" value="Guardar" />
           </form>
 
-
+{% endif %}
+{% if not iactiva %}
+<h1>EL PERIODO DE INSCRIPCIONES HA VENCIDO</h1>
+<h1>Para mayor información comuicarse con el administrador del sistema</h1>
+<a href="{{path('_portada')}}">regresar</a>
+{% endif%}
 
 
 
 {% endblock%}
 
 {% block aside %}
-
+mensaje
 {% endblock%}
