@@ -11,7 +11,7 @@ estudiante_registro:
     defaults: { _controller: academicoBundle:default:registroEstudiante}
     
 estudiante_requisito:
-    pattern:  /estudiante/requisito
+    pattern:  /estudiante/requisito/{cedula}
     defaults: { _controller: academicoBundle:default:requisitoEstudiante}
         
 estudiante_registro_p:

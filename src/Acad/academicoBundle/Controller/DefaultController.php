@@ -2,25 +2,26 @@
 
 namespace Acad\academicoBundle\Controller;
 
+use Acad\academicoBundle\Entity\CumpleRequisito;
 use Acad\academicoBundle\Entity\Estudiante;
 use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Form\EstudianteType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Acad\academicoBundle\Form\RequisitosType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class DefaultController extends Controller
-{
-    public function indexAction($name)
-    {
+class DefaultController extends Controller {
+
+    public function indexAction($name) {
         return $this->render('academicoBundle:Default:index.html.twig', array('name' => $name));
     }
-    
-    
+
     public function portadaAction() {
-        
+
         return $this->render('academicoBundle:Default:portada.html.twig');
     }
 
+    //METODO INSERTAR ESTUDIANTE
+    //permite ingresar un nuevo estudiante al sistema y lo inscribe en el periodo actual
     public function registroEstudianteAction() {
 
 
@@ -36,15 +37,13 @@ class DefaultController extends Controller
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
             'estado' => 1
                 ));
-        
-       $req = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => 1));
-        
+
+        $req = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => 1));
+
         if ($formulario->isValid()) {
 
-            $formulario->get('nombre');
-            $calle = $estudiante->setEstado(1);
-
-            $estudiante->setCalle($calle);
+            //inserto el nuevo estudiante       
+            $estudiante->setEstado(1);
             $em->persist($estudiante);
             $em->flush();
 
@@ -54,19 +53,18 @@ class DefaultController extends Controller
             $inscripcion->setEstudiante($estudiante);
             $inscripcion->setEstado(1);
             $inscripcion->setPeriodo($periodo);
-
+            
+            //le iscribo en el periodo actual al estudiante
             $em->persist($inscripcion);
             $em->flush();
-            
-            
-            
-            
-            foreach ($req as $req1) {                                        
-            $cumplerequisito= new CumpleRequisito();
+
+            //lleno la tabla cumplerequisito
+            foreach ($req as $req1) {
+                $cumplerequisito = new CumpleRequisito();
                 $cumplerequisito->setEstado(0);
                 $cumplerequisito->setInscripcion($inscripcion);
                 $cumplerequisito->setRequisito($req1);
-                
+
                 $em->persist($cumplerequisito);
                 $em->flush();
             }
@@ -75,8 +73,8 @@ class DefaultController extends Controller
 //                    'Felicitaciones! El estudiante ha sido ingresado satisfatoriamente'
 //             );
 
-
-            return $this->redirect($this->generateUrl('estudiante_requisito', array('estudiante' => $estudiante)));
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $estudiante->getCedula())));
         }
 
         return $this->render('academicoBundle:Default:registroestudiante.html.twig', array(
@@ -85,47 +83,22 @@ class DefaultController extends Controller
         );
     }
 
-    public function requisitoEstudianteAction() {
+    public function requisitoEstudianteAction($cedula) {
 
-        //CODIGO ANTERIOR
-//        $em= $this->getDoctrine()->getEntityManager();
-//        $estudiante= $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
-//           'id'=>1
-//            ));
-//      
         $em = $this->getDoctrine()->getEntityManager();
-        
+
         $peticion = $this->getRequest();
-        
-        $estud=$em->getRepository('administrativoBundle:Requisito')->findBy(array(
-            'estado'=>1
-        ));
-        $formulario = $this->createFormBuilder($estud)
-                ->add('estado','checkbox',array('required'=>false))
-                ->add('descripcion')
-                ->getForm()
-        
-         ;
-        
-        
-        $consulta = $em->createQuery('SELECT u FROM academicoBundle:Estudiante u ORDER BY u.id DESC');
-        $consulta->setMaxResults(1);
-        $estudiante = $consulta->getResult();
-
-
-        $emm = $this->getDoctrine()->getManager();
-        $requisito = $emm->getRepository('administrativoBundle:Requisito')->findBy(array('estado' =>1));
-        return $this->render('academicoBundle:Default:requisitoestudiante.html.twig', array(
-                    'estudiante' => $estudiante,
-                    'requisito' => $requisito,
-                    'estud'=>$estud,
-                    'formulario'=>$formulario->createView()
-            
+        $estudiante = $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
+            'cedula' => $cedula
                 ));
 
 
+        $requisito = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => 1));
+
+
         return $this->render('academicoBundle:Default:requisitoestudiante.html.twig', array(
-                    'estudiante' => $estudiante
+                    'estudiante' => $estudiante,
+                    'requisito' => $requisito
                 ));
     }
 
@@ -136,7 +109,9 @@ class DefaultController extends Controller
 
 
         $estudiante = new Estudiante();
-
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
+            'estado' => 1
+                ));
 
 
         $formulario = $this->createFormBuilder($estudiante)
@@ -149,12 +124,21 @@ class DefaultController extends Controller
 
             $cedula = $formulario->getData()->getCedula();
 
+            //$est = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexInscripcion($cedula, $periodo->getId());
+            //consulto si un estudiante ya esta registrado en el sistema
             $est = $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
                 'cedula' => $cedula
                     ));
 
             if ($est) {
-                return $this->redirect($this->generateUrl('estudiante_registro_p', array('cedula' => $cedula)));
+                //consulto si ese estudiante ya esta inscrito en el periodo actual
+                $est2 = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexInscripcion($cedula, $periodo->getId());
+                
+                if ($est2) {
+                    return $this->redirect($this->generateUrl('_portada'));
+                } else {
+                    return $this->redirect($this->generateUrl('estudiante_registro_p', array('cedula' => $cedula)));
+                }
             } else {
                 return $this->redirect($this->generateUrl('estudiante_registro'));
             }
@@ -165,33 +149,71 @@ class DefaultController extends Controller
     }
 
     public function registroEstudiantepAction($cedula) {
-        
-        $em =  $this->getDoctrine()->getEntityManager();
-        
-        $estudiante= $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
-            'cedula'=>$cedula
-        ));
-                
-        
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+
+        //consulto el periodo actual
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
             'estado' => 1
                 ));
+        //obtendo los datos del estudiante para procecer luego a la inscripcion
+        $estudiante = $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
+            'cedula' => $cedula
+                ));
 
-        $inscripcion = new Inscripcion();
+        //creo el formulario en la vista
+        $default = array('mensaje' => 'hola');
+        $formulario = $this->createFormBuilder($default)
+                ->add('Inscribir', 'submit')
+                ->getForm()
+        ;
 
-        $inscripcion->setEstudiante($estudiante);
-        $inscripcion->setEstado(1);
-        $inscripcion->setPeriodo($periodo);
+        $formulario->handleRequest($peticion);
 
-        $em->persist($inscripcion);
-        $em->flush();
+        //consuslto los requisitos
+        $req = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => 1));
 
-        return $this->redirect($this->generateUrl('estudiante_requisito', array('estudiante' => $estudiante)));
+        if ($formulario->isValid()) {
+
+
+
+            $inscripcion = new Inscripcion();
+
+            $inscripcion->setEstudiante($estudiante);
+            $inscripcion->setEstado(1);
+            $inscripcion->setPeriodo($periodo);
+
+            $em->persist($inscripcion);
+            $em->flush();
+
+            //recorro lista de requisitos para insertar en la tabla cumplerequisito
+            foreach ($req as $req1) {
+                $cumplerequisito = new CumpleRequisito();
+                $cumplerequisito->setEstado(0);
+                $cumplerequisito->setInscripcion($inscripcion);
+                $cumplerequisito->setRequisito($req1);
+
+                $em->persist($cumplerequisito);
+                $em->flush();
+            }
+
+            return $this->redirect($this->generateUrl('estudiante_requisito', array(
+                                'cedula' => $cedula,
+                            )));
+        }
+
+        //creo la vista
+        return $this->render('academicoBundle:Default:nuevainscripcion.html.twig', array(
+                    'estudiante' => $estudiante,
+                    'periodo' => $periodo,
+                    'formulario' => $formulario->createView()
+                ));
     }
 
     public function buscarEAction() {
-        
-        
+
+
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getManager();
 
@@ -221,8 +243,6 @@ class DefaultController extends Controller
         return $this->render('academicoBundle:Default:buscarE.html.twig', array(
                     'formulario' => $formulario->createView()
                 ));
-        
-    } 
-    
-    
+    }
+
 }

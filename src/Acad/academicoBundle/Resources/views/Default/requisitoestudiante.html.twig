@@ -1,85 +1,17 @@
 {% extends '::frontend.html.twig' %}
 
-{% block choice_widget %}
-{% spaceless %}
-    {% if expanded %}
-        <div {{ block('widget_container_attributes') }}>
-        {% for child in form %}
-            {{ form_widget(child) }}
-        {#  {{ form_label(child) }} <--------------------- linea removida para la funcionalidad lista label #}  
-        {% endfor %}
-        </div>
-    {% else %}
-    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
-        {% if empty_value is not none %}
-            <option value="">{{ empty_value|trans }}</option>
-        {% endif %}
-        {% if preferred_choices|length > 0 %}
-            {% set options = preferred_choices %}
-            {{ block('widget_choice_options') }}
-            {% if choices|length > 0 and separator is not none %}
-                <option disabled="disabled">{{ separator }}</option>
-            {% endif %}
-        {% endif %}
-        {% set options = choices %}
-        {{ block('widget_choice_options') }}
-    </select>
-    {% endif %}
-{% endspaceless %}
-{% endblock choice_widget %}
 
-{% block id 'estudiante' %}
+{% block id 'requisito' %}
 
 {% block title %}Requisito del estudiante{% endblock%}
 
 {% block article %}
 
 <h1>{{ block ('title')}}</h1>
+<strong>Cédula:</strong>{{estudiante.cedula}}<br>
+<strong>Nombre:</strong>{{estudiante.nombre}}<br>
+<strong>Apellido:</strong>{{estudiante.apellido}}<br>
 
-<article>
-    {% for persona in estudiante %}
-        Nombre : {{persona.nombre}}&nbsp;{{persona.apellido}}
-        <br>
-        CI : {{persona.cedula}}
-        <br>
-    {% endfor %}
-</article>
-
-{# CODIGO DE REQUISITOS CON CHECK BOX#}
-
-<article>
-    {% block checkbox_widget %}
-    {% spaceless %}
-       {% for entity in requisito %}
-            <br>
-            <input type="checkbox"/>{{ entity.descripcion }}
-    {% endfor %}
-    {% endspaceless %}
-    {% endblock checkbox_widget %}
-</article>
-
-
-
-{#Formulario con checkBox para requisitos#}
-
-<form action="{{ path('estudiante_requisito') }}" method="post"{{
-form_enctype(form) }}>
-    {{ form_widget(form) }}
-    <input class="boton" type="submit" value="Guardar" />
-</form>
-
-
-
-
-{# CODIGO DE PRUEBA SIN CHECK BOX
-{% for entity in requisito %}
-<tr>
-           <td>{{ entity.descripcion }}</td>
-          	
-        </tr>		
-			
-{% endfor %}
-#}
 {% endblock%}
 
 {% block aside %}

@@ -1,0 +1,30 @@
+{% extends '::frontend.html.twig' %}
+
+{% block id 'estudiante' %}
+
+{% block title %}Inscripcion del estudiante{% endblock%}
+
+{% block article %}
+<strong>PERIODO ACADÉMICO:</strong> {{periodo.nombre}}<br><br>
+<h1>{{ block ('title')}}</h1>
+
+<strong>DATOS DEL ESTUDIANTE</strong><br><br>
+<strong>Cédula:</strong>{{estudiante.cedula}}<br>
+<strong>Nombres:</strong>{{estudiante.nombre}}<br>
+<strong>Apellidos:</strong>{{estudiante.apellido}}<br><br>
+
+<form action="{{ path('estudiante_registro_p', {'cedula': estudiante.cedula})}}" method="post" {{
+        form_enctype(formulario) }} >
+          
+          {{form_row(formulario.Inscribir)}}
+          {{form_rest(formulario)}}
+</form>
+
+
+
+
+{% endblock%}
+
+{% block aside %}
+      mensaje
+{% endblock%}
