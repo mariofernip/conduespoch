@@ -40,7 +40,7 @@ class DefaultController extends Controller {
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
             'estado' => 1
                 ));
-
+       
         $req = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => 1));
 
         if ($formulario->isValid()) {
@@ -272,7 +272,8 @@ class DefaultController extends Controller {
         
         if ($formulario->isValid()) {
 
-            $matricula->setEstado(0);                
+            $matricula->setEstado(1);            
+            $matricula->setFechamatricula(new \DateTime('now'));
             $em->persist($matricula);
             $em->flush();
           

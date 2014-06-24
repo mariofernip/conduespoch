@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * uniqueConstraints={
  * @ORM\UniqueConstraint(name="unique_matricula", columns={"nivel_id","periodo_id", "estudiante_id"})
  *  })
- * @UniqueEntity(fields={"nivel", "periodo", "estudiante"}, message="UniqueEntity_validator")
+ * @UniqueEntity(fields={"nivel", "periodo", "estudiante"}, message="El estudiante ya ha sido previamente matriculado")
  * @ORM\Entity
  */
 
@@ -35,7 +35,6 @@ class Matricula {
     /**
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Periodo") 
      * @ORM\JoinColumn(name="periodo_id", referencedColumnName="id")
-     * @Assert\NotBlank(message="Por favor seleccione un periodo")
      */
     protected $periodo;
     
@@ -58,7 +57,6 @@ class Matricula {
     /**
      *
      * @ORM\Column(type="date", nullable=false)
-     * @Assert\NotBlank(message="Por favor ingrese una fecha")
      */
     protected $fechamatricula;
 

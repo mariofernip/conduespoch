@@ -15,13 +15,11 @@ class MatriculaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('seccion', 'choice', array('choices'   => array('Diurna' => 'Diurna', 'Vespertina' => 'Vespertina', 'Nocturna' => 'Nocturna'),  'required'  => false))
-            ->add('observaciones')            
-            ->add('nivel')            
-            ->add('fechamatricula')  
-            ->add('periodo')  
+            ->add('periodo')                                    
+            ->add('nivel')                                    
+            ->add('seccion', 'choice', array('choices'   => array('Diurna' => 'Diurna', 'Vespertina' => 'Vespertina', 'Nocturna' => 'Nocturna'),  'required'  => false))                        
             ->add('estudiante')  
-                
+            ->add('observaciones')                
         ;
     }
     
