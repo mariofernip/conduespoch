@@ -25,3 +25,7 @@ estudiante_busqueda:
 estudiante_buscar:
     pattern:  /estudiante/consulta/matricula
     defaults: { _controller: academicoBundle:default:buscarE}    
+    
+estudiante_matricula:
+    pattern:  /estudiante/matricula
+    defaults: { _controller: academicoBundle:default:matriculaEstudiante} 

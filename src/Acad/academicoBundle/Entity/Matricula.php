@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * uniqueConstraints={
  * @ORM\UniqueConstraint(name="unique_matricula", columns={"nivel_id","periodo_id", "estudiante_id"})
  *  })
- * @UniqueEntity(fields={"nivel_id", "periodo_id", "estudiante_id"}, message="UniqueEntity_validator")
+ * @UniqueEntity(fields={"nivel", "periodo", "estudiante"}, message="UniqueEntity_validator")
  * @ORM\Entity
  */
 

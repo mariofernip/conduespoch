@@ -7,6 +7,9 @@ use Acad\academicoBundle\Entity\Estudiante;
 use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Form\EstudianteType;
 use Acad\academicoBundle\Form\RequisitosType;
+use Acad\academicoBundle\Form\MatriculaType;
+use Acad\academicoBundle\Entity\Matricula;
+use Acad\academicoBundle\Entity\MateriaAsignada;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DefaultController extends Controller {
@@ -243,6 +246,58 @@ class DefaultController extends Controller {
         return $this->render('academicoBundle:Default:buscarE.html.twig', array(
                     'formulario' => $formulario->createView()
                 ));
+    }
+    
+    //Matricula estudiante
+    
+    public function matriculaEstudianteAction() {
+
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $matricula = new Matricula();
+
+        $formulario = $this->createForm(new MatriculaType(), $matricula);
+
+        $formulario->handleRequest($peticion);
+        
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
+            'estado' => 1
+                ));
+        $nivel = $em->getRepository('administrativoBundle:Nivel')->findOneBy(array(
+            'id' => 1
+                ));
+        
+       $mat = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado' => 1));
+        
+        if ($formulario->isValid()) {
+
+            $matricula->setEstado(0);                
+            $em->persist($matricula);
+            $em->flush();
+          
+            foreach ($mat as $mat1) {                                        
+                $materiaasignada= new MateriaAsignada();
+                $materiaasignada->setMateria($mat1);
+                $materiaasignada->setMatricula($matricula);                        
+                
+                $em->persist($materiaasignada);
+                $em->flush();
+            }
+
+//            $this->get('session')->getFlashBag()->add('Info',
+//                    'Felicitaciones! El estudiante ha sido matriculado satisfatoriamente'
+//             );
+
+
+            return $this->redirect($this->generateUrl('estudiante_matricula', array('matricula' => $matricula)));
+        }
+
+        return $this->render('academicoBundle:Default:matriculaestudiante.html.twig', array(
+                    'periodo' => $periodo,
+                    'nivel' => $nivel,            
+                    'formulario' => $formulario->createView())
+        );
     }
 
 }
