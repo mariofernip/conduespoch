@@ -301,4 +301,13 @@ class DefaultController extends Controller {
         );
     }
 
+    
+    public function cajaLoginAction() {
+
+        
+
+        return $this->render('academicoBundle:Default:cajaLogin.html.twig');
+    }
+
+    
 }

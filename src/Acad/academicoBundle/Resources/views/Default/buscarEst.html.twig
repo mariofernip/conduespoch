@@ -13,7 +13,7 @@
         form_enctype(formulario) }} >
           {{form_row(formulario.cedula)}}
     {{form_rest(formulario)}}    
-    <input class="boton" type="submit" value="Buscar" />
+          <input class="boton" type="submit" value="Buscar" />
 </form>
 
 
@@ -22,5 +22,7 @@
 {% endblock%}
 
 {% block aside %}
-mensaje
+    <section id="login">
+                {{ render (controller('academicoBundle:Default:cajaLogin')) }}
+            </section>            
 {% endblock%}

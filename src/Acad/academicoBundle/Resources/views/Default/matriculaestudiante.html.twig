@@ -16,7 +16,7 @@
                   {{form_row(formulario.nivel)}}
                   {{form_label(formulario.seccion,'Seccion de estudio:')}}{{form_widget(formulario.seccion)}}                                                        
                   {{form_row(formulario.estudiante)}}
-                  {{form_row(formulario.observaciones)}}                                    
+                  {{form_row(formulario.observaciones, { 'attr': {'autocomplete' : 'off' } }) }}
                   
               </fieldset>   
          {{form_rest(formulario)}}                   
@@ -30,5 +30,7 @@
 {% endblock%}
 
 {% block aside %}
-
+<section id="login">
+                {{ render (controller('academicoBundle:Default:cajaLogin')) }}
+            </section>            
 {% endblock%}

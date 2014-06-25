@@ -8,28 +8,30 @@
 {% endblock %}
 
 {% block body %}
-    <header>
-        <h1><a href="{{path('_portada')}}">ACADÉMICO</a></h1>
-        <nav>
-            <ul>
-                <li><a href="{{path ('estudiante_busqueda')}}">Inscripciones</a></li>
-                <li><a href="{{path('estudiante_matricula')}}">Matriculas</a></li>
-                <li><a href="#">Consultas</a></li>                
-                <li><a href="#">Reportes</a></li>                
-            </ul>
-        </nav>
-    </header>
+<header>
+    <h1><a href="{{path('_portada')}}">ACADÉMICO</a></h1>
+    <nav>
+        <ul>
+            <li><a href="{{path ('estudiante_busqueda')}}">Inscripciones</a></li>
+            <li><a href="{{path('estudiante_matricula')}}">Matriculas</a></li>
+            <li><a href="#">Consultas</a></li>                
+            <li><a href="#">Reportes</a></li>                
+        </ul>
+    </nav>
+</header>
 
-    <article class="oferta">
+<article class="oferta">
         {% block article %}{% endblock%}
     </article>
 
     <aside>
-        {% block aside %}
-            
-            
+        {% block aside %}            
+
+            <section id="login">
+                {{ render (controller('academicoBundle:Default:cajaLogin')) }}
+            </section>            
         {% endblock %}
-            
-     </aside>
+
+            </aside>
 {% endblock %}
-       
+
