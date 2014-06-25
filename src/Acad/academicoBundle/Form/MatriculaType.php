@@ -18,7 +18,17 @@ class MatriculaType extends AbstractType
             ->add('periodo')                                    
             ->add('nivel')                                    
             ->add('seccion', 'choice', array('choices'   => array('Diurna' => 'Diurna', 'Vespertina' => 'Vespertina', 'Nocturna' => 'Nocturna'),  'required'  => false))                        
-            ->add('estudiante')  
+            ->add('estudiante','entity',array(
+                    'class'=> 'academicoBundle:Estudiante',
+                    'query_builder'=> function(EntityRepository $er){
+                    return $er->createQueryBuilder('e')
+                    ->select('e')        
+                    ->join('academicoBundle:Inscripcion', 'i', 'WITH', 'e.id =i.estudiante')                            
+                    ->join('administrativoBundle:Periodo', 'p', 'WITH', 'p.id = i.periodo')           
+                    ->where('i.estado = 1 and p.estado = 1')
+                    ;                    
+                }
+                ))  
             ->add('observaciones')                
         ;
     }
