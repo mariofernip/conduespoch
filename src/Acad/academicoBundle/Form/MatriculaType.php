@@ -26,6 +26,7 @@ class MatriculaType extends AbstractType
                     ->join('academicoBundle:Inscripcion', 'i', 'WITH', 'e.id =i.estudiante')                            
                     ->join('administrativoBundle:Periodo', 'p', 'WITH', 'p.id = i.periodo')           
                     ->where('i.estado = 1 and p.estado = 1')
+                            
                     ;                    
                 }
                 ))  
