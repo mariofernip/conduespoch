@@ -389,6 +389,6 @@ class Estudiante {
     }
     
     public function __toString() {
-        return $this->getNombre().' '.$this->getApellido();
+        return $this->getCedula().' - '.$this->getNombre().' '.$this->getApellido();
     }
 }
