@@ -175,7 +175,7 @@ class DefaultController extends Controller {
         $formulario->handleRequest($peticion);
 
         //consuslto los requisitos
-        $req = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => 1));
+        $req = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => true));
 
         if ($formulario->isValid()) {
 
