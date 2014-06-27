@@ -29,3 +29,7 @@ estudiante_buscar:
 estudiante_matricula:
     pattern:  /estudiante/matricula
     defaults: { _controller: academicoBundle:default:matriculaEstudiante} 
+    
+docente_dictadomateria:
+    pattern:  /docente/materias
+    defaults: { _controller: academicoBundle:default:dictadomateria}

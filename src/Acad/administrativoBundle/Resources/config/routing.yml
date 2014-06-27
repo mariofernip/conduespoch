@@ -1,3 +1,7 @@
 administrativo_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: administrativoBundle:Default:index }
+
+docente_registro:
+    pattern:  /docente/registro
+    defaults: { _controller: administrativoBundle:Default:registrodocente}

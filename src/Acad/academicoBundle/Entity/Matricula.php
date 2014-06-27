@@ -35,6 +35,7 @@ class Matricula {
     /**
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Periodo") 
      * @ORM\JoinColumn(name="periodo_id", referencedColumnName="id")
+     * @Assert\NotBlank(message="Por favor seleccione un periodo")        
      */
     protected $periodo;
     
@@ -69,7 +70,6 @@ class Matricula {
     /**
      *
      * @ORM\Column(type="string", length=128, nullable=true)
-     * @Assert\Blank()
      */
     protected $observaciones;
     

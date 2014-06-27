@@ -12,6 +12,29 @@
 <strong>Nombre:</strong>{{estudiante.nombre}}<br>
 <strong>Apellido:</strong>{{estudiante.apellido}}<br>
 
+<section id="reqqui">
+{% for req in requisitos %}
+        <li>{{req.estado}}{{req.requisito.descripcion}}</li>
+{% endfor%}
+    </section>
+
+<form action="{{ path('estudiante_requisito',{'cedula':estudiante.cedula}) }}" method="post" {{
+        form_enctype(formulario) }}>
+          {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_row(formulario.estado)}}
+                  {{form_row(formulario.requisito)}}
+                  
+                  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+
+
+
+
+
 {% endblock%}
 
 {% block aside %}

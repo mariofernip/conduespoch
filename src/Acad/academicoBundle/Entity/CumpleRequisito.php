@@ -15,8 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  * uniqueConstraints={
  * @ORM\UniqueConstraint(name="unique_cumplerequisito", columns={"requisito_id","inscripcion_id"})
  *  })
- * @UniqueEntity(fields={"requisito_id","inscripcion_id"}, message="El registro a insertar ya existe")
- * @ORM\Entity
+ * @UniqueEntity(fields={"requisito","inscripcion"}, message="El registro a insertar ya existe")
+ * @ORM\Entity(repositoryClass="Acad\academicoBundle\Entity\CumpleRequisitoRepository")
  */
 
 class CumpleRequisito {
@@ -128,5 +128,9 @@ class CumpleRequisito {
     public function getInscripcion()
     {
         return $this->inscripcion;
+    }
+    
+    public function __toString() {
+        return $this->requisito->getDescripcion();
     }
 }

@@ -3,17 +3,26 @@
 {% block title %} INICIO {% endblock%}
 {% block id 'portada' %}
 {% block article%}
-<strong><legend>Enlaces de interes</legend></strong>
+<strong><legend>Estudiante</legend></strong>
 <strong>
     <ul>
-        <li><a href="{{path('estudiante_registro')}}">Registrar estudiante</a></li>
-        <li><a href="{{path('estudiante_busqueda')}}">Buscar estudiante</a></li>
-        <li><a href="{{path('estudiante_busqueda')}}">Matricula</a></li>
-        
+        <li><a href="{{path('estudiante_busqueda')}}">Inscripción</a></li>
+        <li><a href="{{path('estudiante_matricula')}}">Matrícula</a></li>                
     </ul>
 </strong>
 
-
+<strong><legend>Docente</legend></strong>
+<strong>
+    <ul>
+        <li><a href="{{path('docente_registro')}}">Registrar docente</a></li>        
+        <li><a href="{{path('docente_dictadomateria')}}">Asignar materias</a></li>        
+    </ul>
+</strong>
 
 {% endblock%}
 
+{% block aside %}
+<section id="login">
+                {{ render (controller('academicoBundle:Default:cajaLogin')) }}
+            </section>            
+{% endblock%}

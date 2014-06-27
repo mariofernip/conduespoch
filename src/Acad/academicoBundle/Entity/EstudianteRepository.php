@@ -8,28 +8,64 @@ use Symfony\Bundle\FrameworkBundle\Controller;
 
 class EstudianteRepository extends EntityRepository {
     
+    
     public function findEstudiantexInscripcion($cedula,$pid) {
         
         $em = $this->getEntityManager();
 
-        $dql = 'select i,e 
-                FROM academicoBundle:Inscripcion i
-                Join i.estudiante e
-                Join i.periodo p
-                WHERE e.cedula= :cedu and
-                        p.id = :pid
-                order by e.cedula asc
+        $dql = 'select i,e,p
+                FROM academicoBundle:Inscripcion i                
+                Join i.estudiante e               
+                Join i.periodo p                
+                WHERE e.cedula = :cedu and
+                          p.id = :pid                           
+                
                 ';
 
         $consulta = $em->createQuery($dql);
         $consulta->setParameter('cedu', $cedula);                
         $consulta->setParameter('pid', $pid);                
-        $consulta->setMaxResults(1);
-        $consulta->execute();
+             
 
         return $consulta->getOneOrNullResult();
     }
     
+    public function getRequisitosxEstudiante($cedula) {
+        
+        
+        
+        
+        $em = $this->getEntityManager();
+
+        $dql = 'select cr
+                FROM academicoBundle:CumpleRequisito cr                               
+                
+                where cr.inscripcion = :ci
+                ';
+
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('ci', $cedula);                                              
+
+        return $consulta->getResult();
+        
+    } 
+    
+    public function getDictadoMateria($pid) {
+        
+        $em = $this->getEntityManager();
+
+        $dql = 'select dm,p
+                FROM academicoBundle:Dictadomateria dm                               
+                JOIN dm.periodo p
+                where p.id = :pid
+                ';
+
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('pid', $pid);                                              
+
+        return $consulta->getResult();
+        
+    }
     
     
     

@@ -1,0 +1,35 @@
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'estudiante' %}
+
+{% block title %}Asignar materia a los docentes{% endblock%}
+
+{% block article %}
+<h1>PERIODO ACADÉMICO ACTUAL {{periodo.nombre}}</h1><br><br>
+<h1>{{ block ('title')}}</h1>
+
+<form action="{{ path('docente_dictadomateria') }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{ form_row(formulario.periodo)}}
+                  {{ form_row(formulario.docente)}}
+                  {{ form_row(formulario.nivel)}}
+                  {{ form_row(formulario.materia)}}
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Asignar" />
+</form>
+<section id="cercanas">
+    {% for dm in dictadomat%}
+        <li>{{dm.docente.cedula}}&nbsp;&RightArrow;&nbsp;{{dm.docente.nombre}}&nbsp;&nbsp;{{dm.docente.apellido}}&nbsp;&nbsp;{{dm.nivel.curso.nombre}}&nbsp;&nbsp;{{dm.nivel.paralelo.nombre}}&nbsp;&nbsp;{{dm.materia.nombre}}</li>
+        {% endfor%}
+    </section>
+{% endblock%}
+
+{% block aside %}
+<section id="login">
+                {{ render (controller('academicoBundle:Default:cajaLogin')) }}
+            </section>            
+{% endblock%}

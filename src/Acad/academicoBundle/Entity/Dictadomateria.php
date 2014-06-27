@@ -11,7 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  * uniqueConstraints={
  * @ORM\UniqueConstraint(name="unique_dictadomateria", columns={"nivel_id", "docente_id", "periodo_id","materia_id"})
  *  })
- * @UniqueEntity(fields={"nivel_id", "docente_id", "periodo_id","materia_id"}, message="El registro a insertar ya existe")
+ * @UniqueEntity(fields={"nivel", "docente", "periodo","materia"}, message="El registro a insertar ya existe")
+ * @UniqueEntity(fields={"nivel","periodo","materia"}, message="La materia selecciona ya fue designada a otro docente")
  * @ORM\Entity
  */
 
@@ -28,16 +29,14 @@ class Dictadomateria
     /**
      *
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Nivel") 
-     * @ORM\JoinColumn(name="nivel_id", referencedColumnName="id")
-     * @Assert\NotBlank(message="Por favor seleccione un curso")
+     * @ORM\JoinColumn(name="nivel_id", referencedColumnName="id")     
      */
     protected $nivel;
 
     /**
      * 
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Docente") 
-     * @ORM\JoinColumn(name="docente_id", referencedColumnName="id")
-     * @Assert\NotBlank(message="Por favor seleccione un docente")
+     * @ORM\JoinColumn(name="docente_id", referencedColumnName="id")     
      */
     protected $docente;
 
@@ -53,7 +52,6 @@ class Dictadomateria
      * 
      * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Materia") 
      * @ORM\JoinColumn(name="materia_id", referencedColumnName="id")
-     * @Assert\NotBlank(message="Por favor seleccione una materia")
      */
     protected $materia;
 
@@ -142,10 +140,10 @@ class Dictadomateria
     /**
      * Set materia
      *
-     * @param \Acad\academicoBundle\Entity\Materia $materia
+     * @param \Acad\administrativoBundle\Entity\Materia $materia
      * @return Dictadomateria
      */
-    public function setMateria(\Acad\academicoBundle\Entity\Materia $materia = null)
+    public function setMateria(\Acad\administrativoBundle\Entity\Materia $materia = null)
     {
         $this->materia = $materia;
     
@@ -155,7 +153,7 @@ class Dictadomateria
     /**
      * Get materia
      *
-     * @return \Acad\academicoBundle\Entity\Materia 
+     * @return \Acad\administrativoBundle\Entity\Materia 
      */
     public function getMateria()
     {

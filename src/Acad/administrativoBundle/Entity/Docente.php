@@ -84,7 +84,6 @@ class Docente
     /**
      *
      * @ORM\Column(type="date", nullable=false)
-     * @Assert\NotBlank(message="Por favor ingrese la fecha de ingreso del Docente")
      * @Assert\Date()
      */
     protected $fechaingreso;

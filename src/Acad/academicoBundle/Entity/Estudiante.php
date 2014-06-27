@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="estudiante")
  * @ORM\Entity(repositoryClass="Acad\academicoBundle\Entity\EstudianteRepository")
- * @UniqueEntity(fields={"email"}, message="El correo ingresado ya existe")
- * @UniqueEntity(fields={"cedula"}, message="El número de cédula ingresada ya existe")
+ * @UniqueEntity(fields={"email"}, message="El correo electrónico ingresado ya existe")
+ * @UniqueEntity(fields={"cedula"}, message="El número de cédula ingresado ya existe")
  */
 class Estudiante {
     
