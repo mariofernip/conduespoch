@@ -12,9 +12,15 @@ use Acad\academicoBundle\Form\CumpleRequisitoType;
 use Acad\academicoBundle\Form\DictadomateriaType;
 use Acad\academicoBundle\Form\EstudianteType;
 use Acad\academicoBundle\Form\MatriculaType;
-
+use Acad\administrativoBundle\Entity\Descripcion;
+use Acad\administrativoBundle\Entity\Docente;
+use Acad\administrativoBundle\Entity\Periodo;
+use Acad\administrativoBundle\Entity\Requisito;
+use Acad\administrativoBundle\Form\DocenteType;
+use Acad\administrativoBundle\Form\RequisitoType;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller {
 
@@ -33,27 +39,38 @@ class DefaultController extends Controller {
 
 
         $peticion = $this->getRequest();
+        $peticion2 = $this->getRequest();
         $em = $this->getDoctrine()->getManager();
 
         $estudiante = new Estudiante();
+        $est2 = new Estudiante();
+
+        $form = $this->createFormBuilder($est2)
+                ->add('cedula')
+                ->getForm()
+        ;
 
         $formulario = $this->createForm(new EstudianteType(), $estudiante);
 
         $formulario->handleRequest($peticion);
+        $form->handleRequest($peticion2);
 
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
             'estado' => 1
                 ));
 
         if (!$periodo) {
-            $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo'
-            );
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo');
             return $this->redirect($this->generateUrl('_portada'));
         }
 
         $req = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => 1));
 
-        if ($formulario->isValid()) {
+
+
+
+
+        if ($formulario->isSubmitted()) {
 
             //inserto el nuevo estudiante       
             $estudiante->setEstado(1);
@@ -71,10 +88,11 @@ class DefaultController extends Controller {
             $em->persist($inscripcion);
             $em->flush();
 
+            $codi = $inscripcion->getId();
             //lleno la tabla cumplerequisito
             foreach ($req as $req1) {
                 $cumplerequisito = new CumpleRequisito();
-                $cumplerequisito->setEstado(0);
+                $cumplerequisito->setEstado(1);
                 $cumplerequisito->setInscripcion($inscripcion);
                 $cumplerequisito->setRequisito($req1);
 
@@ -84,17 +102,18 @@ class DefaultController extends Controller {
 
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Estudiante inscrito'
             );
-
             //llamo al la vista requisito estudiante
             return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $estudiante->getCedula())));
         }
-
+        
+        
         return $this->render('academicoBundle:Default:registroestudiante.html.twig', array(
                     'periodo' => $periodo,
                     'formulario' => $formulario->createView())
         );
     }
 
+    
     public function requisitoEstudianteAction($cedula) {
 
         $em = $this->getDoctrine()->getEntityManager();
@@ -115,20 +134,21 @@ class DefaultController extends Controller {
             );
             return $this->redirect($this->generateUrl('_portada'));
         }
-
-        $cumplerequisito = $em->getRepository('academicoBundle:CumpleRequisito')->findRequisitosEstudiante($estudiante->getCedula(), $periodo->getid());
+        //$cumplerequisito = $em->getRepository('AcadacademicoBundle:CumpleRequisito')->findRequisitosEstudiante($estudiante->getCedula(),$periodo->getid());
+        $cumplerequisito= $em->getRepository('academicoBundle:CumpleRequisito')->find(3);
         //$cumpler = new CumpleRequisito();
-        $formulario = $this->createForm(new CumpleRequisitoType, $cumplerequisito);
+        $formulario= $this->createForm(new CumpleRequisitoType,$cumplerequisito);
         $formulario->handleRequest($peticion);
 
 
         return $this->render('academicoBundle:Default:requisitoestudiante.html.twig', array(
                     'estudiante' => $estudiante,
-                    'requisitos' => $cumplerequisito,
-                    'formulario' => $formulario->createView()
+                    'requisitos' => $cumplerequisito ,
+                    'formulario'=>$formulario->createView()
                 ));
     }
 
+    
     public function buscarEstAction() {
 
         $peticion = $this->getRequest();
@@ -140,12 +160,13 @@ class DefaultController extends Controller {
             'estado' => 1
                 ));
 
+
         if (!$periodo) {
             $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo'
             );
             return $this->redirect($this->generateUrl('_portada'));
         }
-
+        
         $formulario = $this->createFormBuilder($estudiante)
                 ->add('cedula')
                 ->getForm()
@@ -167,8 +188,9 @@ class DefaultController extends Controller {
                 $est2 = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexInscripcion($cedula, $periodo->getId());
 
                 if ($est2) {
-                    return $this->redirect($this->generateUrl('_portada'));
                     $this->get('session')->getFlashBag()->add('Info', 'Estudiante ya esta inscrito' );
+                    return $this->redirect($this->generateUrl('estudiante_busqueda'));
+                    
                 } else {
                     return $this->redirect($this->generateUrl('estudiante_registro_p', array('cedula' => $cedula)));
                 }
@@ -180,7 +202,7 @@ class DefaultController extends Controller {
                     'formulario' => $formulario->createView()
                 ));
     }
-
+    
     public function registroEstudiantepAction($cedula) {
 
         $em = $this->getDoctrine()->getEntityManager();
@@ -192,7 +214,8 @@ class DefaultController extends Controller {
                 ));
 
         if (!$periodo) {
-            $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo' );
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo'
+            );
             return $this->redirect($this->generateUrl('_portada'));
         }
 
@@ -211,9 +234,11 @@ class DefaultController extends Controller {
         $formulario->handleRequest($peticion);
 
         //consuslto los requisitos
-        $req = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => true));
+        $req = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado' => 1));
 
         if ($formulario->isValid()) {
+
+
 
             $inscripcion = new Inscripcion();
 
@@ -227,7 +252,7 @@ class DefaultController extends Controller {
             //recorro lista de requisitos para insertar en la tabla cumplerequisito
             foreach ($req as $req1) {
                 $cumplerequisito = new CumpleRequisito();
-                $cumplerequisito->setEstado(0);
+                $cumplerequisito->setEstado(1);
                 $cumplerequisito->setInscripcion($inscripcion);
                 $cumplerequisito->setRequisito($req1);
 
@@ -235,8 +260,6 @@ class DefaultController extends Controller {
                 $em->flush();
             }
 
-            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Nuevo estudiante inscrito' );
-            
             return $this->redirect($this->generateUrl('estudiante_requisito', array(
                                 'cedula' => $cedula,
                             )));
@@ -245,45 +268,13 @@ class DefaultController extends Controller {
         //creo la vista
         return $this->render('academicoBundle:Default:nuevainscripcion.html.twig', array(
                     'estudiante' => $estudiante,
+                    'requisito' => $req,
                     'periodo' => $periodo,
                     'formulario' => $formulario->createView()
                 ));
     }
 
-    public function buscarEAction() {
-
-
-        $peticion = $this->getRequest();
-        $em = $this->getDoctrine()->getManager();
-
-
-        $estudiante = new Estudiante();
-
-
-
-        $formulario = $this->createFormBuilder($estudiante)
-                ->add('cedula')
-                ->getForm()
-        ;
-
-        $formulario->handleRequest($peticion);
-        if ($formulario->isSubmitted()) {
-
-            $cedula = $formulario->getData()->getCedula();
-
-            $est = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexInscripcion($cedula);
-
-            if ($est) {
-                return $this->redirect($this->generateUrl('_portada'));
-            } else {
-                return $this->redirect($this->generateUrl('estudiante_registro'));
-            }
-        }
-        return $this->render('academicoBundle:Default:buscarE.html.twig', array(
-                    'formulario' => $formulario->createView()
-                ));
-    }
-
+    
     //Matricula estudiante
 
     public function matriculaEstudianteAction() {
@@ -293,7 +284,6 @@ class DefaultController extends Controller {
 
         $matricula = new Matricula();
 
-        
         $formulario = $this->createForm(new MatriculaType(), $matricula);
 
         $formulario->handleRequest($peticion);
@@ -304,6 +294,7 @@ class DefaultController extends Controller {
         $nivel = $em->getRepository('administrativoBundle:Nivel')->findOneBy(array(
             'id' => 1
                 ));
+
         if (!$periodo) {
             $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo'
             );
@@ -311,16 +302,15 @@ class DefaultController extends Controller {
         }
 
         $mat = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado' => 1));
-
         if (!$mat) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No hay materias activas');
             return $this->redirect($this->generateUrl('_portada'));
         }
-
         if ($formulario->isValid()) {
 
+
             $matricula->setEstado(1);
-            $matricula->setFechamatricula(new DateTime('now'));
+            $matricula->setFechamatricula(new \DateTime('now'));
             $em->persist($matricula);
             $em->flush();
 
@@ -333,7 +323,7 @@ class DefaultController extends Controller {
                 $em->flush();
             }
 
-            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Estudiante matriculado');
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Estudiante matriculado' );
 
 
             return $this->redirect($this->generateUrl('estudiante_matricula', array('matricula' => $matricula)));
@@ -346,10 +336,6 @@ class DefaultController extends Controller {
         );
     }
 
-    public function cajaLoginAction() {
-
-        return $this->render('academicoBundle:Default:cajaLogin.html.twig');
-    }
 
     public function dictadomateriaAction() {
 
@@ -360,11 +346,14 @@ class DefaultController extends Controller {
             'estado' => 1
                 ));
 
-
+        $niv= $em->getRepository('administrativoBundle:Nivel')->findOneBy(array(
+            'id'=>3
+        ));
         $dictadomateria = new Dictadomateria();
+        
         $formulario = $this->createForm(new DictadomateriaType(), $dictadomateria);
         $formulario->handleRequest($peticion);
-
+        
         if (!$periodo) {
             $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo'
             );
@@ -372,7 +361,11 @@ class DefaultController extends Controller {
         }
 
         if ($formulario->isValid()) {
-            
+            $doc = new Docente($formulario->getData()->getDocente());
+            $c = $doc->getCedula();
+
+
+
             if ($formulario->getData()->getDocente() == null) {
 
                 $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione un docente');
@@ -394,8 +387,8 @@ class DefaultController extends Controller {
 
             $em->persist($dictadomateria);
             $em->flush();
-            
-            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia asignada al docente'  );
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia asignada al docente'
+            );
 
             return $this->redirect($this->generateUrl('docente_dictadomateria'));
         }

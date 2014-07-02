@@ -12,19 +12,19 @@ class CumpleRequisitoType extends AbstractType
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
+    public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
 //            ->add('estado','entity',array(
 //                    'class' => 'AcadacademicoBundle:CumpleRequisito',
 //                    'property' => 'estado',))
-            ->add('requisito','entity',array(
-                    'class' => 'administrativoBundle:Requisito',
-                    'property' => 'descripcion',))
-         ->add('estado','checkbox')
-                //->add('requisito')
+//            ->add('requisito','entity',array(
+//                    'class' => 'AcadadministrativoBundle:Requisito',
+//                    'property' => 'descripcion',))
+                //->add('requisito','collection',array('type'=> new RequisitoType()))                
+                ->add('requisito')
+                ->add('estado', 'checkbox')
+        //->add('id')
         ;
-        
     }
     
     /**
@@ -32,10 +32,9 @@ class CumpleRequisitoType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        //$resolver->setDefaults(array(
-        return array(
+        $resolver->setDefaults(array(
             'data_class' => 'Acad\academicoBundle\Entity\CumpleRequisito'
-        );
+        ));
     }
 
     /**

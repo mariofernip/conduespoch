@@ -2,6 +2,10 @@
 
 namespace Acad\academicoBundle\Entity;
 
+use Acad\administrativoBundle\Entity\Nivel; 
+use Acad\administrativoBundle\Entity\Periodo;
+use Acad\administrativoBundle\Entity\Docente;
+use Acad\administrativoBundle\Entity\Materia;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  *  })
  * @UniqueEntity(fields={"nivel", "docente", "periodo","materia"}, message="El registro a insertar ya existe")
  * @UniqueEntity(fields={"nivel","periodo","materia"}, message="La materia selecciona ya fue designada a otro docente")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Acad\academicoBundle\Entity\DictadomateriaRepository")
  */
 
 class Dictadomateria

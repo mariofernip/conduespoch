@@ -30,25 +30,6 @@ class EstudianteRepository extends EntityRepository {
         return $consulta->getOneOrNullResult();
     }
     
-    public function getRequisitosxEstudiante($cedula) {
-        
-        
-        
-        
-        $em = $this->getEntityManager();
-
-        $dql = 'select cr
-                FROM academicoBundle:CumpleRequisito cr                               
-                
-                where cr.inscripcion = :ci
-                ';
-
-        $consulta = $em->createQuery($dql);
-        $consulta->setParameter('ci', $cedula);                                              
-
-        return $consulta->getResult();
-        
-    } 
     
     public function getDictadoMateria($pid) {
         
@@ -66,9 +47,6 @@ class EstudianteRepository extends EntityRepository {
         return $consulta->getResult();
         
     }
-    
-    
-    
 }
 
 ?>

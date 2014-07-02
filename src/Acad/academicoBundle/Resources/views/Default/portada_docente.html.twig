@@ -1,16 +1,9 @@
 {% extends '::frontend.html.twig'%}
 
-{% block title %} INICIO {% endblock%}
+{% block title %} Perfil de docente {% endblock%}
 {% block id 'portada' %}
 {% block article%}
-<strong><legend>Estudiante</legend></strong>
-<strong>
-    <ul>
-        <li><a href="{{path('estudiante_busqueda')}}">Inscripción</a></li>
-        <li><a href="{{path('estudiante_matricula')}}">Matrícula</a></li>                
-    </ul>
-</strong>
-
+<h1>PERIODO ACADÉMICO ACTUAL {{periodo.nombre}}</h1><br><br>
 <strong><legend>Docente</legend></strong>
 <strong>
     <ul>
@@ -18,5 +11,11 @@
         <li><a href="{{path('docente_dictadomateria')}}">Asignar materias</a></li>        
     </ul>
 </strong>
+<strong><legend>Materias del docente</legend></strong>
+{% for matdoc in materiasdoc %}
+    <li>{{matdoc.nivel.curso.nombre}}&nbsp;{{matdoc.nivel.paralelo.nombre}}&nbsp;&nbsp;{{matdoc.materia.nombre}}</li>
+{% endfor%}
+
 
 {% endblock%}
+

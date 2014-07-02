@@ -1,3 +1,18 @@
 seguridad_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: seguridadBundle:Default:index }
+
+
+usuario_login:
+    path: /login
+    defaults: { _controller: seguridadBundle:Default:login }
+    
+usuario_login_check:
+    path: /login_check
+ 
+usuario_logout:
+    path: /
+    
+usuario_registro:
+    path:     /usuario/registro
+    defaults: { _controller: seguridadBundle:default:registro}

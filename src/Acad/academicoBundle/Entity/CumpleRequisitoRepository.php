@@ -31,24 +31,6 @@ class CumpleRequisitoRepository extends EntityRepository {
         return $consulta->getResult();
     }
 
-    public function getEstudiantesMatricula() {
-        
-        $em = $this->getEntityManager();
-
-        $dql = 'select m,e,ee,i
-                FROM academicoBundle:Matricula m               
-                Join m.estudiante e                
-                Join academicoBundle:Inscripcion i                
-                join i.estudiante ee
-                WHERE e.cedula != ee.cedula
-                ';
-        $consulta = $em->createQuery($dql);
-        
-        return $consulta->getResult();
-        
-    } 
-    
-
 }
 
 ?>

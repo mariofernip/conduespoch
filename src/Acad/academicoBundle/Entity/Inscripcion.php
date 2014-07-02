@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * uniqueConstraints={
  * @ORM\UniqueConstraint(name="unique_inscripcion", columns={"periodo_id","estudiante_id"})
  *  })
- * @UniqueEntity(fields={"periodo_id","estudiante_id"}, message="El registro a insertar ya existe")
+ * @UniqueEntity(fields={"periodo","estudiante"}, message="El registro a insertar ya existe")
  * @ORM\Entity
  */
 class Inscripcion

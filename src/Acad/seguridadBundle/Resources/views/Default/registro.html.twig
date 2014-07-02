@@ -1,0 +1,27 @@
+{% extends '::frontend.html.twig' %}
+
+{% block id 'usuario' %}
+{% block title %}Regístro de usuarios{% endblock %}
+
+{% block article %}
+
+    <h1>{{ block('title') }}</h1>
+    
+    <form action="{{ path('usuario_registro') }}" method="post" {{form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+            {{form_label(formulario.cedula,'Número de cédula:')}}{{form_widget(formulario.cedula, { 'attr': {'autocomplete' : 'off' } }) }}
+            {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
+            {{form_label(formulario.apellidos,'Apellidos:')}}{{form_widget(formulario.apellidos, { 'attr': {'autocomplete' : 'off' } }) }}<br>
+            {{form_label(formulario.email,'Correo:')}}{{form_widget(formulario.email, { 'attr': {'autocomplete' : 'off' } }) }}<br>
+            {{form_row(formulario.password)}}
+            {{form_label(formulario.rol,'Rol:')}}{{form_widget(formulario.rol, { 'attr': {'autocomplete' : 'off' } }) }}
+            {{form_row(formulario.estado)}}
+        {{form_rest(formulario)}}        
+        <input class="boton" type="submit" value="Registrar" />
+    </form>
+    
+{% endblock %}
+    
+{% block aside %}
+    {{ parent()}}
+{% endblock %}

@@ -30,7 +30,5 @@
 {% endblock%}
 
 {% block aside %}
-<section id="login">
-                {{ render (controller('academicoBundle:Default:cajaLogin')) }}
-            </section>            
+    {{ parent()}}
 {% endblock%}

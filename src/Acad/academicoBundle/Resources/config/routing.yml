@@ -2,32 +2,25 @@ academico_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: academicoBundle:Default:index }
 
-_portada:    
-    pattern:  /inicio
-    defaults: {_controller: academicoBundle:Default:portada }
 
 estudiante_registro:
-    pattern:  /estudiante/registro
+    pattern:  /secretaria/estudiante/registro
     defaults: { _controller: academicoBundle:default:registroEstudiante}
     
 estudiante_requisito:
-    pattern:  /estudiante/requisito/{cedula}
+    pattern:  /secretaria/estudiante/requisito/{cedula}
     defaults: { _controller: academicoBundle:default:requisitoEstudiante}
         
 estudiante_registro_p:
-    pattern:  /estudiante/registro/{cedula}
+    pattern:  /secretaria/estudiante/registro/{cedula}
     defaults: { _controller: academicoBundle:default:registroEstudiantep}    
     
 estudiante_busqueda:
-    pattern:  /estudiante/consulta/inscripcion
+    pattern:  /secretaria/estudiante/consulta/inscripcion
     defaults: { _controller: academicoBundle:default:buscarEst}
-    
-estudiante_buscar:
-    pattern:  /estudiante/consulta/matricula
-    defaults: { _controller: academicoBundle:default:buscarE}    
-    
+        
 estudiante_matricula:
-    pattern:  /estudiante/matricula
+    pattern:  /secretaria/estudiante/matricula
     defaults: { _controller: academicoBundle:default:matriculaEstudiante} 
     
 docente_dictadomateria:
