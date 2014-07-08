@@ -13,7 +13,6 @@
 
 <form action="{{ path('estudiante_buscar')}}" method="post" {{
         form_enctype(formulario) }}>
-          {{ form_errors(formulario) }}
           {{form_row(formulario.cedula)}}
     {{form_rest(formulario)}}    
     <input class="boton" type="submit" value="Buscar" />
