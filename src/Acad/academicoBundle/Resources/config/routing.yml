@@ -18,11 +18,15 @@ estudiante_registro_p:
 estudiante_busqueda:
     pattern:  /secretaria/estudiante/consulta/inscripcion
     defaults: { _controller: academicoBundle:default:buscarEst}
-        
-estudiante_matricula:
-    pattern:  /secretaria/estudiante/matricula
-    defaults: { _controller: academicoBundle:default:matriculaEstudiante} 
-    
+            
 docente_dictadomateria:
     pattern:  /docente/materias
     defaults: { _controller: academicoBundle:default:dictadomateria}
+   
+estudiante_matricula:
+    pattern:  /secretaria/estudiante/matricula/{cedula}
+    defaults: { _controller: academicoBundle:default:matriculaEstudiante} 
+    
+estudiante_buscar:
+    pattern:  /secretaria/estudiante/consulta/matricula
+    defaults: { _controller: academicoBundle:default:matriculaBuscarEstudiante}      
