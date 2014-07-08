@@ -1,0 +1,33 @@
+{% extends '::frontend.html.twig' %}
+
+{% block id 'estudiante' %}
+
+{% block title %}Buscar estudiante{% endblock%}
+
+{% block article %}
+
+<h1>{{ block ('title')}}</h1>
+
+
+{#<form action="{{ path('estudiante_busqueda') }}" method="post" {{#}
+
+<form action="{{ path('estudiante_buscar')}}" method="post" {{
+        form_enctype(formulario) }}>
+          {{ form_errors(formulario) }}
+          {{form_row(formulario.cedula)}}
+    {{form_rest(formulario)}}    
+    <input class="boton" type="submit" value="Buscar" />
+</form>
+
+
+
+
+{% endblock%}
+
+{% block aside %}
+    {% for flashMessage in app.session.flashbag.get('info') %}
+    <div class="flash-notice delete">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+{% endblock%}

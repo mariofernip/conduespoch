@@ -1,0 +1,45 @@
+{% extends '::frontend.html.twig' %}
+
+{% block id 'estudiante' %}
+
+
+{% block title %}Matricula de estudiantes{% endblock%}
+
+    
+    
+{% block article %}
+<h1>PERIODO ACADÉMICO ACTUAL {{periodo.nombre}}</h1>
+<h1>{{ block ('title')}}</h1>
+<strong>DATOS DEL ESTUDIANTE</strong><br><br>
+<strong>Cédula:</strong>{{estudiante.cedula}}<br>
+<strong>Nombres:</strong>{{estudiante.nombre}}<br>
+<strong>Apellidos:</strong>{{estudiante.apellido}}<br><br>
+<div id="contenedorformularios">
+  <div id="left">
+       <h2 align="center">Estudiante</h2>
+<form action="{{ path('estudiante_matricula', {'cedula': estudiante.cedula})}}" method="post" {{
+        form_enctype(formulario) }}>
+          {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_label(formulario.seccion,'Seccion de estudio:')}}{{form_widget(formulario.seccion)}}                    
+                  {{form_row(formulario.nivel)}}
+                  {{form_row(formulario.observaciones)}}
+                 {#{{form_label(formulario.fechamatricula,'Fecha:')}}{{form_widget(formulario.fechamatricula)}}#}
+                  {{form_row(formulario.periodo)}}
+                  {#{{form_row(formulario.estudiante)}}               #}
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+          </form>
+       {#<h1>PERIODO ACADÉMICO ACTUAL {{est.seccion}}</h1>#}
+</div>
+        
+     
+
+{% endblock%}
+
+
+
+{% block aside %}
+
+{% endblock%}
