@@ -75,6 +75,21 @@ class EstudianteRepository extends EntityRepository {
 
         return $consulta->getOneOrNullResult();
     }
+    public function findEstudiantexMatriculadoA($eid) {
+        
+        $em = $this->getEntityManager();
+
+
+                $consulta = $em->createQuery('
+                SELECT m FROM academicoBundle:Matricula m
+                WHERE m.estado = 0
+                AND m.estudiante = :id_estudiante');
+                $consulta->setParameter('id_estudiante', $eid);     
+
+        return $consulta->getOneOrNullResult();
+    }
+    
+    
     
 }
 

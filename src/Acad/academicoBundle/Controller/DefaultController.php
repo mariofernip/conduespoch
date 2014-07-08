@@ -396,6 +396,10 @@ class DefaultController extends Controller {
                     $this->get('session')->getFlashBag()->add('info', 'Estudiante ya se ha matriculado anteriormente' );
                     return $this->redirect($this->generateUrl('estudiante_buscar'));                             
                 }
+                $estma = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculadoA($estudiante->getId());
+               if ($estma != null) {
+                    return $this->redirect($this->generateUrl('estudiante_matricula', array('cedula' => $estudiante->getCedula())));                                               
+                }
                 
             } else {
                 $this->get('session')->getFlashBag()->add('info', 'Estudiante no encontrado');
