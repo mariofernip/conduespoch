@@ -356,9 +356,9 @@ class DefaultController extends Controller {
                     ));
 
             $est = null;
-            $cd=$estudiante->getId();
+            
             if ($estudiante != null) {
-                $est = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatricula($cd);
+                $est = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatricula($estudiante->getId());
 
                 if ($est) {
 
@@ -391,6 +391,12 @@ class DefaultController extends Controller {
                         return $this->redirect($this->generateUrl('estudiante_buscar'));
                     }
                 }
+                  $estm = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
+                if ($estm != null) {
+                    $this->get('session')->getFlashBag()->add('info', 'Estudiante ya se ha matriculado anteriormente' );
+                    return $this->redirect($this->generateUrl('estudiante_buscar'));                             
+                }
+                
             } else {
                 $this->get('session')->getFlashBag()->add('info', 'Estudiante no encontrado');
                 return $this->redirect($this->generateUrl('estudiante_buscar'));
