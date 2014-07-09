@@ -207,7 +207,6 @@ class DefaultController extends Controller {
             return $this->redirect($this->generateUrl('_portada'));
         }
 
-        $defaultData = array('message' => 'Type your message here');
         $formulario = $this->createFormBuilder($estudiante)
                 ->add('cedula')
                 ->getForm()
