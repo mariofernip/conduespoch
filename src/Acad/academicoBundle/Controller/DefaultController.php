@@ -431,17 +431,17 @@ class DefaultController extends Controller {
                         return $this->redirect($this->generateUrl('estudiante_matricula', array('cedula' => $estudiante->getCedula())));
                     }
                     if (($count == 0) or ($count2 == 0)) {
-                        $this->get('session')->getFlashBag()->add('info', 'Estudiante no ha cumplido todos los requisitos');
+                        $this->get('session')->getFlashBag()->add('Info', 'Estudiante no cumple todos los requisitos');
                         return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $ci)));
                     }
                     if (($count != $count2)) {
-                        $this->get('session')->getFlashBag()->add('info', 'Estudiante no ha cumplido todos los requisitos');
+                        $this->get('session')->getFlashBag()->add('Info', 'Estudiante no cumple todos los requisitos');
                         return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $ci)));
                     }
                 }
                 $estm = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
-                if ($estm != null) {
-                    $this->get('session')->getFlashBag()->add('info', 'Estudiante ya se ha matriculado anteriormente');
+                if ($estm != null) {                    
+                    $this->get('session')->getFlashBag()->add('Info', 'Estudiante ya esta matriculado');
                     return $this->redirect($this->generateUrl('estudiante_buscar'));
                 }
                 $estma = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculadoA($estudiante->getId());
@@ -487,8 +487,14 @@ class DefaultController extends Controller {
                 $em->persist($materiaasignada);
                 $em->flush();
             }
-            $mensaje = 'Estudiante ha sido matriculado exitosamente';
-            return $this->render('academicoBundle:Default:estudiantematriculado.html.twig', array('mensaje' => $mensaje));
+            
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Estudiante matroculado');
+            
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+            $usuario = $this->get('security.context')->getToken()->getUser();
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
         return $this->render('academicoBundle:Default:estudiantematriculado2.html.twig', array('periodo' => $periodo, 'formulario' => $formulario->createView(), 'estudiante' => $estudiante));
