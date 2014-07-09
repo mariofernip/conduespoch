@@ -13,7 +13,7 @@
 </strong>
 <strong><legend>Materias del docente</legend></strong>
 {% for matdoc in materiasdoc %}
-    <li>{{matdoc.nivel.curso.nombre}}&nbsp;{{matdoc.nivel.paralelo.nombre}}&nbsp;&nbsp;{{matdoc.materia.nombre}}</li>
+    <li>{{matdoc.nivel | title}}&nbsp;&nbsp;<a href="{{path('docente_notas_x_materia',{'materia': matdoc.materia.id, 'nivel': matdoc.nivel.id})}}">{{matdoc.materia.nombre | title}}</a></li>
 {% endfor%}
 
 

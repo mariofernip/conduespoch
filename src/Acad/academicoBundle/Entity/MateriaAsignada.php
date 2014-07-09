@@ -97,4 +97,8 @@ class MateriaAsignada {
     {
         return $this->materia;
     }
+    
+    public function __toString() {
+        return $this->matricula->getEstudiante()->getNombre();
+    }
 }

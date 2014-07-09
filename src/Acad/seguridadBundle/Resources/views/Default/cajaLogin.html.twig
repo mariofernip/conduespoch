@@ -8,9 +8,8 @@
     
 {% if is_granted('ROLE_SECRETARIA' ) or is_granted('ROLE_DOCENTE')%}
     
-    <p>Conectado como: <strong>{{ app.user }}</strong></p>
-    <a href="#">Ver mi perfil</a>
-    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+    
+    <a href="#">Ver mi perfil</a>    
     {# el usuario todavía no ha hecho login #}
 {% else %}
     <a class="boton" href="{{ path('usuario_registro') }}">Regístrate</a>

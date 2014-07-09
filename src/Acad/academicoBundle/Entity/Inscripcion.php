@@ -127,6 +127,9 @@ class Inscripcion
     {
         return $this->periodo;
     }
-
+    
+    public function __toString() {
+        return $this->estudiante->getNombre();
+    }
   
 }

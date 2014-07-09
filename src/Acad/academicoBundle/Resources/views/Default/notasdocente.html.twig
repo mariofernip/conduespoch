@@ -1,0 +1,42 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} NOTAS {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+<h1>PERIODO ACADÉMICO ACTUAL {{periodo.nombre}}</h1><br><br>
+<strong><legend>Docente</legend></strong>
+<strong>
+    <ul>
+        <li><a href="{{path('docente_registro')}}">Registrar docente</a></li>        
+        <li><a href="{{path('docente_dictadomateria')}}">Asignar materias</a></li>        
+    </ul>
+</strong>
+<strong><legend>Materias del docente</legend></strong>
+{% for matdoc in materiasdoc %}
+<li>{{matdoc.nivel | title}}&nbsp;&nbsp;<a href="{{path('docente_notas_x_materia',{'materia': matdoc.materia.id, 'nivel': matdoc.nivel.id})}}">{{matdoc.materia.nombre | title}}</a></li>
+{% endfor%}
+<br>
+<form action="{{path('docente_notas_x_materia',{'materia': 2, 'nivel': 2})}}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{ form_row(formulario.promedio)}}
+                  {{ form_row(formulario.mes)}}
+                  {{ form_row(formulario.tiponota)}}
+                  {{ form_row(formulario.materiaasignada)}}
+                  {{ form_row(formulario.descripcion)}}
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+
+<br>
+<strong><legend>Lista de estudiante</legend></strong>
+{% for est in estudiantes %}
+<li>{{est.id}}&nbsp;{{est.matricula.estudiante}}</li>
+{% endfor%}
+{% endblock%}
+{% block aside%}
+    
+    {{parent()}}
+{% endblock%}

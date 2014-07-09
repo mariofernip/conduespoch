@@ -90,7 +90,7 @@ class DefaultController extends Controller
         $periodo= $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
             'estado'=>1
         ));
-        if($role=='DOCENTE'){
+        if($role=='docente'){
             $cedula=$usuario->getCedula();
             $materiasdocente= $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula,$periodo->getId());
             return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
@@ -99,7 +99,7 @@ class DefaultController extends Controller
             ));
         }
         
-        if($role=='SECRETARIA'){
+        if($role=='secretaria'){
             
             return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
                 'periodo'=>$periodo

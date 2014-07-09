@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CumpleRequisito {
     
    
-     /** @ORM\Column(type="integer", nullable=false)      
+     /** @ORM\Column(type="boolean", nullable=true)      
      */    
     protected $estado;
     

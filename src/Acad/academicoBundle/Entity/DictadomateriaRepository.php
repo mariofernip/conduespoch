@@ -30,6 +30,29 @@ class DictadomateriaRepository extends EntityRepository {
         return $consulta->getResult();
     }
 
+    public function getEstudiantesxMateria($mid,$pid,$nid) {
+        
+        $em = $this->getEntityManager();
+
+        $dql = 'select ma,m,p,n,e
+                FROM academicoBundle:MateriaAsignada ma
+                Join ma.matricula m
+                Join m.periodo p  
+                Join m.estudiante e
+                Join m.nivel n
+                WHERE ma.materia = :mid and
+                          p.id = :pid and
+                          m.estado = 1 and
+                          m.nivel= :nid
+                ';
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('mid', $mid);                
+        $consulta->setParameter('pid', $pid);                        
+        $consulta->setParameter('nid', $nid);                        
+        
+        return $consulta->getResult();
+        
+    }
     
 
 }

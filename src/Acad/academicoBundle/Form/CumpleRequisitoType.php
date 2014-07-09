@@ -21,8 +21,8 @@ class CumpleRequisitoType extends AbstractType
 //                    'class' => 'AcadadministrativoBundle:Requisito',
 //                    'property' => 'descripcion',))
                 //->add('requisito','collection',array('type'=> new RequisitoType()))                
-                ->add('requisito')
-                ->add('estado', 'checkbox')
+                ->add('estado','checkbox')
+                ->add('requisito')                
         //->add('id')
         ;
     }

@@ -11,20 +11,20 @@
 <h1>{{ block ('title')}}</h1>
 {% if  iactiva %}
 
-<form action="{{ path('estudiante_registro') }}" method="post" {{
+<form action="{{ path('estudiante_registro')}}" method="post" {{
         form_enctype(formulario) }}>
         {{ form_errors(formulario) }}
           <fieldset>
-                  {{form_label(formulario.cedula,'Número de cédula:')}}{{form_widget(formulario.cedula, { 'attr': {'autocomplete' : 'off' } }) }}
-                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
-                  {{form_row(formulario.apellido, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_label(formulario.cedula,'Número de cédula:')}}{{form_errors(formulario.cedula)}}{{form_widget(formulario.cedula, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}{{form_errors(formulario.nombre)}}
+                  {{form_row(formulario.apellido, { 'attr': {'autocomplete' : 'off' } }) }}{{form_errors(formulario.apellido)}}
                   {{form_label(formulario.telefonofijo,'Teléfono fijo')}}{{form_widget(formulario.telefonofijo, { 'attr': {'autocomplete' : 'off' } }) }}
                   {{form_row(formulario.celular, { 'attr': {'autocomplete' : 'off' } }) }}
                   {{form_row(formulario.calle, { 'attr': {'autocomplete' : 'off' } }) }}
                   {{form_row(formulario.barrio, { 'attr': {'autocomplete' : 'off' } }) }}
                   {{form_row(formulario.parroquia, { 'attr': {'autocomplete' : 'off' } }) }}
                   {{form_row(formulario.ciudad, { 'attr': {'autocomplete' : 'off' } }) }}
-                  {{form_label(formulario.email,'Correo')}}{{form_widget(formulario.email, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_label(formulario.email,'Correo')}}{{form_errors(formulario.email)}}{{form_widget(formulario.email, { 'attr': {'autocomplete' : 'off' } }) }}
                   {{form_row(formulario.ocupacion, { 'attr': {'autocomplete' : 'off' } }) }}
                   {{form_label(formulario.lugarnacimiento,'Lugar de nacimiento')}}{{form_widget(formulario.lugarnacimiento, { 'attr': {'autocomplete' : 'off' } }) }}
 

@@ -27,8 +27,9 @@ class LoginListener
     public function onKernelResponse(FilterResponseEvent $event) {
         
         if(null!= $this->role){
+            $r= strtolower($this->role);
             $portada = $this->router->generate('portada',array(
-               'role'=>  $this->role 
+               'role'=>$r
             ));
             
             $event->setResponse(new RedirectResponse($portada));
