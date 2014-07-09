@@ -432,11 +432,11 @@ class DefaultController extends Controller {
                     }
                     if (($count == 0) or ($count2 == 0)) {
                         $this->get('session')->getFlashBag()->add('info', 'Estudiante no ha cumplido todos los requisitos');
-                        return $this->redirect($this->generateUrl('estudiante_buscar'));
+                        return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $ci)));
                     }
                     if (($count != $count2)) {
                         $this->get('session')->getFlashBag()->add('info', 'Estudiante no ha cumplido todos los requisitos');
-                        return $this->redirect($this->generateUrl('estudiante_buscar'));
+                        return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $ci)));
                     }
                 }
                 $estm = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
