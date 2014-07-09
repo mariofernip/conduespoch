@@ -21,11 +21,10 @@
         form_enctype(formulario) }}>
           {{ form_errors(formulario) }}
           <fieldset>
-                  {{form_label(formulario.seccion,'Seccion de estudio:')}}{{form_widget(formulario.seccion)}}                    
-                  {{form_row(formulario.nivel)}}
+                  {{form_row(formulario.periodo)}}{{form_errors(formulario.periodo)}}
+                  {{form_row(formulario.nivel)}}{{form_errors(formulario.nivel)}}
+                  {{form_label(formulario.seccion,'Seccion de estudio:')}}{{form_errors(formulario.seccion)}}{{form_widget(formulario.seccion)}}                                      
                   {{form_row(formulario.observaciones)}}
-                 {#{{form_label(formulario.fechamatricula,'Fecha:')}}{{form_widget(formulario.fechamatricula)}}#}
-                  {{form_row(formulario.periodo)}}
                   {#{{form_row(formulario.estudiante)}}               #}
               </fieldset>   
          {{form_rest(formulario)}}                   
