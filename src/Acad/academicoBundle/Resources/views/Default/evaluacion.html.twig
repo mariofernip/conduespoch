@@ -1,0 +1,38 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} Perfil de docente {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+<strong><legend>Notas del estudiante</legend></strong>
+<br>
+<strong>Cédula:&nbsp;</strong>{{datos.matricula.estudiante.cedula}}<br>
+<strong>Nombres:&nbsp;</strong>{{datos.matricula.estudiante.nombre}}<br>
+<strong>Apellidos:&nbsp;</strong>{{datos.matricula.estudiante.apellido}}<br><br>
+<form action="{{path('docente_notas_x_estudiante',{'codigo': codigo})}}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>                  
+                  {{form_label(formulario.promedio,'Calificación:')}}{{form_errors(formulario.promedio)}}{{form_widget(formulario.promedio, { 'attr': {'autocomplete' : 'off','size': 2 } }) }}  <br>  
+                  {{form_label(formulario.mesevaluacion,'Mes evaluado:')}}{{form_errors(formulario.mesevaluacion)}}{{form_widget(formulario.mesevaluacion, { 'attr': {'autocomplete' : 'off' } }) }}              <br>                                        
+                  {{form_label(formulario.tiponota,'Nota de:')}}{{form_errors(formulario.tiponota)}}{{form_widget(formulario.tiponota, { 'attr': {'autocomplete' : 'off' } }) }} <br>   
+                  {{form_label(formulario.descripcion,'Descripción:')}}{{form_errors(formulario.descripcion)}}{{form_widget(formulario.descripcion, { 'attr': {'autocomplete' : 'off' } }) }}    
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+
+{% endblock%}
+{% block aside %}
+{%set docente='docente'%}
+<p align="center"><a class="boton" href="{{path('portada',{'role':docente})}}">INICIO</a></p>
+    {{parent()}}
+<strong><p align="left">Materias</p></strong>
+<div id="relacionadas">
+    <ul>
+    {% for matdoc in materiasdoc %}
+            <li><a class="boton" href="{{path('docente_listaest_x_materia',{'materia': matdoc.materia.id, 'nivel': matdoc.nivel.id})}}">{{matdoc.nivel | title}}&nbsp;&nbsp;{{matdoc.materia.nombre | title}}</a></li>
+    {% endfor%}
+
+    </ul>
+</div>
+{% endblock%}

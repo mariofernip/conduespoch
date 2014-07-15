@@ -50,7 +50,8 @@ class CumpleRequisitoRepository extends EntityRepository {
         $consulta->setParameter('cedu', $cedula);                
         $consulta->setParameter('pid', $pid);                        
 
-        return $numRequisitos = $consulta->getResult(Query::HYDRATE_SINGLE_SCALAR); 
+        //return $numRequisitos = $consulta->getResult(Query::HYDRATE_SINGLE_SCALAR); 
+        return $consulta->getOneOrNullResult();
     }
     
     public function getNumeroRequisitosActivosxPeriodo() {
@@ -64,8 +65,8 @@ class CumpleRequisitoRepository extends EntityRepository {
                 ';
         $consulta = $em->createQuery($dql);        
 
-        return $numRequisitos = $consulta->getResult(Query::HYDRATE_SINGLE_SCALAR); 
-        
+        //return $numRequisitos = $consulta->getResult(Query::HYDRATE_SINGLE_SCALAR); 
+        return $consulta->getOneOrNullResult();
     } 
  
     public function getEStadoInscripcionxEstudiante($cedula, $pid) {

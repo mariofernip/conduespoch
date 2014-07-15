@@ -2,20 +2,35 @@
 
 {% block title %} Perfil de docente {% endblock%}
 {% block id 'portada' %}
+
 {% block article%}
+
 <h1>PERIODO ACADÉMICO ACTUAL {{periodo.nombre}}</h1><br><br>
 <strong><legend>Docente</legend></strong>
 <strong>
-    <ul>
-        <li><a href="{{path('docente_registro')}}">Registrar docente</a></li>        
-        <li><a href="{{path('docente_dictadomateria')}}">Asignar materias</a></li>        
-    </ul>
+    <div id="dt_example">
+        <ul>
+            <li><a href="{{path('docente_registro')}}">Registrar docente</a></li>        
+            <li><a href="{{path('docente_dictadomateria')}}">Asignar materias</a></li>    
+        </ul>
+    </div>
 </strong>
-<strong><legend>Materias del docente</legend></strong>
-{% for matdoc in materiasdoc %}
-    <li>{{matdoc.nivel | title}}&nbsp;&nbsp;<a href="{{path('docente_notas_x_materia',{'materia': matdoc.materia.id, 'nivel': matdoc.nivel.id})}}">{{matdoc.materia.nombre | title}}</a></li>
-{% endfor%}
+
 
 
 {% endblock%}
+{% block aside%}
+{%set docente='docente'%}
+    <p align="center"><a class="boton" href="{{path('portada',{'role':docente})}}">INICIO</a></p>
+{{parent()}}
+    <strong><p align="left">Asignar notas</p></strong>
+    <div id="relacionadas">
+        <ul>
+    {% for matdoc in materiasdoc %}
+                <li><a class="boton" href="{{path('docente_listaest_x_materia',{'materia': matdoc.materia.id, 'nivel': matdoc.nivel.id})}}">{{matdoc.nivel | title}}&nbsp;&nbsp;{{matdoc.materia.nombre | title}}</a></li>
+    {% endfor%}
 
+            </ul>
+        </div>
+
+{% endblock%}

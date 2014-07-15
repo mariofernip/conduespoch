@@ -1,0 +1,45 @@
+
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'requisito' %}
+
+{% block title %}Evaluaciones{% endblock%}
+
+{% block article %}
+
+<h1>{{ block ('title')}}</h1>
+
+
+
+
+<form action="{{ path('mes_evaluacion',{'pid': codigo}) }}" method="post" {{
+        form_enctype(form) }} >
+    {{ form_start(form) }}
+        {# render the task's only field: description #}
+    
+    <br>
+    <h3>Requisitos</h3>
+    <ul>
+        {# iterate over each existing tag and render its only field: name #}
+        {% for req in form.evames %}
+            {{ form_widget(req.estado) }} &nbsp;<strong>{{ form_widget(req.mes, { 'attr': {'disabled' : 'true' } }) }} </strong>
+            <li>{{ form_label(req.finiciomes,('Fecha Inicio:')) }}{{ form_widget(req.finiciomes) }}</li>
+            <li>{{ form_label(req.finiciomes,('Fecha Fin:')) }}{{ form_widget(req.ffinmes) }}</li>
+            <br><br>
+            <hr>
+        {% endfor %}
+    </ul>
+
+    
+    <input type="submit" value="guardar" class="boton" >
+    {{ form_end(form) }}
+    </form>
+
+
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}

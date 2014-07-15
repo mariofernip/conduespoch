@@ -16,9 +16,8 @@ class EvaluacionType extends AbstractType
     {
         $builder      
             ->add('promedio')
-            ->add('descripcion')
-            ->add('materiaasignada')
-            ->add('mes')
+            ->add('descripcion')            
+            ->add('mesevaluacion')
             ->add('tiponota')
         ;
     }

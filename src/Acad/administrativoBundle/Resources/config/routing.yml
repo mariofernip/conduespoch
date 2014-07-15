@@ -5,3 +5,11 @@ administrativo_homepage:
 docente_registro:
     pattern:  /docente/registro
     defaults: { _controller: administrativoBundle:Default:registrodocente}
+    
+periodo_registro:
+    pattern:  /admin/periodo/registro
+    defaults: { _controller: administrativoBundle:Default:registroperiodo}    
+    
+mes_evaluacion:
+    pattern:  /admin/mes/evaluacion/{pid}
+    defaults: { _controller: administrativoBundle:Default:mesevaluacion}

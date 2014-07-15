@@ -1,42 +1,98 @@
 {% extends '::frontend.html.twig'%}
 
 {% block title %} NOTAS {% endblock%}
+
 {% block id 'portada' %}
 {% block article%}
 <h1>PERIODO ACADÉMICO ACTUAL {{periodo.nombre}}</h1><br><br>
-<strong><legend>Docente</legend></strong>
-<strong>
-    <ul>
-        <li><a href="{{path('docente_registro')}}">Registrar docente</a></li>        
-        <li><a href="{{path('docente_dictadomateria')}}">Asignar materias</a></li>        
-    </ul>
-</strong>
-<strong><legend>Materias del docente</legend></strong>
-{% for matdoc in materiasdoc %}
-<li>{{matdoc.nivel | title}}&nbsp;&nbsp;<a href="{{path('docente_notas_x_materia',{'materia': matdoc.materia.id, 'nivel': matdoc.nivel.id})}}">{{matdoc.materia.nombre | title}}</a></li>
-{% endfor%}
-<br>
-<form action="{{path('docente_notas_x_materia',{'materia': 2, 'nivel': 2})}}" method="post" {{
-        form_enctype(formulario) }}>
-        {{ form_errors(formulario) }}
-          <fieldset>
-                  {{ form_row(formulario.promedio)}}
-                  {{ form_row(formulario.mes)}}
-                  {{ form_row(formulario.tiponota)}}
-                  {{ form_row(formulario.materiaasignada)}}
-                  {{ form_row(formulario.descripcion)}}
-              </fieldset>   
-         {{form_rest(formulario)}}                   
-          <input class="boton" type="submit" value="Guardar" />
-</form>
+<script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                $('#example').dataTable({
+                    "oLanguage": {
+                        "sUrl": "bundles/academico/js/datatable.spanish.txt"
+                    }
+                });
+            });
 
+
+    </script>
+    <strong><p>Lista de estudiantes:</p></strong>
+    <div id="dt_example">
+        <div id="demo">
+            <table class="display" id="example">
+                <thead>
+                    <tr >
+                        <th>Código</th><th>Cédula</th><th>Nombre</th><th>Seccion</th><th>accion</th>
+                    </tr>
+                </thead>
+    {% for est in estudiantes %}
+                <tbody>
+                    <tr >
+                        <td><a href="#">{{est.id}}</a></td><td>{{est.matricula.estudiante.cedula}}</td><td>{{est.matricula.estudiante.nombre}}&nbsp;{{est.matricula.estudiante.apellido}}</td><td>{{est.matricula.seccion}}</td><td><a  href="{{path('docente_notas_x_estudiante',{'codigo': est.id})}}" >Evaluar</a></td>
+                    <tr>
+                </tbody>
+
+    {% endfor%}
+            </table>
+        </div>
+
+    </div>
 <br>
-<strong><legend>Lista de estudiante</legend></strong>
-{% for est in estudiantes %}
-<li>{{est.id}}&nbsp;{{est.matricula.estudiante}}</li>
-{% endfor%}
+<strong><p>Notas de estudiantes:</p></strong>
+    <div id="dt_example">
+        <div id="demo">
+            <table class="display" id="example">
+                <thead>
+                    <tr >
+                        <th>Código</th><th>Cédula</th><th>Nombre</th><th>Mes</th><th>Tipo Nota</th><th>Nota</th>
+                    </tr>
+                </thead>
+    {% for eva in evaest %}
+                <tbody>
+                    <tr >
+                        <td><a href="#">{{eva.id}}</a></td><td>{{eva.materiaasignada.matricula.estudiante.cedula}}</td><td>{{eva.materiaasignada.matricula.estudiante.nombre}}&nbsp;{{eva.materiaasignada.matricula.estudiante.apellido}}</td><td>{{eva.mesevaluacion.mes.nombre}}</td><td>{{eva.tiponota.descripcion}}</td><td>{{eva.promedio}}</td>
+                    <tr>
+                </tbody>
+
+    {% endfor%}
+            </table>
+        </div>
+
+    </div>
+
 {% endblock%}
-{% block aside%}
     
-    {{parent()}}
+{% block aside%}
+{%set docente='docente'%}
+    <p align="center"><a class="boton" href="{{path('portada',{'role':docente})}}">INICIO</a></p>
+{{parent()}}
+{#
+<select id="materiadoc">
+    
+    {% for matdoc in materiasdoc %}
+        
+        <option  value="{{matdoc.materia.id}}" data-url="{{url('docente_listaest_x_materia',{'materia': matdoc.materia.id, 'nivel': matdoc.nivel.id})}}" >  {{matdoc.nivel.descripcion | title}}&nbsp;&nbsp;{{matdoc.materia.nombre | title}}</option>
+{% endfor%}
+</select>
+<script type="text/javascript">
+    var lista= document.getElementById('materiadoc');
+        
+    lista.onchange=function(){
+        var url=lista.options[lista.selectedIndex].getAttribute('data-url');
+        window.location=url;
+        
+    };
+    
+ </script>
+#}
+    <strong><p align="left">Materias</p></strong>
+    <div id="relacionadas">
+        <ul>
+    {% for matdoc in materiasdoc %}
+                <li><a class="boton" href="{{path('docente_listaest_x_materia',{'materia': matdoc.materia.id, 'nivel': matdoc.nivel.id})}}">{{matdoc.nivel | title}}&nbsp;&nbsp;{{matdoc.materia.nombre | title}}</a></li>
+    {% endfor%}
+
+            </ul>
+        </div>
+
 {% endblock%}

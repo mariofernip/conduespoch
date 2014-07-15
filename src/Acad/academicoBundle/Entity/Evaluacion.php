@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="evaluacion", 
  * uniqueConstraints={
- * @ORM\UniqueConstraint(name="unique_evaluacion", columns={"materiaasignada_id", "mes_id", "tiponota_id"})
+ * @ORM\UniqueConstraint(name="unique_evaluacion", columns={"materiaasignada_id", "mesevaluacion_id", "tiponota_id"})
  *  })
- * @UniqueEntity(fields={"materiaasignada_id", "mes_id", "tiponota_id"}, message="El registro a insertar ya existe")
+ * @UniqueEntity(fields={"materiaasignada", "mesevaluacion", "tiponota"}, message="El registro a insertar ya existe")
  * @ORM\Entity
  */
 
@@ -29,29 +29,28 @@ class Evaluacion
      *
      * @ORM\ManyToOne(targetEntity="Acad\academicoBundle\Entity\MateriaAsignada") 
      * @ORM\JoinColumn(name="materiaasignada_id", referencedColumnName="id")
-     * @Assert\NotBlank(message="Por favor llene el campo")
+     
      */
     protected $materiaasignada;
     
     /**
      *
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float", nullable=false)
      */
     protected $promedio;
 
     /**     
      * @ORM\Column(type="string", length=128, nullable=true)
-     * @Assert\Blank()
      */
     protected $descripcion;
 
     /**
      *
-     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Mes") 
-     * @ORM\JoinColumn(name="mes_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\MesEvaluacion") 
+     * @ORM\JoinColumn(name="mesevaluacion_id", referencedColumnName="id")
      * @Assert\NotBlank(message="Por favor seleccione un mes")
      */
-    protected $mes;
+    protected $mesevaluacion;
     
     /**
      *
@@ -62,9 +61,7 @@ class Evaluacion
     protected $tiponota;
 
     
-    
-
-
+   
 
     /**
      * Get id
@@ -146,26 +143,26 @@ class Evaluacion
     }
 
     /**
-     * Set mes
+     * Set mesevaluacion
      *
-     * @param \Acad\administrativoBundle\Entity\Mes $mes
+     * @param \Acad\administrativoBundle\Entity\MesEvaluacion $mesevaluacion
      * @return Evaluacion
      */
-    public function setMes(\Acad\administrativoBundle\Entity\Mes $mes = null)
+    public function setMesevaluacion(\Acad\administrativoBundle\Entity\MesEvaluacion $mesevaluacion = null)
     {
-        $this->mes = $mes;
+        $this->mesevaluacion = $mesevaluacion;
     
         return $this;
     }
 
     /**
-     * Get mes
+     * Get mesevaluacion
      *
-     * @return \Acad\administrativoBundle\Entity\Mes 
+     * @return \Acad\administrativoBundle\Entity\MesEvaluacion 
      */
-    public function getMes()
+    public function getMesevaluacion()
     {
-        return $this->mes;
+        return $this->mesevaluacion;
     }
 
     /**

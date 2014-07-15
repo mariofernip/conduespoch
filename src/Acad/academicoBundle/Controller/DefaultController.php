@@ -500,7 +500,7 @@ class DefaultController extends Controller {
         return $this->render('academicoBundle:Default:estudiantematriculado2.html.twig', array('periodo' => $periodo, 'formulario' => $formulario->createView(), 'estudiante' => $estudiante));
     }
 
-    //METODO PRA ASIGNAR LAS NOTAS DEL DOCENTE X MATERIA
+    //METODO PRA lISTAR LOS ESTUDIANTE DEL DOCENTE X MATERIA
 
     public function notasAction($materia, $nivel) {
 
@@ -518,17 +518,64 @@ class DefaultController extends Controller {
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
         //obtiene los estudiante que reciben una materia en un nivel
         $estudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getEstudiantesxMateria($materia, $periodo->getId(), $nivel);
+        $evaluacionestudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia, $periodo->getId(), $nivel);
 
         $evaluacion = new Evaluacion();
         $formulario = $this->createForm(new EvaluacionType(), $evaluacion);
 
         $formulario->handleRequest($peticion);
+        $codigo = 41;
 
         //creo la vista
         return $this->render('academicoBundle:default:notasdocente.html.twig', array(
                     'periodo' => $periodo,
                     'materiasdoc' => $materiasdocente,
                     'estudiantes' => $estudiantesxmateria,
+                    'codigo' => $codigo,
+                    'evaest'=>$evaluacionestudiantesxmateria,
+                    'formulario' => $formulario->createView()
+                ));
+    }
+
+    public function evaluacionAction($codigo) {
+
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getEntityManager();
+        //obtengo el objeto autenticado: en este caso el docente
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        //consulto periodo actual
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
+            'estado' => 1
+                ));
+        //obtengo cedula del docente autenticado
+        $cedula = $usuario->getCedula();
+        //obtiene las materias del docente autenticado
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
+        //obtiene los estudiante que reciben una materia en un nivel
+        //$estudiantesxmateria = $em->getRepository('AcadacademicoBundle:Dictadomateria')->getEstudiantesxMateria($materia, $periodo->getId(), $nivel);
+        $materiaasig = $em->getRepository('academicoBundle:MateriaAsignada')->find($codigo);
+        $evaluacion = new Evaluacion();
+        $formulario = $this->createForm(new EvaluacionType(), $evaluacion);
+
+        $formulario->handleRequest($peticion);
+
+        $evaluacion->setMateriaasignada($materiaasig);
+        if ($formulario->isValid()) {
+            $evaluacion->setMateriaasignada($materiaasig);
+            $em->persist($evaluacion);
+            $em->flush();
+
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Nota guardada');
+            return $this->redirect($this->generateUrl('docente_notas_x_estudiante', array('codigo' => $codigo)));
+        }
+
+        //creo la vista
+        return $this->render('academicoBundle:default:evaluacion.html.twig', array(
+                    'periodo' => $periodo,
+                    'materiasdoc' => $materiasdocente,
+                    'datos' => $materiaasig,
+                    'codigo' => $codigo,
                     'formulario' => $formulario->createView()
                 ));
     }

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="mes")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Acad\administrativoBundle\Entity\MesRepository")
  * @UniqueEntity(fields={"nombre"}, message="El registro a insertar ya existe")
  */
 class Mes {
@@ -25,8 +25,11 @@ class Mes {
     */    
    protected $nombre;
 
-   
-
+   /**
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $estado;
   
 
     /**

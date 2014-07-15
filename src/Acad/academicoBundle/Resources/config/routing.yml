@@ -31,6 +31,10 @@ estudiante_buscar:
     pattern:  /secretaria/estudiante/consulta/matricula
     defaults: { _controller: academicoBundle:default:matriculaBuscarEstudiante}      
     
-docente_notas_x_materia:
-    pattern:  /docente/notas/{materia}/{nivel}
+docente_listaest_x_materia:
+    pattern:  /docente/listaestudiantes/{materia}/{nivel}
     defaults: { _controller: academicoBundle:default:notas}
+    
+docente_notas_x_estudiante:
+    pattern:  /docente/notas/estudiante/{codigo}
+    defaults: { _controller: academicoBundle:default:evaluacion}

@@ -200,12 +200,12 @@ a:active  { position: relative; top: 1px; }
    ======================================================================== */
 /* Botón normal */
 .boton, .boton:visited {
-    background: rgb(204,0,102);
-    border-bottom: 1px solid rgba(0,0,0, 0.25);
+    background: #000066;
+    border-bottom: 1px solid #6d6;
     color: #FFF;
     cursor: pointer;
     display: inline-block;
-    font-size: 18px;
+    font-size: 12px;
     font-weight: bold;
     line-height: 1;
     padding: .5em 1em;
@@ -222,7 +222,7 @@ a:active  { position: relative; top: 1px; }
     text-shadow: 0 1px 1px #603;
 }
 .boton:hover {
-    background: rgba(205,0,102, 0.8);
+    background: #0035C7;
     color: #FFF !important;
 }
 
@@ -232,7 +232,7 @@ a:active  { position: relative; top: 1px; }
     border-radius: 5px;
     color: #FFF !important;
     display: inline-block;
-    font-size: 21px;
+    font-size: 14px;
     line-height: 30px;
     padding: 12px 15px 12px 10px;
     margin: 1em;
