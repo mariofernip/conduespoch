@@ -6,7 +6,9 @@
 {% block title %}Requisito del estudiante{% endblock%}
 
 {% block article %}
-
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
+</section>
 <h1>{{ block ('title')}}</h1>
 <strong>Cédula:</strong>{{estudiante.cedula}}<br>
 <strong>Nombre:</strong>{{estudiante.nombre}}<br>

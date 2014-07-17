@@ -1,0 +1,58 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} INICIO {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
+</section>
+<strong><p>Lista de estudiantes inscritos: {{ pagination.getTotalItemCount }}</p></strong>
+<div id="dt_example">
+    <div id="demo">
+        <div class="count">
+            {#{{ pagination.getTotalItemCount }}#}
+            </div>
+            <table class="display" id="example">
+                <thead>
+                    <tr>
+                        {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Acción</th>#}
+
+                            <th>{{ knp_pagination_sortable(pagination, 'Cedula', 'e.cedula') }}</th>
+                            <th{% if pagination.isSorted('e.nombre') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Nombre', 'e.nombre') }}</th>
+                            <th {% if pagination.isSorted('e.apellido') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Apellido', 'e.apellido') }}</th>
+                            <th{% if pagination.isSorted('e.email') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Correo', 'e.email') }}</th>
+                            <th {% if pagination.isSorted('i.estado') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Estado', 'i.estado') }}</th>
+
+
+                        </tr>
+
+                    </thead>
+    {% for est in pagination %}
+                    <tbody>
+                        <tr {% if loop.index is odd %}class="color"{% endif %}>
+                    {% set estado=est.estado%}
+                        {% if estado==1%}
+                            {% set esta='Activo'%}                                                    
+                        {% endif%}
+                        {% if estado==0%}
+                            {% set esta='Inactivo'%}                                                    
+                        {% endif%}
+                                <td>{{est.estudiante.cedula}}</td><td>{{est.estudiante.nombre | title}}</td><td>{{est.estudiante.apellido | title}}</td><td>{{est.estudiante.email | lower}}</td><td>{{esta}}</td><td><a href="{{path('estudiante_modificar_datos',{'cedula': est.estudiante.cedula})}}">Mod</a>&nbsp;&nbsp;<a href="{{path('estudiante_requisito',{'cedula':est.estudiante.cedula})}}">Req</a></td>
+                            <tr>
+                        </tbody>
+
+    {% endfor%}
+                    </table>
+
+                    <div class="paginacion">
+                        {{ knp_pagination_render(pagination) }}
+                     </div>
+               </div>
+
+
+{% endblock%}
+{% block aside %}
+    {%set secretaria='secretaria'%}
+                    <p align="center"><a class="boton" href="{{path('portada',{'role':secretaria})}}">PORTADA</a></p>
+    {{parent()}}
+{% endblock%}

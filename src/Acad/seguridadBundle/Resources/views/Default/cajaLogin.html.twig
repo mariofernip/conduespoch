@@ -8,8 +8,6 @@
     
 {% if is_granted('ROLE_SECRETARIA' ) or is_granted('ROLE_DOCENTE')%}
     
-    
-    <a href="#">Ver mi perfil</a>    
     {# el usuario todavía no ha hecho login #}
 {% else %}
     <a class="boton" href="{{ path('usuario_registro') }}">Regístrate</a>

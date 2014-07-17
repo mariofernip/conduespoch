@@ -6,7 +6,9 @@
 {% block title %}Inscripcion del estudiante{% endblock%}
 
 {% block article %}
-<strong>PERIODO ACADÉMICO:</strong> {{periodo.nombre}}<br><br>
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
+</section>
 <h1>{{ block ('title')}}</h1>
 
 <strong>DATOS DEL ESTUDIANTE</strong><br><br>

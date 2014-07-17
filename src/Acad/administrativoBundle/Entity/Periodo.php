@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Table(name="periodo")
  * @UniqueEntity(fields={"nombre"}, message="El nombre a insertar ya existe")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Acad\administrativoBundle\Entity\PeriodoRepository")
  */
 class Periodo {
     

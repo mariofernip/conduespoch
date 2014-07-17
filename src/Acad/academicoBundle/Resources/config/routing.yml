@@ -38,3 +38,15 @@ docente_listaest_x_materia:
 docente_notas_x_estudiante:
     pattern:  /docente/notas/estudiante/{codigo}
     defaults: { _controller: academicoBundle:default:evaluacion}
+    
+estudiante_lista_inscritos:
+    pattern:  /secretaria/estudiante/lista/inscritos
+    defaults: { _controller: academicoBundle:default:listaestudiantesinscritos}
+    
+estudiante_modificar_datos:
+    pattern:  /secretaria/estudiante/modificar/{cedula}
+    defaults: { _controller: academicoBundle:default:modificarestudiante}
+        
+estudiante_lista_matriculados_x_secciones:   
+    pattern:  /secretaria/estudiante/lista/matriculados/{nivel}
+    defaults: { _controller: academicoBundle:default:listaestudiantesxsecciones}

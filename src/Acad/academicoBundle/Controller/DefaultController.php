@@ -28,7 +28,11 @@ class DefaultController extends Controller {
 
     public function portadaAction() {
 
-        return $this->render('academicoBundle:Default:portada.html.twig');
+        $periodo= '';
+        
+        return $this->render('academicoBundle:Default:portada.html.twig',array(
+            'periodo'=>$periodo
+        ));
     }
 
     //METODO INSERTAR ESTUDIANTE
@@ -185,6 +189,7 @@ class DefaultController extends Controller {
         return $this->render('academicoBundle:Default:requisitoestudiante.html.twig', array(
                     'estudiante' => $estudiante,
                     'requisitos' => $cumplerequisito,
+                    'periodo' => $periodo,
                     'form' => $form->createView()
                 ));
     }
@@ -245,6 +250,7 @@ class DefaultController extends Controller {
             }
         }
         return $this->render('academicoBundle:Default:buscarEst.html.twig', array(
+                    'periodo'=>$periodo,
                     'formulario' => $formulario->createView()
                 ));
     }
@@ -390,7 +396,7 @@ class DefaultController extends Controller {
         $estudiante = new Estudiante();
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getManager();
-
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         $formularioantiguos = $this->createForm(new MatriculaAntiguosType(), $estudiante);
         $formularioantiguos->handleRequest($peticion);
 
@@ -453,7 +459,9 @@ class DefaultController extends Controller {
                 return $this->redirect($this->generateUrl('estudiante_buscar'));
             }
         }
-        return $this->render('academicoBundle:Default:buscarEstMat.html.twig', array('formulario' => $formularioantiguos->createView()));
+        return $this->render('academicoBundle:Default:buscarEstMat.html.twig', array(
+            'periodo'=>$periodo,
+            'formulario' => $formularioantiguos->createView()));
     }
 
     public function matriculaEstudianteAction($cedula) {
@@ -532,7 +540,7 @@ class DefaultController extends Controller {
                     'materiasdoc' => $materiasdocente,
                     'estudiantes' => $estudiantesxmateria,
                     'codigo' => $codigo,
-                    'evaest'=>$evaluacionestudiantesxmateria,
+                    'evaest' => $evaluacionestudiantesxmateria,
                     'formulario' => $formulario->createView()
                 ));
     }
@@ -579,5 +587,143 @@ class DefaultController extends Controller {
                     'formulario' => $formulario->createView()
                 ));
     }
+
+    
+    //METODO: listar los estudiantes inscritos en el periodo actual
+    public function listaestudiantesinscritosAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+            $usuario = $this->get('security.context')->getToken()->getUser();
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+        $estudiantes = $em->getRepository('academicoBundle:Inscripcion')->getListaEstudiantesInscritosxPeriodo($periodo->getId());
+
+
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+                $estudiantes, $this->getRequest()->query->get('page', 1), 10
+        );
+
+
+        return $this->render('academicoBundle:default:listaestudiantesinscritos.html.twig', array(
+                    'periodo' => $periodo,                    
+                    'pagination'=>$pagination
+                    
+                ));
+    }
+
+    //METODO: modifica los datos de un estudiante previamente inscrito 
+    public function modificarestudianteAction($cedula) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+
+        $estudiante = $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
+            'cedula' => $cedula
+                ));
+
+        $formulario = $this->createForm(new EstudianteType(), $estudiante);
+
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->persist($estudiante);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Datos actualizados');
+
+
+            return $this->redirect($this->generateUrl('estudiante_lista_inscritos'));
+        }
+
+
+        return $this->render('academicoBundle:default:modificarestudiante.html.twig', array(
+                    'periodo' => $periodo,
+                    'cedula' => $cedula,
+                    'formulario' => $formulario->createView()
+                ));
+    }
+
+    //METODO: lista los estudiantes matriculados por nivel, y secciones de un periodo actual    
+    public function listaestudiantesxseccionesAction($nivel) {
+
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+            $usuario = $this->get('security.context')->getToken()->getUser();
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        //obtiene lista de estudiantes matriculados de seccion: diurna
+        $diurna = $em->getRepository('academicoBundle:Matricula')->getEstudiantesxSeccionDiurna($periodo->getId(), $nivel);
+        //obtiene lista de estudiantes matriculados de seccion: nocturna
+        $nocturna = $em->getRepository('academicoBundle:Matricula')->getEstudiantesxSeccionNocturna($periodo->getId(), $nivel);
+        //obtiene lista de estudiantes matriculados de seccion: vespertina
+        $vespertina = $em->getRepository('academicoBundle:Matricula')->getEstudiantesxSeccionVespertina($periodo->getId(), $nivel);
+        //obtiene lista de todos los niveles
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        //obtine el nivel
+        $curso = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
+
+        //seccion diurna
+        $paginatorSD = $this->get('knp_paginator');
+        $paginationSD = $paginatorSD->paginate(
+                $diurna, $this->getRequest()->query->get('page', 1), 10
+        );
+        
+        //seccion vespertina
+        $paginatorSV = $this->get('knp_paginator');
+        $paginationSV = $paginatorSV->paginate(
+                $vespertina, $this->getRequest()->query->get('page', 1), 10
+        );
+        
+        //seccion nocturna
+        $paginatorSN = $this->get('knp_paginator');
+        $paginationSN = $paginatorSN->paginate(
+                $nocturna, $this->getRequest()->query->get('page', 1), 10
+        );
+        $sd=0; 
+        $sv=0;
+        $sn=0;
+        if($diurna){
+            $sd=1;
+        }
+        if($vespertina){
+            $sv=1;
+        }
+        if($nocturna){
+            $sn=1;
+        }
+        return $this->render('academicoBundle:default:listaestudiantesmatriculados.html.twig', array(
+                    'periodo' => $periodo,
+                    'niveles' => $niveles,
+                    'diurna' => $paginationSD,
+                    'nocturna' => $paginationSN,
+                    'vespertina' => $paginationSV,
+                    'curso' => $curso,
+                    'sd'=>$sd,
+                    'sv'=>$sv,
+                    'sn'=>$sn
+                ));
+    }
+    
 
 }

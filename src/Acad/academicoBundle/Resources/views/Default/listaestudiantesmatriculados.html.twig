@@ -1,0 +1,151 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} INICIO {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
+</section>
+<h3><p align="center">{{curso}}</p><h3>
+{#LISTA DE ESTUDIANTES: SECCION DIURNA#}
+{% if sd== 1 %}
+<strong><p>Seccion Diurna:</p></strong>
+<div id="dt_example">
+    <div id="demo">
+        <table class="display" id="example">
+            <thead>
+                <tr >
+                    {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Fecha</th><th>Acción</th>#}
+                    <th>{{ knp_pagination_sortable(diurna, 'Cedula', 'e.cedula') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Nombre', 'e.nombre') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Apellido', 'e.apellido') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Correo', 'e.email') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Estado', 'm.estado') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Fecha', 'm.fechamatricula') }}</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+    {% for est in diurna %}
+            <tbody>
+                <tr {% if loop.index is odd %}class="color"{% endif %}>
+                    {% set estado=est.estado%}
+                        {% if estado==1%}
+                            {% set esta='Activo'%}                                                    
+                        {% endif%}
+                        {% if estado==0%}
+                            {% set esta='Inactivo'%}                                                    
+                        {% endif%}
+                        <td>{{est.estudiante.cedula}}</td><td>{{est.estudiante.nombre | title}}</td><td>{{est.estudiante.apellido | title}}</td><td>{{est.estudiante.email | lower}}</td><td>{{esta}}</td><td>{{est.fechamatricula | date('Y-m-d')}}</td><td><a href="#">Mod</a></td>
+                <tr>
+            </tbody>
+
+    {% endfor%}
+        </table>
+            <div class="paginacion">
+                        {{ knp_pagination_render(diurna) }}
+                     </div>
+    </div>
+</div>
+<br>
+{% endif %}
+{#LISTA DE ESTUDIANTES: SECCION VESPERTINA#}
+{% if sv== 1 %}
+<strong><p>Seccion Vespertina</p></strong>
+<div id="dt_example">
+    <div id="demo">
+        <table class="display" id="example">
+            <thead>
+                <tr >
+                    {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Fecha</th><th>Acción</th>#}
+                    <th>{{ knp_pagination_sortable(vespertina, 'Cedula', 'e.cedula') }}</th>
+                    <th>{{ knp_pagination_sortable(vespertina, 'Nombre', 'e.nombre') }}</th>
+                    <th>{{ knp_pagination_sortable(vespertina, 'Apellido', 'e.apellido') }}</th>
+                    <th>{{ knp_pagination_sortable(vespertina, 'Correo', 'e.email') }}</th>
+                    <th>{{ knp_pagination_sortable(vespertina, 'Estado', 'm.estado') }}</th>
+                    <th>{{ knp_pagination_sortable(vespertina, 'Fecha', 'm.fechamatricula') }}</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+    {% for est in vespertina %}
+            <tbody>
+                <tr {% if loop.index is odd %}class="color"{% endif %}>
+                    {% set estado=est.estado%}
+                        {% if estado==1%}
+                            {% set esta='Activo'%}                                                    
+                        {% endif%}
+                        {% if estado==0%}
+                            {% set esta='Inactivo'%}                                                    
+                        {% endif%}
+                        <td>{{est.estudiante.cedula}}</td><td>{{est.estudiante.nombre | title}}</td><td>{{est.estudiante.apellido | title}}</td><td>{{est.estudiante.email | lower}}</td><td>{{esta}}</td><td>{{est.fechamatricula | date('Y-m-d')}}</td><td><a href="#">Mod</a></td>
+                <tr>
+            </tbody>
+
+    {% endfor%}
+        </table>
+            <div class="paginacion">
+                        {{ knp_pagination_render(vespertina) }}
+                     </div>
+    </div>
+
+</div>
+<br>
+{% endif%}
+{#ESTUDIANTE SECCION NOCTURNA#}
+{% if sn== 1 %}
+<strong><p>Seccion Noctuna</p></strong>
+<div id="dt_example">
+    <div id="demo">
+        <table class="display" id="example">
+            <thead>
+                <tr >
+                    {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Fecha</th><th>Acción</th>#}
+                        
+                    <th>{{ knp_pagination_sortable(nocturna, 'Cedula', 'e.cedula') }}</th>
+                    <th>{{ knp_pagination_sortable(nocturna, 'Nombre', 'e.nombre') }}</th>
+                    <th>{{ knp_pagination_sortable(nocturna, 'Apellido', 'e.apellido') }}</th>
+                    <th>{{ knp_pagination_sortable(nocturna, 'Correo', 'e.email') }}</th>
+                    <th>{{ knp_pagination_sortable(nocturna, 'Estado', 'm.estado') }}</th>
+                    <th>{{ knp_pagination_sortable(nocturna, 'Fecha', 'm.fechamatricula') }}</th>
+                    <th>Accion</th>    
+                </tr>
+            </thead>
+    {% for est in nocturna %}
+            <tbody>
+                <tr {% if loop.index is odd %}class="color"{% endif %}>
+                    {% set estado=est.estado%}
+                        {% if estado==1%}
+                            {% set esta='Activo'%}                                                    
+                        {% endif%}
+                        {% if estado==0%}
+                            {% set esta='Inactivo'%}                                                    
+                        {% endif%}
+                        <td>{{est.estudiante.cedula}}</td><td>{{est.estudiante.nombre | title}}</td><td>{{est.estudiante.apellido | title}}</td><td>{{est.estudiante.email | lower}}</td><td>{{esta}}</td><td>{{est.fechamatricula | date('Y-m-d')}}</td><td><a href="#">Mod</a></td>
+                <tr>
+            </tbody>
+
+    {% endfor%}
+        </table>
+            <div class="paginacion">
+                        {{ knp_pagination_render(nocturna) }}
+                     </div>
+    </div>
+
+</div>
+<br><br>
+{% endif%}
+
+{% endblock%}
+{% block aside %}
+    {%set secretaria='secretaria'%}
+        <p align="center"><a class="boton" href="{{path('portada',{'role':secretaria})}}">PORTADA</a></p>
+    {{parent()}}
+        <strong><p align="left">Cursos</p></strong>
+    <div id="relacionadas">
+        <ul>
+    {% for niv in niveles %}
+                <li><a class="boton" href="{{path('estudiante_lista_matriculados_x_secciones',{'nivel': niv.id, 'nivel': niv.id})}}">{{niv.curso | title}}&nbsp;&nbsp;{{niv.paralelo | title}}</a></li>
+    {% endfor%}
+
+            </ul>
+        </div>
+{% endblock%}

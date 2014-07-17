@@ -8,7 +8,10 @@
     
     
 {% block article %}
-<h1>PERIODO ACADÉMICO ACTUAL {{periodo.nombre}}</h1>
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
+</section>
+
 <h1>{{ block ('title')}}</h1>
 <strong>DATOS DEL ESTUDIANTE</strong><br><br>
 <strong>Cédula:</strong>{{estudiante.cedula}}<br>

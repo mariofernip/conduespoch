@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\UniqueConstraint(name="unique_inscripcion", columns={"periodo_id","estudiante_id"})
  *  })
  * @UniqueEntity(fields={"periodo","estudiante"}, message="El registro a insertar ya existe")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Acad\academicoBundle\Entity\InscripcionRepository")
  */
 class Inscripcion
 {

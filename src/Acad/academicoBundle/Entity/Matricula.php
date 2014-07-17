@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\UniqueConstraint(name="unique_matricula", columns={"nivel_id","periodo_id", "estudiante_id"})
  *  })
  * @UniqueEntity(fields={"nivel", "periodo", "estudiante"}, message="El estudiante ya ha sido previamente matriculado")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Acad\academicoBundle\Entity\MatriculaRepository")
  */
 
 class Matricula {

@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -149,6 +150,16 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
         $builder->register('foo', 'stdClass')->setScope('request');
 
         $this->assertNull($builder->get('foo', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+    }
+
+    /**
+     * @covers Symfony\Component\DependencyInjection\ContainerBuilder::get
+     */
+    public function testGetReturnsNullOnInactiveScopeWhenServiceIsCreatedByAMethod()
+    {
+        $builder = new ProjectContainer();
+
+        $this->assertNull($builder->get('foobaz', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
     /**
@@ -440,7 +451,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Symfony\Component\DependencyInjection\ContainerBuilder::merge
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testMergeLogicException()
     {
@@ -656,7 +667,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException BadMethodCallException
+     * @expectedException \BadMethodCallException
      */
     public function testThrowsExceptionWhenSetServiceOnAFrozenContainer()
     {
@@ -668,7 +679,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException BadMethodCallException
+     * @expectedException \BadMethodCallException
      */
     public function testThrowsExceptionWhenAddServiceOnAFrozenContainer()
     {
@@ -743,7 +754,7 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException BadMethodCallException
+     * @expectedException \BadMethodCallException
      */
     public function testThrowsExceptionWhenSetDefinitionOnAFrozenContainer()
     {
@@ -805,8 +816,16 @@ class ContainerBuilderTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        $this->assertEquals(true, $classInList);
+        $this->assertTrue($classInList);
     }
 }
 
 class FooClass {}
+
+class ProjectContainer extends ContainerBuilder
+{
+    public function getFoobazService()
+    {
+        throw new InactiveScopeException('foo', 'request');
+    }
+}

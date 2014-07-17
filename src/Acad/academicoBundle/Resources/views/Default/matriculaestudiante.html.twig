@@ -5,7 +5,10 @@
 {% block title %}Matricula de un nuevo estudiante{% endblock%}
 
 {% block article %}
-<h1>PERIODO ACADÉMICO ACTUAL {{periodo.nombre}}</h1><br><br>
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
+</section>
+
 <h1>{{ block ('title')}}</h1>
 
 <form action="{{ path('estudiante_matricula') }}" method="post" {{

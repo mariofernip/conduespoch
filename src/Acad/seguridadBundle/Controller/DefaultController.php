@@ -17,7 +17,8 @@ class DefaultController extends Controller
     }
     
     public function loginAction() {
-
+        $periodo='';
+        
         $peticion = $this->getRequest();
 
         $sesion = $peticion->getSession();
@@ -30,7 +31,8 @@ class DefaultController extends Controller
 
         return $this->render('seguridadBundle:Default:login.html.twig', array(
                     'last_username' => $sesion->get(SecurityContext::LAST_USERNAME), //contiene el valor del último nombre de usuario utilizado para intentar hacer login.
-                    'error' => $error
+                    'error' => $error,
+                    'periodo'=>$periodo
                 ));
     }
 
@@ -77,7 +79,9 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('_portada'));
         }
 
+        $periodo='';
         return $this->render('seguridadBundle:Default:registro.html.twig', array(
+                    'periodo'=>$periodo,
                     'formulario' => $formulario->createView()
                 ));
     }
@@ -106,7 +110,5 @@ class DefaultController extends Controller
             ));
         }
         
-    }
-    
-    
+    }        
 }

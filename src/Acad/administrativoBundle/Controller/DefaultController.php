@@ -100,6 +100,7 @@ class DefaultController extends Controller
         
         
         return $this->render('administrativoBundle:default:registroperiodo.html.twig',array(
+            'periodo'=>$periodo,
             'formulario'=>$formulario->createView()
         ));
                 
@@ -157,9 +158,11 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('_portada'));
         }
 
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         return $this->render('administrativoBundle:Default:evaluacionxmes.html.twig', array(
                     'codigo'=>$pid,
                     'requisitos' => $mesevaluacion,
+                     'periodo'=>$periodo,
                     'form' => $form->createView()
                 ));
     }

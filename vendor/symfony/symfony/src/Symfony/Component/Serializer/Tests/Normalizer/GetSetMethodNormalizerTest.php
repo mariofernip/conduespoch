@@ -17,13 +17,13 @@ class GetSetMethodNormalizerTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        $this->normalizer = new GetSetMethodNormalizer;
+        $this->normalizer = new GetSetMethodNormalizer();
         $this->normalizer->setSerializer($this->getMock('Symfony\Component\Serializer\Serializer'));
     }
 
     public function testNormalize()
     {
-        $obj = new GetSetDummy;
+        $obj = new GetSetDummy();
         $obj->setFoo('foo');
         $obj->setBar('bar');
         $obj->setCamelCase('camelcase');
@@ -86,6 +86,16 @@ class GetSetMethodNormalizerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $obj->getBar());
     }
 
+    public function testConstructorDenormalizeWithMissingOptionalArgument()
+    {
+        $obj = $this->normalizer->denormalize(
+            array('foo' => 'test', 'baz' => array(1, 2, 3)),
+            __NAMESPACE__.'\GetConstructorOptionalArgsDummy', 'any');
+        $this->assertEquals('test', $obj->getFoo());
+        $this->assertEquals(array(), $obj->getBar());
+        $this->assertEquals(array(1, 2, 3), $obj->getBaz());
+    }
+
     /**
      * @dataProvider provideCallbacks
      */
@@ -118,7 +128,7 @@ class GetSetMethodNormalizerTest extends \PHPUnit_Framework_TestCase
     {
         $this->normalizer->setIgnoredAttributes(array('foo', 'bar', 'camelCase'));
 
-        $obj = new GetSetDummy;
+        $obj = new GetSetDummy();
         $obj->setFoo('foo');
         $obj->setBar('bar');
 
@@ -144,7 +154,7 @@ class GetSetMethodNormalizerTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     'bar' => function ($bar) {
-                        return null;
+                        return;
                     },
                 ),
                 'baz',
@@ -256,6 +266,40 @@ class GetConstructorDummy
     public function getBar()
     {
         return $this->bar;
+    }
+
+    public function otherMethod()
+    {
+        throw new \RuntimeException("Dummy::otherMethod() should not be called");
+    }
+}
+
+class GetConstructorOptionalArgsDummy
+{
+    protected $foo;
+    private $bar;
+    private $baz;
+
+    public function __construct($foo, $bar = array(), $baz = array())
+    {
+        $this->foo = $foo;
+        $this->bar = $bar;
+        $this->baz = $baz;
+    }
+
+    public function getFoo()
+    {
+        return $this->foo;
+    }
+
+    public function getBar()
+    {
+        return $this->bar;
+    }
+
+    public function getBaz()
+    {
+        return $this->baz;
     }
 
     public function otherMethod()
