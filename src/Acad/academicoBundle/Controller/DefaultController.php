@@ -2,6 +2,7 @@
 
 namespace Acad\academicoBundle\Controller;
 
+use Acad\academicoBundle\Entity\Asistencia;
 use Acad\academicoBundle\Entity\CumpleRequisito;
 use Acad\academicoBundle\Entity\Dictadomateria;
 use Acad\academicoBundle\Entity\Estudiante;
@@ -499,10 +500,10 @@ class DefaultController extends Controller {
             
             $matasi = $em->getRepository('academicoBundle:MateriaAsignada')->findBy(array('matricula' => $matricula->getId()));
             
-            foreach ($matasi as $matasi1) {
-                $evaluacion = new Evaluacion();
-                $evaluacion->setMateriaasignada($matasi1);
-                $em->persist($evaluacion);
+             foreach ($matasi as $matasi1) {
+                $asistencia = new Asistencia();
+                $asistencia->setMateriaasiganda($matasi1);
+                $em->persist($asistencia);
                 $em->flush();
             }
             //mensaje
