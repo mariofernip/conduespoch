@@ -50,3 +50,7 @@ estudiante_modificar_datos:
 estudiante_lista_matriculados_x_secciones:   
     pattern:  /secretaria/estudiante/lista/matriculados/{nivel}
     defaults: { _controller: academicoBundle:default:listaestudiantesxsecciones}
+    
+estudiante_lista_matriculados_x_materia_x_secciones:   
+    pattern:  /inspector/estudiante/lista/materias/{materias}
+    defaults: { _controller: academicoBundle:default:listaestudiantesxseccionesmateria}

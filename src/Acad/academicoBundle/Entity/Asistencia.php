@@ -31,7 +31,6 @@ class Asistencia
     /**
      *
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Blank()
      * @Assert\Range(min=1)
      */
     protected $horasmodulo;
@@ -39,7 +38,6 @@ class Asistencia
     /**
      *
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Blank()
      * @Assert\Range(min=0)
      */
     protected $faltasjustificadas;
@@ -47,7 +45,6 @@ class Asistencia
     /**
      *
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Blank()
      * @Assert\Range(min=0)
      */
     protected $faltasinjustificadas;
@@ -55,7 +52,6 @@ class Asistencia
     /**
      *
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Blank()
      * @Assert\Range(min=0)
      */
     protected $atrasos;
@@ -63,7 +59,6 @@ class Asistencia
     /**
      *
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Blank()
      * @Assert\Range(min=0)
      */
     protected $horasasistidas;
@@ -71,14 +66,12 @@ class Asistencia
     /**
      *
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Blank()
      */
     protected $observaciones;
 
     /**
      *
      * @ORM\Column(type="float", nullable=true)
-     * @Assert\Blank()
      * @Assert\Range(min=0, max=20)
      */
     protected $promediofinal;
@@ -86,7 +79,6 @@ class Asistencia
     /**
      *
      * @ORM\Column(type="float", nullable=true)
-     * @Assert\Blank()
      * @Assert\Range(min=0, max=20)
      */
     protected $suspenso;
@@ -94,7 +86,6 @@ class Asistencia
     /**
      *
      * @ORM\Column(type="float", nullable=true)
-     * @Assert\Blank()
      * @Assert\Range(min=0, max=20)
      */
     protected $notagrado;
@@ -102,7 +93,6 @@ class Asistencia
     /**
      *
      * @ORM\Column(type="float", nullable=true)
-     * @Assert\Blank()
      * @Assert\Range(min=0, max=20)
      */
     protected $promediototal;

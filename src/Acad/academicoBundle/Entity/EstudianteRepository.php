@@ -75,6 +75,7 @@ class EstudianteRepository extends EntityRepository {
 
         return $consulta->getOneOrNullResult();
     }
+    
     public function findEstudiantexMatriculadoA($eid) {
         
         $em = $this->getEntityManager();
@@ -89,7 +90,81 @@ class EstudianteRepository extends EntityRepository {
         return $consulta->getOneOrNullResult();
     }
     
+     public function findEstudiantexMateriaxSeccionNocturna($materias) {
+        
+        $em = $this->getEntityManager();
+        $seccion='Nocturna';
+        $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
+                join a.materiaasiganda ma
+                join ma.matricula m
+                join m.estudiante e
+                WHERE m.estado = 1 
+                AND ma.materia = :mid 
+                AND m.seccion = :sec';   
+                
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('mid', $materias);
+        $estudiante->setParameter('sec', $seccion);
+        
+        return $estudiante->getResult();
+        
+    }
     
+    public function findEstudiantexMateriaxSeccionDiurna($materias) {
+        
+        $em = $this->getEntityManager();
+        $seccion='Diurna';
+        $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
+                join a.materiaasiganda ma
+                join ma.matricula m
+                join m.estudiante e
+                WHERE m.estado = 1 
+                AND ma.materia = :mid 
+                AND m.seccion = :sec';   
+                
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('mid', $materias);
+        $estudiante->setParameter('sec', $seccion);
+        
+        return $estudiante->getResult();
+        
+    }
+    
+    public function findEstudiantexMateriaxSeccionVespertina($materias) {
+        
+        $em = $this->getEntityManager();
+        $seccion='Vespertina';
+        $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
+                join a.materiaasiganda ma
+                join ma.matricula m
+                join m.estudiante e
+                WHERE m.estado = 1 
+                AND ma.materia = :mid 
+                AND m.seccion = :sec';   
+                       
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('mid', $materias);
+        $estudiante->setParameter('sec', $seccion);
+        
+        return $estudiante->getResult();
+        
+    }
+    
+    
+        public function getMaterias() {
+        
+        $em = $this->getEntityManager();
+
+        $dql = 'select dm, ma, n  FROM academicoBundle:Dictadomateria dm   
+                join dm.materia ma
+                join dm.nivel n
+                where ma.estado = 1';
+        
+        $consulta = $em->createQuery($dql);
+        return $consulta->getResult();
+        
+    }
+
     
 }
 

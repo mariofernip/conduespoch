@@ -10,6 +10,7 @@ use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Entity\MateriaAsignada;
 use Acad\academicoBundle\Entity\Matricula;
 use Acad\academicoBundle\Entity\RequisitoEstudiante;
+use Acad\academicoBundle\Form\AsistenciaType;
 use Acad\academicoBundle\Form\DictadomateriaType;
 use Acad\academicoBundle\Form\EstudianteType;
 use Acad\academicoBundle\Form\EvaluacionType;
@@ -455,7 +456,7 @@ class DefaultController extends Controller {
                     return $this->redirect($this->generateUrl('estudiante_matricula', array('cedula' => $estudiante->getCedula())));
                 }
             } else {
-                $this->get('session')->getFlashBag()->add('info', 'Estudiante no encontrado');
+                $this->get('session')->getFlashBag()->add('Info', 'Estudiante no encontrado');
                 return $this->redirect($this->generateUrl('estudiante_buscar'));
             }
         }
@@ -496,8 +497,16 @@ class DefaultController extends Controller {
                 $em->flush();
             }
             
+            $matasi = $em->getRepository('academicoBundle:MateriaAsignada')->findBy(array('matricula' => $matricula->getId()));
+            
+            foreach ($matasi as $matasi1) {
+                $evaluacion = new Evaluacion();
+                $evaluacion->setMateriaasignada($matasi1);
+                $em->persist($evaluacion);
+                $em->flush();
+            }
             //mensaje
-            $this->get('session')->getFlashBag()->add('Info', 'Estudiante matroculado');
+            $this->get('session')->getFlashBag()->add('Info', 'Estudiante matriculado');
             
             //codigo para hacer que retorne a la pagina principal del usuario autenticado
             $usuario = $this->get('security.context')->getToken()->getUser();
@@ -725,5 +734,97 @@ class DefaultController extends Controller {
                 ));
     }
     
+    //METODO: lista los estudiantes matriculados por nivel, y secciones de un periodo actual    
+    public function listaestudiantesxseccionesmateriaAction($materias) {
 
+        $nivel=1;
+        $em = $this->getDoctrine()->getEntityManager();
+        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMaterias();
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        
+        $asistencia= $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('id' => 3));
+        
+        $form = $this->createForm( new AsistenciaType(), $asistencia);
+        $request = $this->getRequest();
+        
+        if ( $request->getMethod() == 'POST' ) {
+        $form->bind( $request );
+        
+        if ( $form->isValid() ) {
+            $em->persist( $asistencia );
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('Info', 'Asistencia Actualizada');
+            }
+        }
+        
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+            $usuario = $this->get('security.context')->getToken()->getUser();
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        //obtiene lista de estudiantes matriculados de seccion: diurna
+        $diurna = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionDiurna($materias);      
+        //obtiene lista de estudiantes matriculados de seccion: nocturna
+        $nocturna = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionNocturna($materias);
+        //obtiene lista de estudiantes matriculados de seccion: vespertina
+        $vespertina = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionVespertina($materias);
+        //obtiene lista de todos los niveles
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        //obtine el nivel
+        $curso = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
+
+        //seccion diurna
+        $paginatorSD = $this->get('knp_paginator');
+        $paginationSD = $paginatorSD->paginate(
+                $diurna, $this->getRequest()->query->get('page', 1), 10
+        );
+        
+        //seccion vespertina
+        $paginatorSV = $this->get('knp_paginator');
+        $paginationSV = $paginatorSV->paginate(
+                $vespertina, $this->getRequest()->query->get('page', 1), 10
+        );
+        
+        //seccion nocturna
+        $paginatorSN = $this->get('knp_paginator');
+        $paginationSN = $paginatorSN->paginate(
+                $nocturna, $this->getRequest()->query->get('page', 1), 10
+        );
+        $sd=0; 
+        $sv=0;
+        $sn=0;
+        if($diurna){
+            $sd=1;
+        }
+        if($vespertina){
+            $sv=1;
+        }
+        if($nocturna){
+            $sn=1;
+        } 
+        return $this->render('academicoBundle:default:listaestudiantesmatriculadosasistecia.html.twig', array(
+                    'periodo' => $periodo,
+                    'niveles' => $niveles,
+                    'diurna' => $paginationSD,
+                    'nocturna' => $paginationSN,
+                    'vespertina' => $paginationSV,
+                    'curso' => $curso,
+                    'sd'=>$sd,
+                    'sv'=>$sv,
+                    'sn'=>$sn,
+                    'materias'=>$materias,
+                    'listamaterias'=>$listamaterias,
+                    'form'=>$form->createView()
+                    
+                ));
+    }
+    
+    
+    
+    
 }

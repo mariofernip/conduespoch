@@ -109,6 +109,12 @@ class DefaultController extends Controller
                 'periodo'=>$periodo
             ));
         }
+        if($role=='inspector'){
+            
+            return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
+                'periodo'=>$periodo
+            ));
+        }
         
     }        
 }

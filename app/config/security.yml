@@ -29,6 +29,8 @@ security:
         - { path: ^/secretaria/registro, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/secretaria/*, roles: ROLE_SECRETARIA }
         - { path: ^/docente/*, roles: ROLE_DOCENTE }
+        - { path: ^/inspector/*, roles: ROLE_INSPECTOR }
+        
         
    #encargados de crear los usuarios de la aplicacion
     providers:      

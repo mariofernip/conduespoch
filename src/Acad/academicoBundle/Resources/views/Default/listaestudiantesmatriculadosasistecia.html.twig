@@ -1,0 +1,286 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} INICIO {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+<section id="menu_inspector">
+    {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
+</section>
+<h3><p align="center">{{curso}}</p><h3>
+{#LISTA DE ESTUDIANTES: SECCION DIURNA#}
+{% if sd== 1 %}
+<strong><p>Seccion Diurna:</p></strong>
+<div id="dt_example">
+    <div id="demo">
+        <table class="display" id="example">
+            <thead>
+                <tr >
+                    {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Fecha</th><th>Acción</th>#}
+                    <th>{{ knp_pagination_sortable(diurna, 'Cedula', 'e.cedula') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Nombre/Apellido', 'e.nombre') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Injustificadas', 'a.faltasinjustificadas') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Atrasos', 'a.atrasos') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Horas Asistidas', 'a.horasasistidas') }}</th>
+                   
+                    <th>Accion</th>
+                </tr>
+            </thead>
+    {% for est in diurna %}
+            <tbody>
+                <tr {% if loop.index is odd %}class="color"{% endif %}>                    
+                        <td>{{est.materiaasiganda.matricula.estudiante.cedula}}</td>
+                        <td>{{est.materiaasiganda.matricula.estudiante.nombre | title}}&nbsp{{est.materiaasiganda.matricula.estudiante.apellido | title}}</td>                                                           
+                        <td>{{est.faltasjustificadas | title}}</td><td>{{est.faltasinjustificadas | title}}</td>
+                        <td>{{est.atrasos | title}}</td><td>{{est.horasasistidas | title}}</td>
+                        <td><a class='activate_modal' name='modal_window' id="foos">Mod</a></td>
+                <tr>
+            </tbody>
+
+    {% endfor%}
+        </table>
+            <div class="paginacion">
+                        {{ knp_pagination_render(diurna) }}
+                     </div>
+    </div>
+</div>
+<br>
+{% endif %}
+{#LISTA DE ESTUDIANTES: SECCION VESPERTINA#}
+{% if sv== 1 %}
+<strong><p>Seccion Vespertina</p></strong>
+<div id="dt_example">
+    <div id="demo">
+        <table class="display" id="example">
+            <thead>
+                <tr >
+                    {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Fecha</th><th>Acción</th>#}
+                    <th>{{ knp_pagination_sortable(diurna, 'Cedula', 'e.cedula') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Nombre/Apellido', 'e.nombre') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Injustificadas', 'a.faltasinjustificadas') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Atrasos', 'a.atrasos') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Horas Asistidas', 'a.horasasistidas') }}</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+    {% for est in vespertina %}
+            <tbody>
+                <tr {% if loop.index is odd %}class="color"{% endif %}>
+                        <td>{{est.materiaasiganda.matricula.estudiante.cedula}}</td>
+                        <td>{{est.materiaasiganda.matricula.estudiante.nombre | title}}&nbsp{{est.materiaasiganda.matricula.estudiante.apellido | title}}</td>
+                        <td>{{est.faltasjustificadas | title}}</td><td>{{est.faltasinjustificadas | title}}</td>
+                        <td>{{est.atrasos | title}}</td><td>{{est.horasasistidas | title}}</td>
+                        <td><a class='activate_modal' name='modal_window' id="foos">Mod</a></td>
+                <tr>
+            </tbody>
+
+    {% endfor%}
+        </table>
+            <div class="paginacion">
+                        {{ knp_pagination_render(vespertina) }}
+                     </div>
+    </div>
+
+</div>
+<br>
+{% endif%}
+{#ESTUDIANTE SECCION NOCTURNA#}
+{% if sn== 1 %}
+<strong><p>Seccion Noctuna</p></strong>
+<div id="dt_example">
+    <div id="demo">
+        <table class="display" id="example">
+            <thead>
+                <tr >
+                    {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Fecha</th><th>Acción</th>#}                        
+                    <th>{{ knp_pagination_sortable(diurna, 'Cedula', 'e.cedula') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Nombre/Apellido', 'e.nombre') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Injustificadas', 'a.faltasinjustificadas') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Atrasos', 'a.atrasos') }}</th>
+                    <th>{{ knp_pagination_sortable(diurna, 'Horas Asistidas', 'a.horasasistidas') }}</th>
+                    <th>Accion</th>    
+                </tr>
+            </thead>
+    {% for est in nocturna %}
+            <tbody>
+                <tr {% if loop.index is odd %}class="color"{% endif %}>
+                        <td>{{est.materiaasiganda.matricula.estudiante.cedula}}</td>
+                        <td>{{est.materiaasiganda.matricula.estudiante.nombre | title}}&nbsp{{est.materiaasiganda.matricula.estudiante.apellido | title}}</td>
+                        <td>{{est.faltasjustificadas | title}}</td><td>{{est.faltasinjustificadas | title}}</td>
+                        <td>{{est.atrasos | title}}</td><td>{{est.horasasistidas | title}}</td>
+                        <td><a class='activate_modal' name='modal_window' id="foos">Mod</a></td>
+            <tr>
+            </tbody>
+
+    {% endfor%}
+        </table>
+            <div class="paginacion">
+                        {{ knp_pagination_render(nocturna) }}
+                     </div>
+    </div>
+
+</div>
+<br><br>
+{% endif%}
+
+{% endblock%}
+{% block aside %}
+    {%set inspector='inspector'%}
+        <p align="center"><a class="boton" href="{{path('portada',{'role':inspector})}}">PORTADA</a></p>
+          <strong><p align="left">Materias/Curso</p></strong>
+    <div id="relacionadas">
+        <ul>
+    {% for mat in listamaterias %}
+                <li><a class="boton" href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materia.id})}}">{{mat.materia.nombre | title}}&nbsp;&nbsp;{{mat.nivel.curso.nombre | title}}</a></li>
+    {% endfor%}
+            </ul>
+        </div>
+{% endblock%}
+
+          
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript">
+    (function($){var ie6=$.browser.msie&&parseInt($.browser.version)==6&&!window['XMLHttpRequest'],ieQuirks=$.browser.msie&&!$.boxModel,w=[];$.modal=function(data,options){return $.modal.impl.init(data,options);};$.modal.close=function(){$.modal.impl.close();};$.fn.modal=function(options){return $.modal.impl.init(this,options);};$.modal.defaults={opacity:50,overlayId:'simplemodal-overlay',overlayCss:{},containerId:'simplemodal-container',containerCss:{},dataCss:{},zIndex:1000,close:true,closeHTML:'<a class="modalCloseImg" title="Close"></a>',closeClass:'simplemodal-close',position:null,persist:false,onOpen:null,onShow:null,onClose:null};$.modal.impl={opts:null,dialog:{},init:function(data,options){if(this.dialog.data){return false;}this.opts=$.extend({},$.modal.defaults,options);this.zIndex=this.opts.zIndex;this.occb=false;if(typeof data=='object'){data=data instanceof jQuery?data:$(data);if(data.parent().parent().size()>0){this.dialog.parentNode=data.parent();if(!this.opts.persist){this.dialog.orig=data.clone(true);}}}else if(typeof data=='string'||typeof data=='number'){data=$('<div/>').html(data);}else{alert('SimpleModal Error: Unsupported data type: '+typeof data);return false;}this.dialog.data=data.addClass('simplemodal-data').css(this.opts.dataCss);data=null;this.create();this.open();if($.isFunction(this.opts.onShow)){this.opts.onShow.apply(this,[this.dialog]);}return this;},create:function(){w=this.getDimensions();if(ie6){this.dialog.iframe=$('<iframe src="javascript:false;"/>').css($.extend(this.opts.iframeCss,{display:'none',opacity:0,position:'fixed',height:w[0],width:w[1],zIndex:this.opts.zIndex,top:0,left:0})).appendTo('body');}this.dialog.overlay=$('<div/>').attr('id',this.opts.overlayId).addClass('simplemodal-overlay').css($.extend(this.opts.overlayCss,{display:'none',opacity:this.opts.opacity/100,height:w[0],width:w[1],position:'fixed',left:0,top:0,zIndex:this.opts.zIndex+1})).appendTo('body');this.dialog.container=$('<div/>').attr('id',this.opts.containerId).addClass('simplemodal-container').css($.extend(this.opts.containerCss,{display:'none',position:'fixed',zIndex:this.opts.zIndex+2})).append(this.opts.close?$(this.opts.closeHTML).addClass(this.opts.closeClass):'').appendTo('body');this.setPosition();if(ie6||ieQuirks){this.fixIE();}this.dialog.container.append(this.dialog.data.hide());},bindEvents:function(){var self=this;$('.'+this.opts.closeClass).bind('click.simplemodal',function(e){e.preventDefault();self.close();});$(window).bind('resize.simplemodal',function(){w=self.getDimensions();self.setPosition();if(ie6||ieQuirks){self.fixIE();}else{self.dialog.iframe&&self.dialog.iframe.css({height:w[0],width:w[1]});self.dialog.overlay.css({height:w[0],width:w[1]});}});},unbindEvents:function(){$('.'+this.opts.closeClass).unbind('click.simplemodal');$(window).unbind('resize.simplemodal');},fixIE:function(){var p=this.opts.position;$.each([this.dialog.iframe||null,this.dialog.overlay,this.dialog.container],function(i,el){if(el){var bch='document.body.clientHeight',bcw='document.body.clientWidth',bsh='document.body.scrollHeight',bsl='document.body.scrollLeft',bst='document.body.scrollTop',bsw='document.body.scrollWidth',ch='document.documentElement.clientHeight',cw='document.documentElement.clientWidth',sl='document.documentElement.scrollLeft',st='document.documentElement.scrollTop',s=el[0].style;s.position='absolute';if(i<2){s.removeExpression('height');s.removeExpression('width');s.setExpression('height',''+bsh+' > '+bch+' ? '+bsh+' : '+bch+' + "px"');s.setExpression('width',''+bsw+' > '+bcw+' ? '+bsw+' : '+bcw+' + "px"');}else{var te,le;if(p&&p.constructor==Array){if(p[0]){var top=typeof p[0]=='number'?p[0].toString():p[0].replace(/px/,'');te=top.indexOf('%')==-1?top+' + (t = '+st+' ? '+st+' : '+bst+') + "px"':parseInt(top.replace(/%/,''))+' * (('+ch+' || '+bch+') / 100) + (t = '+st+' ? '+st+' : '+bst+') + "px"';}if(p[1]){var left=typeof p[1]=='number'?p[1].toString():p[1].replace(/px/,'');le=left.indexOf('%')==-1?left+' + (t = '+sl+' ? '+sl+' : '+bsl+') + "px"':parseInt(left.replace(/%/,''))+' * (('+cw+' || '+bcw+') / 100) + (t = '+sl+' ? '+sl+' : '+bsl+') + "px"';}}else{te='('+ch+' || '+bch+') / 2 - (this.offsetHeight / 2) + (t = '+st+' ? '+st+' : '+bst+') + "px"';le='('+cw+' || '+bcw+') / 2 - (this.offsetWidth / 2) + (t = '+sl+' ? '+sl+' : '+bsl+') + "px"';}s.removeExpression('top');s.removeExpression('left');s.setExpression('top',te);s.setExpression('left',le);}}});},getDimensions:function(){var el=$(window);var h=$.browser.opera&&$.browser.version>'9.5'&&$.fn.jquery<='1.2.6'?document.documentElement['clientHeight']:el.height();return[h,el.width()];},setPosition:function(){var top,left,hCenter=(w[0]/2)-((this.dialog.container.height()||this.dialog.data.height())/2),vCenter=(w[1]/2)-((this.dialog.container.width()||this.dialog.data.width())/2);if(this.opts.position&&this.opts.position.constructor==Array){top=this.opts.position[0]||hCenter;left=this.opts.position[1]||vCenter;}else{top=hCenter;left=vCenter;}this.dialog.container.css({left:left,top:top});},open:function(){this.dialog.iframe&&this.dialog.iframe.show();if($.isFunction(this.opts.onOpen)){this.opts.onOpen.apply(this,[this.dialog]);}else{this.dialog.overlay.show();this.dialog.container.show();this.dialog.data.show();}this.bindEvents();},close:function(){if(!this.dialog.data){return false;}if($.isFunction(this.opts.onClose)&&!this.occb){this.occb=true;this.opts.onClose.apply(this,[this.dialog]);}else{if(this.dialog.parentNode){if(this.opts.persist){this.dialog.data.hide().appendTo(this.dialog.parentNode);}else{this.dialog.data.remove();this.dialog.orig.appendTo(this.dialog.parentNode);}}else{this.dialog.data.remove();}this.dialog.container.remove();this.dialog.overlay.remove();this.dialog.iframe&&this.dialog.iframe.remove();this.dialog={};}this.unbindEvents();}};})(jQuery);
+    </script>
+
+
+<script type='text/javascript'>
+
+    $(document).ready(function(){
+    
+    //get the height and width of the page
+    var window_width = $(window).width();
+    var window_height = $(window).height();
+    
+    //vertical and horizontal centering of modal window(s)
+    /*we will use each function so if we have more then 1 
+    modal window we center them all*/
+    $('.modal_window').each(function(){
+        
+        //get the height and width of the modal
+        var modal_height = $(this).outerHeight();
+        var modal_width = $(this).outerWidth();
+        
+        //calculate top and left offset needed for centering
+        var top = (window_height-modal_height)/2;
+        var left = (window_width-modal_width)/2;
+        
+        //apply new top and left css values 
+        $(this).css({'top' : top , 'left' : left});
+        
+    });
+
+        
+        $('.activate_modal').click(function(){
+                
+              //get the id of the modal window stored in the name of the activating element       
+              var modal_id = $(this).attr('name');
+              
+              //use the function to show it
+              show_modal(modal_id);
+              
+        });
+        
+        $('.close_modal').click(function(){
+            
+            //use the function to close it
+            close_modal();
+            
+        });
+        
+    });
+    
+    //THE FUNCTIONS
+    
+    function close_modal(){
+        
+        //hide the mask
+        $('#mask').fadeOut(500);
+        
+        //hide modal window(s)
+        $('.modal_window').fadeOut(500);
+        
+    }
+    function show_modal(modal_id){
+    
+        //set display to block and opacity to 0 so we can use fadeTo
+        $('#mask').css({ 'display' : 'block', opacity : 0});
+        
+        //fade in the mask to opacity 0.8 
+        $('#mask').fadeTo(500,0.8);
+         
+         //show the modal window
+        $('#'+modal_id).fadeIn(500);
+        
+    }
+    
+</script>
+
+
+{% endblock%}
+
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+ 
+/* ESTILO PARA LA VENTANA MODAL */
+
+  #mask{ 
+        position:absolute; /* important */
+        top:0px; /* start from top */
+        left:0px; /* start from left */
+        height:100%; /* cover the whole page */
+        width:100%;  /* cover the whole page */
+        display:none; /* don't show it '*/          
+        
+        /* styling bellow */
+        background-color: black; 
+    }
+    
+    .modal_window{
+        position:absolute; /* important so we can position it on center later */
+        display:none; /* don't show it */
+        
+        /* styling bellow */
+        color:white;
+    }
+    
+    /* style a specific modal window  */
+    #modal_window{
+        padding:50px;
+        border:1px solid gray;
+        background: #246493;
+        color:black;
+    }
+  /* CIERRE BLOQUE ESTILO PARA LA VENTANA MODAL */  
+    
+</style>
+
+
+
+<div id='mask' class='close_modal'></div>
+<div id='modal_window' class='modal_window'>
+     <form id="login" method="post" {{
+                 form_enctype(form) }}>
+                    <fieldset>
+                  {{form_row(form.faltasjustificadas)}}
+                  {{form_row(form.faltasinjustificadas)}}                                                    
+                  {{form_row(form.atrasos)}}                                                    
+                  {{form_row(form.horasasistidas)}}                                                    
+                  {{form_row(form.observaciones)}}                                                    
+                  
+              </fieldset>   
+         {{form_rest(form)}}                   
+          <input  class="boton" type="submit" value="Guardar"/>
+                </form>
+
+</div>
+   {% endblock %}
+     
+
+    

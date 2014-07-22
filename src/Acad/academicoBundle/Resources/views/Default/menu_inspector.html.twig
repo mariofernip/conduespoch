@@ -1,0 +1,57 @@
+<span class="preload1"></span>
+<span class="preload2"></span>
+{% set rol='inspector'%}
+<ul id="nave">
+    <li class="top"><a href="{{path('portada',{'role': rol })}}" class="top_link"><span>INICIO</span></a></li>
+    <li class="top"><a href="#nogo27" id="contacts" class="top_link"><span class="down">Asistencia</span></a>
+        <ul class="sub">
+                    <li><a href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': 3})}}">Evaluar</a></li>                                          
+        </ul>
+    </li>
+    <li class="top"><a href="#nogo53" id="shop" class="top_link"><span class="down">Reportes</span></a>
+        <ul class="sub">
+            <li><a href="#nogo54">Reporte 1</a></li>
+            <li><a href="#nogo55">Reporte 2</a></li>
+            <li><a href="#nogo56">Reporte 3</a></li>
+        </ul>
+    </li>
+
+</ul>
+
+
+<script type="text/javascript">
+
+    /* Credits: Stu Nicholls */
+/* URL: http://www.stunicholls.com/menu/pro_drop_1/stuHover.js */
+
+stuHover = function() {
+        var cssRule;
+        var newSelector;
+        for (var i = 0; i < document.styleSheets.length; i++)
+                for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
+                        {
+                        cssRule = document.styleSheets[i].rules[x];
+                        if (cssRule.selectorText.indexOf("LI:hover") >= 0)
+                        {
+                                 newSelector = cssRule.selectorText.replace(/LI:hover/gi, "LI.iehover");
+                                document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
+                        }
+                }
+        var getElm = document.getElementById("nave").getElementsByTagName("LI");
+        for (var i=0; i<getElm.length; i++) {
+                getElm[i].onmouseover=function() {
+                        this.className+=" iehover";
+                }
+                getElm[i].onmouseout=function() {
+                        this.className=this.className.replace(new RegExp(" iehover\\b"), "");
+                }
+        }
+}
+if (window.attachEvent) window.attachEvent("onload", stuHover);
+
+    </script>
+
+
+
+
+
