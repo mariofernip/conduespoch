@@ -52,5 +52,10 @@ estudiante_lista_matriculados_x_secciones:
     defaults: { _controller: academicoBundle:default:listaestudiantesxsecciones}
     
 estudiante_lista_matriculados_x_materia_x_secciones:   
-    pattern:  /inspector/estudiante/lista/materias/{materias}
+    pattern:  /inspector/estudiante/lista/materias/{materias}/{nivel}
     defaults: { _controller: academicoBundle:default:listaestudiantesxseccionesmateria}
+    
+lista_materia_x_nivel:    
+    pattern:  /inspector/lista/materias/{nivel}
+    defaults: { _controller: academicoBundle:default:listamateriasxnivel}
+    

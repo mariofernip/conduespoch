@@ -4,7 +4,7 @@
 {% block id 'portada' %}
 {% block article%}
 <section id="menu_inspector">
-    {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
+        {% include 'academicoBundle:Default:menu_inspector.html.twig' with {'niveles': niveles, 'listamaterias': listamaterias}%}
 </section>
 <h3><p align="center">{{curso}}</p><h3>
 {#LISTA DE ESTUDIANTES: SECCION DIURNA#}
@@ -54,7 +54,6 @@
         <table class="display" id="example">
             <thead>
                 <tr >
-                    {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Fecha</th><th>Acción</th>#}
                     <th>{{ knp_pagination_sortable(diurna, 'Cedula', 'e.cedula') }}</th>
                     <th>{{ knp_pagination_sortable(diurna, 'Nombre/Apellido', 'e.nombre') }}</th>
                     <th>{{ knp_pagination_sortable(diurna, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
@@ -93,7 +92,6 @@
         <table class="display" id="example">
             <thead>
                 <tr >
-                    {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Fecha</th><th>Acción</th>#}                        
                     <th>{{ knp_pagination_sortable(diurna, 'Cedula', 'e.cedula') }}</th>
                     <th>{{ knp_pagination_sortable(diurna, 'Nombre/Apellido', 'e.nombre') }}</th>
                     <th>{{ knp_pagination_sortable(diurna, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
@@ -129,12 +127,16 @@
 {% block aside %}
     {%set inspector='inspector'%}
         <p align="center"><a class="boton" href="{{path('portada',{'role':inspector})}}">PORTADA</a></p>
-          <strong><p align="left">Materias/Curso</p></strong>
+          <strong><p align="left">Materias</p></strong>
     <div id="relacionadas">
         <ul>
-    {% for mat in listamaterias %}
-                <li><a class="boton" href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materia.id})}}">{{mat.materia.nombre | title}}&nbsp;&nbsp;{{mat.nivel.curso.nombre | title}}</a></li>
-    {% endfor%}
+    {#{% for mat in listamaterias %}
+                <li><a class="boton" href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materia.id, 'nivel': mat.nivel.id})}}">{{mat.materia.nombre | title}}&nbsp;&nbsp;{{mat.nivel.curso.nombre | title}}&nbsp;&nbsp;{{mat.nivel.paralelo.nombre | title}}</a></li>            
+    {% endfor%}#}
+       {% for mat in listamaterias %}
+                {#<li><a class="boton" href="{{path('estudiante_lista_matriculados_x_secciones',{'nivel': niv.id, 'nivel': niv.id})}}">{{niv.curso | title}}&nbsp;&nbsp;{{niv.paralelo | title}}</a></li>#}
+                <li><a href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materia.id, 'nivel': mat.nivel.id})}}" class="boton">{{mat.materia.nombre | title}}</a></li>
+       {% endfor%}
             </ul>
         </div>
 {% endblock%}

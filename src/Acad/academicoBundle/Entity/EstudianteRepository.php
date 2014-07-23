@@ -90,7 +90,7 @@ class EstudianteRepository extends EntityRepository {
         return $consulta->getOneOrNullResult();
     }
     
-     public function findEstudiantexMateriaxSeccionNocturna($materias) {
+     public function findEstudiantexMateriaxSeccionNocturna($materias, $nivel) {
         
         $em = $this->getEntityManager();
         $seccion='Nocturna';
@@ -98,19 +98,21 @@ class EstudianteRepository extends EntityRepository {
                 join a.materiaasiganda ma
                 join ma.matricula m
                 join m.estudiante e
+                join m.nivel n
                 WHERE m.estado = 1 
+                AND n.id =:nid 
                 AND ma.materia = :mid 
                 AND m.seccion = :sec';   
                 
         $estudiante = $em->createQuery($dql);
         $estudiante->setParameter('mid', $materias);
         $estudiante->setParameter('sec', $seccion);
-        
+        $estudiante->setParameter('nid', $nivel);
         return $estudiante->getResult();
         
     }
     
-    public function findEstudiantexMateriaxSeccionDiurna($materias) {
+    public function findEstudiantexMateriaxSeccionDiurna($materias, $nivel) {
         
         $em = $this->getEntityManager();
         $seccion='Diurna';
@@ -118,19 +120,21 @@ class EstudianteRepository extends EntityRepository {
                 join a.materiaasiganda ma
                 join ma.matricula m
                 join m.estudiante e
+                join m.nivel n
                 WHERE m.estado = 1 
+                AND n.id =:nid 
                 AND ma.materia = :mid 
                 AND m.seccion = :sec';   
                 
         $estudiante = $em->createQuery($dql);
         $estudiante->setParameter('mid', $materias);
         $estudiante->setParameter('sec', $seccion);
-        
+        $estudiante->setParameter('nid', $nivel);
         return $estudiante->getResult();
         
     }
     
-    public function findEstudiantexMateriaxSeccionVespertina($materias) {
+    public function findEstudiantexMateriaxSeccionVespertina($materias, $nivel) {
         
         $em = $this->getEntityManager();
         $seccion='Vespertina';
@@ -138,14 +142,16 @@ class EstudianteRepository extends EntityRepository {
                 join a.materiaasiganda ma
                 join ma.matricula m
                 join m.estudiante e
+                join m.nivel n
                 WHERE m.estado = 1 
+                AND n.id =:nid 
                 AND ma.materia = :mid 
                 AND m.seccion = :sec';   
-                       
+                
         $estudiante = $em->createQuery($dql);
         $estudiante->setParameter('mid', $materias);
         $estudiante->setParameter('sec', $seccion);
-        
+        $estudiante->setParameter('nid', $nivel);
         return $estudiante->getResult();
         
     }
@@ -155,15 +161,30 @@ class EstudianteRepository extends EntityRepository {
         
         $em = $this->getEntityManager();
 
-        $dql = 'select dm, ma, n  FROM academicoBundle:Dictadomateria dm   
+        $dql = 'select dm, ma  FROM academicoBundle:Dictadomateria dm   
                 join dm.materia ma
-                join dm.nivel n
                 where ma.estado = 1';
         
         $consulta = $em->createQuery($dql);
         return $consulta->getResult();
         
     }
+    
+    public function getMateriasxNivel($nid) {
+        
+        $em = $this->getEntityManager();
+
+        $dql = 'select dm, ma  FROM academicoBundle:Dictadomateria dm   
+                join dm.materia ma
+                where ma.estado = 1
+                and dm.nivel = :nid ';
+        
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('nid', $nid);
+        return $consulta->getResult();
+        
+    }
+    
 
     
 }

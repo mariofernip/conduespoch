@@ -1,0 +1,25 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} INICIO {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
+</section>
+
+{#LISTA DE ESTUDIANTES: SECCION DIURNA#}
+{% endblock%}
+{% block aside %}
+    {%set inspector='inspector'%}
+        <p align="center"><a class="boton" href="{{path('portada',{'role':inspector})}}">PORTADA</a></p>
+    
+        <strong><p align="left"><h3><p align="center">{{curso}}</p><h3></p></strong>
+    <div id="relacionadas">
+        <ul>
+    {% for mat in listamaterias %}
+                 <li ><a href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materia.id, 'nivel': mat.nivel.id})}}" class="boton">{{mat.materia.nombre | title}}</a></li>
+    {% endfor%}
+
+            </ul>
+        </div>
+{% endblock%}

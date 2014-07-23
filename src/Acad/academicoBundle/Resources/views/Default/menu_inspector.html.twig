@@ -5,9 +5,21 @@
     <li class="top"><a href="{{path('portada',{'role': rol })}}" class="top_link"><span>INICIO</span></a></li>
     <li class="top"><a href="#nogo27" id="contacts" class="top_link"><span class="down">Asistencia</span></a>
         <ul class="sub">
-                    <li><a href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': 3})}}">Evaluar</a></li>                                          
+                <li><a href="#nogo532" id="shop" class="top_link"><span class="down">Evaluar</span></a>
+                    <ul>
+                       
+                           {% for mat in niveles %}
+                            <li><a href="{{path('lista_materia_x_nivel',{'nivel': mat.id})}}">{{mat.curso.nombre | title}}&nbsp;&nbsp;{{mat.paralelo.nombre | title}}</a></li>              
+                          {% endfor%} 
+                    </ul>
+    </li>
         </ul>
     </li>
+
+    
+     
+    
+    
     <li class="top"><a href="#nogo53" id="shop" class="top_link"><span class="down">Reportes</span></a>
         <ul class="sub">
             <li><a href="#nogo54">Reporte 1</a></li>
@@ -15,7 +27,9 @@
             <li><a href="#nogo56">Reporte 3</a></li>
         </ul>
     </li>
-
+   
+    
+    
 </ul>
 
 

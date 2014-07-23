@@ -94,6 +94,9 @@ class DefaultController extends Controller
         $periodo= $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
             'estado'=>1
         ));
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMaterias();
+       
         if($role=='docente'){
             $cedula=$usuario->getCedula();
             $materiasdocente= $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula,$periodo->getId());
@@ -112,7 +115,10 @@ class DefaultController extends Controller
         if($role=='inspector'){
             
             return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
-                'periodo'=>$periodo
+                'periodo'=>$periodo,
+                'niveles'=>$niveles,
+                'listamaterias'=>$listamaterias,
+        
             ));
         }
         

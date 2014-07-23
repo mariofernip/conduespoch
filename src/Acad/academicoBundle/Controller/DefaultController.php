@@ -735,12 +735,11 @@ class DefaultController extends Controller {
                 ));
     }
     
-    //METODO: lista los estudiantes matriculados por nivel, y secciones de un periodo actual    
-    public function listaestudiantesxseccionesmateriaAction($materias) {
+    //METODO: lista asistencia estudiantes matriculados por nivel, y secciones de un periodo actual    
+    public function listaestudiantesxseccionesmateriaAction($materias, $nivel) {
 
-        $nivel=1;
-        $em = $this->getDoctrine()->getEntityManager();
-        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMaterias();
+       $em = $this->getDoctrine()->getEntityManager();
+       $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         
         $asistencia= $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('id' => 3));
@@ -769,11 +768,11 @@ class DefaultController extends Controller {
         }
 
         //obtiene lista de estudiantes matriculados de seccion: diurna
-        $diurna = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionDiurna($materias);      
+        $diurna = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionDiurna($materias, $nivel);      
         //obtiene lista de estudiantes matriculados de seccion: nocturna
-        $nocturna = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionNocturna($materias);
+        $nocturna = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionNocturna($materias, $nivel);
         //obtiene lista de estudiantes matriculados de seccion: vespertina
-        $vespertina = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionVespertina($materias);
+        $vespertina = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionVespertina($materias, $nivel);
         //obtiene lista de todos los niveles
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         //obtine el nivel
@@ -826,6 +825,34 @@ class DefaultController extends Controller {
     }
     
     
+    //METODO: lista las materias por nivel    
+    public function listamateriasxnivelAction($nivel) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        $curso = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
+
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+            $usuario = $this->get('security.context')->getToken()->getUser();
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+         
+        return $this->render('academicoBundle:default:listamateriasxnivel.html.twig', array(
+                    'periodo' => $periodo,
+                    'listamaterias'=>$listamaterias,
+                    'niveles'=>$niveles,
+                    'curso'=>$curso
+            
+                ));
+    }
     
     
 }
