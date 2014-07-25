@@ -1,0 +1,25 @@
+
+{% extends '::frontend.html.twig'%}
+
+{% block title %} Perfil de docente {% endblock%}
+{% block id 'portada' %}
+
+{% block article%}
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_docente.html.twig'%}
+</section>
+
+{% endblock%}
+{% block aside%}
+{{parent()}}
+    <strong><p align="left">Curso / Materia</p></strong>
+    <div id="relacionadas">
+        <ul>
+    {% for matdoc in materiasdoc %}
+                <li><a class="boton" href="{{path('docente_listaest_x_materia',{'materia': matdoc.materia.id, 'nivel': matdoc.nivel.id})}}">{{matdoc.nivel | title}}&nbsp;&nbsp;{{matdoc.materia.nombre | title}}</a></li>
+    {% endfor%}
+
+            </ul>
+        </div>
+
+{% endblock%}

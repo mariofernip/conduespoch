@@ -1,35 +1,39 @@
 <span class="preload1"></span>
 <span class="preload2"></span>
-{% set rol='inspector'%}
+{% set rol='docente'%}
 <ul id="nave">
     <li class="top"><a href="{{path('portada',{'role': rol })}}" class="top_link"><span>INICIO</span></a></li>
-    <li class="top"><a id="contacts" class="top_link"><span class="down">Asistencia</span></a>
+    <li class="top"><a  id="products" class="top_link"><span class="down">Asignar notas</span></a>        
         <ul class="sub">
-                <li><a href="#nogo532" id="shop" class="top_link"><span class="down">Evaluar</span></a>
-                    <ul>
-                       
-                           {% for mat in niveles %}
-                            <li><a href="{{path('lista_materia_x_nivel',{'nivel': mat.id})}}">{{mat.curso.nombre | title}}&nbsp;&nbsp;{{mat.paralelo.nombre | title}}</a></li>              
-                          {% endfor%} 
-                    </ul>
+            <li>
+                <a href="{{path('docente_lista_materias_x_nivel')}}" class="fly">Ver materias</a>
+            </li>                
+
+            <li><a  class="fly">Ver</a>
+                <ul>
+                    <li><a href="#nogo4">Nikon</a></li>
+                    <li><a href="#nogo5">Minolta</a></li>
+                    <li><a href="#nogo6">Pentax</a></li>
+                </ul>
+            </li>
+        </ul>
     </li>
+    <li class="top"><a  id="services" class="top_link"><span class="down">Consultas</span></a>
+        <ul class="sub">
+            <li><a href="">Nueva</a></li>
+
+        </ul>
+    </li>
+    <li class="top"><a  id="contacts" class="top_link"><span class="down">Reportes</span></a>
+        <ul class="sub">
+            <li><a href="#nogo28">Reporte 1</a></li>
+            <li><a href="#nogo29" class="fly">Lista Estudiantes</a>
+                
+            </li>            
         </ul>
     </li>
 
-    
-     
-    
-    
-    <li class="top"><a  id="shop" class="top_link"><span class="down">Reportes</span></a>
-        <ul class="sub">
-            <li><a href="#nogo54">Reporte 1</a></li>
-            <li><a href="#nogo55">Reporte 2</a></li>
-            <li><a href="#nogo56">Reporte 3</a></li>
-        </ul>
-    </li>
-   
-    
-    
+
 </ul>
 
 

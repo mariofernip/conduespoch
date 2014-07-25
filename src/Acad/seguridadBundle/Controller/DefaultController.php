@@ -122,5 +122,13 @@ class DefaultController extends Controller
             ));
         }
         
+        if($role=='amaterias'){
+            
+            return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
+                'periodo'=>$periodo
+            ));
+        }
+        
+        
     }        
 }

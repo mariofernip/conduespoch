@@ -39,10 +39,30 @@ class EstudianteRepository extends EntityRepository {
                 FROM academicoBundle:Dictadomateria dm                               
                 JOIN dm.periodo p
                 where p.id = :pid
+                order by dm.id desc                
                 ';
 
         $consulta = $em->createQuery($dql);
-        $consulta->setParameter('pid', $pid);                                              
+        $consulta->setParameter('pid', $pid);    
+        $consulta->setMaxResults(5);
+
+        return $consulta->getResult();
+        
+    }
+    
+    public function getTodosDictadoMateria($pid) {
+        
+        $em = $this->getEntityManager();
+
+        $dql = 'select dm,p
+                FROM academicoBundle:Dictadomateria dm                               
+                JOIN dm.periodo p
+                where p.id = :pid
+                order by dm.id desc                
+                ';
+
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('pid', $pid);            
 
         return $consulta->getResult();
         

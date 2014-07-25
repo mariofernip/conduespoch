@@ -1,27 +1,11 @@
 {% extends '::frontend.html.twig' %}
+{% block id 'amaterias' %}
 
-
-{% block id 'estudiante' %}
-
-{% block title %}Asignar materia a los docentes{% endblock%}
+{% block title %}Materias docente{% endblock%}
 
 {% block article %}
 
 <h1>{{ block ('title')}}</h1>
-<br>
-<form action="{{ path('amaterias_dictadomateria') }}" method="post" {{
-        form_enctype(formulario) }}>
-        {{ form_errors(formulario) }}
-          <fieldset>
-                  {{ form_row(formulario.periodo)}}
-                  {{ form_row(formulario.docente)}}
-                  {{ form_row(formulario.nivel)}}
-                  {{ form_row(formulario.materia)}}
-              </fieldset>   
-         {{form_rest(formulario)}}                   
-          <input class="boton" type="submit" value="Asignar" />
-</form>
-<strong>Últimos 5 ingresos: </strong>&nbsp;<a href="{{path('amaterias_lista_materias_asignadas')}}">Ver todos</a>
 <br>
     <div id="dt_example">
         <div id="demo">
@@ -53,7 +37,6 @@
         </div>
     </div>
 <br>
-
 {% endblock%}
 
 {% block aside %}
@@ -73,4 +56,4 @@
             }
         }
     </script>
-{% endblock%}
+{% endblock%}        

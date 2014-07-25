@@ -6,7 +6,7 @@
     
 {% endfor%}    
     
-{% if is_granted('ROLE_SECRETARIA' ) or is_granted('ROLE_DOCENTE')%}
+{% if is_granted('ROLE_SECRETARIA' ) or is_granted('ROLE_DOCENTE') or is_granted('ROLE_INSPECTOR') or is_granted('ROLE_AMATERIAS')%}
     
     {# el usuario todavía no ha hecho login #}
 {% else %}

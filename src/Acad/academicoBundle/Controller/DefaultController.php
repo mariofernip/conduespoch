@@ -334,47 +334,42 @@ class DefaultController extends Controller {
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
 
-        $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
-            'estado' => 1
-                ));
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        if (!$periodo) {
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
 
-        $niv = $em->getRepository('administrativoBundle:Nivel')->findOneBy(array(
-            'id' => 3
-                ));
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+            $usuario = $this->get('security.context')->getToken()->getUser();
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
         $dictadomateria = new Dictadomateria();
 
         $formulario = $this->createForm(new DictadomateriaType(), $dictadomateria);
         $formulario->handleRequest($peticion);
 
-        if (!$periodo) {
-            $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo'
-            );
-            return $this->redirect($this->generateUrl('_portada'));
-        }
-
         if ($formulario->isValid()) {
             $doc = new Docente($formulario->getData()->getDocente());
             $c = $doc->getCedula();
-
-
 
             if ($formulario->getData()->getDocente() == null) {
 
                 $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione un docente');
 
-                return $this->redirect($this->generateUrl('docente_dictadomateria'));
+                return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
             }
             if ($formulario->getData()->getNivel() == null) {
 
                 $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione un nivel');
 
-                return $this->redirect($this->generateUrl('docente_dictadomateria'));
+                return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
             }
             if ($formulario->getData()->getMateria() == null) {
 
                 $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione una materia');
 
-                return $this->redirect($this->generateUrl('docente_dictadomateria'));
+                return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
             }
 
             $em->persist($dictadomateria);
@@ -382,13 +377,20 @@ class DefaultController extends Controller {
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia asignada al docente'
             );
 
-            return $this->redirect($this->generateUrl('docente_dictadomateria'));
+            return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
         }
+
         $dicmat = $em->getRepository('academicoBundle:Estudiante')->getDictadoMateria($periodo->getId());
+
+        //paginacion
+        $paginatorDM = $this->get('knp_paginator');
+        $paginationDM = $paginatorDM->paginate(
+                $dicmat, $this->getRequest()->query->get('page', 1), 10
+        );
 
         return $this->render('academicoBundle:default:docentematerias.html.twig', array(
                     'periodo' => $periodo,
-                    'dictadomat' => $dicmat,
+                    'paginationDM' => $paginationDM,
                     'formulario' => $formulario->createView()
                 ));
     }
@@ -518,7 +520,7 @@ class DefaultController extends Controller {
         return $this->render('academicoBundle:Default:estudiantematriculado2.html.twig', array('periodo' => $periodo, 'formulario' => $formulario->createView(), 'estudiante' => $estudiante));
     }
 
-    //METODO PRA lISTAR LOS ESTUDIANTE DEL DOCENTE X MATERIA
+    //METODO PRA lISTAR LOS ESTUDIANTE DEL DOCENTE X MATERIA, NIVEL, SECCION
 
     public function notasAction($materia, $nivel) {
 
@@ -534,28 +536,78 @@ class DefaultController extends Controller {
         $cedula = $usuario->getCedula();
         //obtiene las materias del docente autenticado
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
-        //obtiene los estudiante que reciben una materia en un nivel
-        $estudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getEstudiantesxMateria($materia, $periodo->getId(), $nivel);
+        //obtiene los estudiante que reciben una materia en un nivel de la seccion diruna
+        $estudiantesxmateriaSD = $em->getRepository('academicoBundle:Dictadomateria')->getEstudiantesxMateriaSD($materia, $periodo->getId(), $nivel);
+        //obtiene los estudiante que reciben una materia en un nivel de la seccion vespertina
+        $estudiantesxmateriaSV = $em->getRepository('academicoBundle:Dictadomateria')->getEstudiantesxMateriaSV($materia, $periodo->getId(), $nivel);
+        //obtiene los estudiante que reciben una materia en un nivel de la seccion nocturna
+        $estudiantesxmateriaSN = $em->getRepository('academicoBundle:Dictadomateria')->getEstudiantesxMateriaSN($materia, $periodo->getId(), $nivel);
         $evaluacionestudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia, $periodo->getId(), $nivel);
 
         $evaluacion = new Evaluacion();
         $formulario = $this->createForm(new EvaluacionType(), $evaluacion);
 
         $formulario->handleRequest($peticion);
-        $codigo = 41;
+        $mat = $em->getRepository('administrativoBundle:Materia')->find($materia);
+        $niv = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
+
+
+        //PAGINACION
+        //seccion diurna
+        $paginatorSD = $this->get('knp_paginator');
+        $paginationSD = $paginatorSD->paginate(
+                $estudiantesxmateriaSD, $this->getRequest()->query->get('page', 1), 10
+        );
+
+        //seccion vespertina
+        $paginatorSV = $this->get('knp_paginator');
+        $paginationSV = $paginatorSV->paginate(
+                $estudiantesxmateriaSV, $this->getRequest()->query->get('page', 1), 10
+        );
+
+        //seccion nocturna
+        $paginatorSN = $this->get('knp_paginator');
+        $paginationSN = $paginatorSN->paginate(
+                $estudiantesxmateriaSN, $this->getRequest()->query->get('page', 1), 10
+        );
+        $sd = 0;
+        $sv = 0;
+        $sn = 0;
+        if ($estudiantesxmateriaSD) {
+            $sd = 1;
+        }
+        if ($estudiantesxmateriaSV) {
+            $sv = 1;
+        }
+        if ($estudiantesxmateriaSN) {
+            $sn = 1;
+        }
+
+
+
+
 
         //creo la vista
         return $this->render('academicoBundle:default:notasdocente.html.twig', array(
                     'periodo' => $periodo,
                     'materiasdoc' => $materiasdocente,
-                    'estudiantes' => $estudiantesxmateria,
-                    'codigo' => $codigo,
+                    'estudiantes' => $estudiantesxmateriaSD,
                     'evaest' => $evaluacionestudiantesxmateria,
+                    'mat' => $mat,
+                    'niv' => $niv,
+                    'codmat' => $materia,
+                    'codniv' => $nivel,
+                    'paginationSD' => $paginationSD,
+                    'paginationSV' => $paginationSV,
+                    'paginationSN' => $paginationSN,
+                    'sd' => $sd,
+                    'sv' => $sv,
+                    'sn' => $sn,
                     'formulario' => $formulario->createView()
                 ));
     }
 
-    public function evaluacionAction($codigo) {
+    public function evaluacionAction() {
 
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
@@ -571,21 +623,47 @@ class DefaultController extends Controller {
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
         //obtiene los estudiante que reciben una materia en un nivel
         //$estudiantesxmateria = $em->getRepository('AcadacademicoBundle:Dictadomateria')->getEstudiantesxMateria($materia, $periodo->getId(), $nivel);
+        $codigo = $this->getRequest()->get('codigo');
         $materiaasig = $em->getRepository('academicoBundle:MateriaAsignada')->find($codigo);
+
         $evaluacion = new Evaluacion();
         $formulario = $this->createForm(new EvaluacionType(), $evaluacion);
 
         $formulario->handleRequest($peticion);
-
+        if (!$materiaasig) {
+            return $this->redirect($this->generateUrl('portada', array('role' => 'docente')));
+        }
         $evaluacion->setMateriaasignada($materiaasig);
-        if ($formulario->isValid()) {
-            $evaluacion->setMateriaasignada($materiaasig);
-            $em->persist($evaluacion);
-            $em->flush();
 
-            //mensaje
-            $this->get('session')->getFlashBag()->add('Info', 'Nota guardada');
-            return $this->redirect($this->generateUrl('docente_notas_x_estudiante', array('codigo' => $codigo)));
+
+        $url = explode("?", $_SERVER['HTTP_REFERER']);
+        $redir = $url[0];
+
+        if ($formulario->isValid()) {
+            $codmes = $formulario->getData()->getMesEvaluacion();
+            $codtiponota = $formulario->getData()->getTipoNota();
+            $matasi = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionExistente($codigo, $codmes->getId(), $codtiponota->getId());
+            if (!$matasi) {
+                $evaluacion->setMateriaasignada($materiaasig);
+                $em->persist($evaluacion);
+                $em->flush();
+
+                //mensaje
+                $this->get('session')->getFlashBag()->add('Info', 'Nota guardada');
+                //redirecciono a la pagina anterior
+                return $this->redirect($redir);
+            } else {
+
+                //mensaje
+                $this->get('session')->getFlashBag()->add('Info', 'Nota previamente ingresada');
+                //redirecciono a la pagina anterior
+                return $this->redirect($redir);
+            }
+        } else {
+
+            $this->get('session')->getFlashBag()->add('Info', 'Nota no válida');
+            //redirecciono a la pagina anterior
+            return $this->redirect($redir);
         }
 
         //creo la vista
@@ -597,6 +675,7 @@ class DefaultController extends Controller {
                     'formulario' => $formulario->createView()
                 ));
     }
+
 
     
     //METODO: listar los estudiantes inscritos en el periodo actual
@@ -853,6 +932,125 @@ class DefaultController extends Controller {
             
                 ));
     }
+    
+    
+    public function listamateriasxdocenteAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        $cedula = $usuario->getCedula();
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
+
+
+
+        return $this->render('academicoBundle:default:listamateriasxdocente.html.twig', array(
+                    'periodo' => $periodo,
+                    'materiasdoc' => $materiasdocente
+                ));
+    }
+
+    public function listadictadomateriaAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        $dicmat = $em->getRepository('academicoBundle:Estudiante')->getTodosDictadoMateria($periodo->getId());
+
+        //paginacion
+        $paginatorDM = $this->get('knp_paginator');
+        $paginationDM = $paginatorDM->paginate(
+                $dicmat, $this->getRequest()->query->get('page', 1), 10
+        );
+
+        return $this->render('academicoBundle:default:listadictadomateria.html.twig', array(
+                    'periodo' => $periodo,
+                    'paginationDM' => $paginationDM
+                ));
+    }
+
+    public function modificardictadomateriaAction($codm) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $rol = strtolower($usuario->getRol());
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no activo');
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+        $dictadomateria = $em->getRepository('academicoBundle:Dictadomateria')->find($codm);
+
+        $formulario = $this->createForm(new DictadomateriaType(), $dictadomateria);
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Datos actualizados');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+
+        return $this->render('academicoBundle:default:modificardictadomateria.html.twig', array(
+                    'periodo' => $periodo,
+                    'coddm' => $codm,
+                    'formulario' => $formulario->createView()
+                ));
+    }
+
+    public function eliminardictadomateriaAction() {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $rol = strtolower($usuario->getRol());
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no activo');
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+        $codm = $this->getRequest()->get('codm');
+        $dictadomateria = $em->getRepository('academicoBundle:Dictadomateria')->find($codm);
+        if ($dictadomateria) {
+            //elimino el objto dictadomateria
+            $em->remove($dictadomateria);
+            $em->flush();
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Registro eliminado');
+            return $this->redirect($this->generateUrl('amaterias_lista_materias_asignadas'));
+        }else{
+            $this->get('session')->getFlashBag()->add('Info', 'Registro no encontrado');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+    }
+    
     
     
 }

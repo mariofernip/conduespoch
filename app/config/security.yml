@@ -30,7 +30,7 @@ security:
         - { path: ^/secretaria/*, roles: ROLE_SECRETARIA }
         - { path: ^/docente/*, roles: ROLE_DOCENTE }
         - { path: ^/inspector/*, roles: ROLE_INSPECTOR }
-        
+        - { path: ^/amaterias/*, roles: ROLE_AMATERIAS }
         
    #encargados de crear los usuarios de la aplicacion
     providers:      

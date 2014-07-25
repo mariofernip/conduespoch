@@ -1,0 +1,32 @@
+
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'estudiante' %}
+
+{% block title %}Asignar materia a los docentes{% endblock%}
+
+{% block article %}
+
+<h1>{{ block ('title')}}</h1>
+<br>
+<form action="{{ path('amaterias_modificar_materias_asignadas',{'codm': coddm}) }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{ form_row(formulario.periodo)}}
+                  {{ form_row(formulario.docente)}}
+                  {{ form_row(formulario.nivel)}}
+                  {{ form_row(formulario.materia)}}
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Asignar" />
+</form>
+<br>
+{% endblock%}
+
+{% block aside %}
+    {%set rol='amaterias'%}
+        <p align="center"><a class="boton" href="{{path('portada',{'role': rol})}}">INICIO</a></p>
+    {{ parent()}}
+{% endblock%}

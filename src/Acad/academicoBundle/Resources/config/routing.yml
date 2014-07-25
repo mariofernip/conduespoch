@@ -2,7 +2,6 @@ academico_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: academicoBundle:Default:index }
 
-
 estudiante_registro:
     pattern:  /secretaria/estudiante/registro
     defaults: { _controller: academicoBundle:default:registroEstudiante}
@@ -19,9 +18,21 @@ estudiante_busqueda:
     pattern:  /secretaria/estudiante/consulta/inscripcion
     defaults: { _controller: academicoBundle:default:buscarEst}
             
-docente_dictadomateria:
-    pattern:  /docente/materias
+amaterias_dictadomateria:
+    pattern:  /amaterias/materias
     defaults: { _controller: academicoBundle:default:dictadomateria}
+    
+amaterias_lista_materias_asignadas:
+    pattern:  /amaterias/lista/materias-asignadas
+    defaults: { _controller: academicoBundle:default:listadictadomateria}
+    
+amaterias_modificar_materias_asignadas:
+    pattern:  /amaterias/modificar/materias-asignadas/{codm}
+    defaults: { _controller: academicoBundle:default:modificardictadomateria}    
+    
+amaterias_eliminar_materias_asignadas:
+    pattern:  /amaterias/eliminar/materias-asignadas
+    defaults: { _controller: academicoBundle:default:eliminardictadomateria}    
    
 estudiante_matricula:
     pattern:  /secretaria/estudiante/matricula/{cedula}
@@ -36,7 +47,7 @@ docente_listaest_x_materia:
     defaults: { _controller: academicoBundle:default:notas}
     
 docente_notas_x_estudiante:
-    pattern:  /docente/notas/estudiante/{codigo}
+    pattern:  /docente/notas/estudiante
     defaults: { _controller: academicoBundle:default:evaluacion}
     
 estudiante_lista_inscritos:
@@ -51,11 +62,15 @@ estudiante_lista_matriculados_x_secciones:
     pattern:  /secretaria/estudiante/lista/matriculados/{nivel}
     defaults: { _controller: academicoBundle:default:listaestudiantesxsecciones}
     
+docente_lista_materias_x_nivel:    
+    pattern:  /docente/lista/materias
+    defaults: { _controller: academicoBundle:default:listamateriasxdocente}
+
 estudiante_lista_matriculados_x_materia_x_secciones:   
     pattern:  /inspector/estudiante/lista/materias/{materias}/{nivel}
     defaults: { _controller: academicoBundle:default:listaestudiantesxseccionesmateria}
     
 lista_materia_x_nivel:    
     pattern:  /inspector/lista/materias/{nivel}
-    defaults: { _controller: academicoBundle:default:listamateriasxnivel}
+    defaults: { _controller: academicoBundle:default:listamateriasxnivel}    
     
