@@ -65,7 +65,7 @@ class Asistencia
 
     /**
      *
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="String", nullable=true)
      */
     protected $observaciones;
 
