@@ -821,7 +821,9 @@ class DefaultController extends Controller {
        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         
-        $asistencia= $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('id' => 3));
+        $codigo= $this->getRequest()->get('codigo');
+        
+        $asistencia= $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('id' => $codigo));
         
         $form = $this->createForm( new AsistenciaType(), $asistencia);
         $request = $this->getRequest();
@@ -902,7 +904,7 @@ class DefaultController extends Controller {
                     
                 ));
     }
-    
+        
     
     //METODO: lista las materias por nivel    
     public function listamateriasxnivelAction($nivel) {

@@ -33,7 +33,7 @@
                         <td>{{est.materiaasiganda.matricula.estudiante.nombre | title}}&nbsp{{est.materiaasiganda.matricula.estudiante.apellido | title}}</td>                                                           
                         <td>{{est.faltasjustificadas | title}}</td><td>{{est.faltasinjustificadas | title}}</td>
                         <td>{{est.atrasos | title}}</td><td>{{est.horasasistidas | title}}</td>
-                        <td><a class='activate_modal' name='modal_window' id="foos">Mod</a></td>
+                        <td><a class='activate_modal' name='modal_window' id="{{ est.id }}">Mod</a></td>
                 <tr>
             </tbody>
 
@@ -70,7 +70,7 @@
                         <td>{{est.materiaasiganda.matricula.estudiante.nombre | title}}&nbsp{{est.materiaasiganda.matricula.estudiante.apellido | title}}</td>
                         <td>{{est.faltasjustificadas | title}}</td><td>{{est.faltasinjustificadas | title}}</td>
                         <td>{{est.atrasos | title}}</td><td>{{est.horasasistidas | title}}</td>
-                        <td><a class='activate_modal' name='modal_window' id="foos">Mod</a></td>
+                        <td><a class='activate_modal' name='modal_window' id="{{ est.id }}">Mod</a></td>
                 <tr>
             </tbody>
 
@@ -108,7 +108,7 @@
                         <td>{{est.materiaasiganda.matricula.estudiante.nombre | title}}&nbsp{{est.materiaasiganda.matricula.estudiante.apellido | title}}</td>
                         <td>{{est.faltasjustificadas | title}}</td><td>{{est.faltasinjustificadas | title}}</td>
                         <td>{{est.atrasos | title}}</td><td>{{est.horasasistidas | title}}</td>
-                        <td><a class='activate_modal' name='modal_window' id="foos">Mod</a></td>
+                        <td><a class='activate_modal' name='modal_window' id="{{ est.id }}">Mod</a></td>
             <tr>
             </tbody>
 
@@ -184,6 +184,12 @@
               
               //use the function to show it
               show_modal(modal_id);
+              
+              //A la ruta le agregamos el codigo como parametro
+              _url = '{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': 3, 'nivel': 1,})}}' + "?codigo="+$(this).attr("id");
+              
+                 //Reemplazaos el action
+                $("#login").attr("action", _url);             
               
         });
         
