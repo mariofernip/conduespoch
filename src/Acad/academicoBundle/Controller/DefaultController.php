@@ -3,6 +3,7 @@
 namespace Acad\academicoBundle\Controller;
 
 use Acad\academicoBundle\Entity\Asistencia;
+use Acad\academicoBundle\Entity\AsistenciaEstudiante;
 use Acad\academicoBundle\Entity\CumpleRequisito;
 use Acad\academicoBundle\Entity\Dictadomateria;
 use Acad\academicoBundle\Entity\Estudiante;
@@ -11,9 +12,9 @@ use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Entity\MateriaAsignada;
 use Acad\academicoBundle\Entity\Matricula;
 use Acad\academicoBundle\Entity\RequisitoEstudiante;
-use Acad\academicoBundle\Form\AsistenciaType;
 use Acad\academicoBundle\Form\DictadomateriaType;
 use Acad\academicoBundle\Form\EstudianteType;
+use Acad\academicoBundle\Form\EstudianteAsistenciaType;
 use Acad\academicoBundle\Form\EvaluacionType;
 use Acad\academicoBundle\Form\MatriculaAntiguosType;
 use Acad\academicoBundle\Form\MatriculaType;
@@ -41,7 +42,7 @@ class DefaultController extends Controller {
     //permite ingresar un nuevo estudiante al sistema y lo inscribe en el periodo actual
     public function registroEstudianteAction() {
 
-
+        
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getManager();
 
@@ -71,6 +72,7 @@ class DefaultController extends Controller {
         if ($formulario->isValid()) {
 
             //inserto el nuevo estudiante       
+            //$estudiante->upload();
             $estudiante->setEstado(1);
             $em->persist($estudiante);
             $em->flush();
@@ -109,6 +111,7 @@ class DefaultController extends Controller {
                     'periodo' => $periodo,
                     'formulario' => $formulario->createView())
         );
+
     }
 
     public function requisitoEstudianteAction($cedula) {
@@ -817,26 +820,11 @@ class DefaultController extends Controller {
     //METODO: lista asistencia estudiantes matriculados por nivel, y secciones de un periodo actual    
     public function listaestudiantesxseccionesmateriaAction($materias, $nivel) {
 
-       $em = $this->getDoctrine()->getEntityManager();
+       $em = $this->getDoctrine()->getManager();
        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
-        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
-        
-        $codigo= $this->getRequest()->get('codigo');
-        
-        $asistencia= $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('id' => $codigo));
-        
-        $form = $this->createForm( new AsistenciaType(), $asistencia);
+       $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+                     
         $request = $this->getRequest();
-        
-        if ( $request->getMethod() == 'POST' ) {
-        $form->bind( $request );
-        
-        if ( $form->isValid() ) {
-            $em->persist( $asistencia );
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('Info', 'Asistencia Actualizada');
-            }
-        }
         
         if (!$periodo) {
             //mensaje
@@ -848,62 +836,78 @@ class DefaultController extends Controller {
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
-        //obtiene lista de estudiantes matriculados de seccion: diurna
-        $diurna = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionDiurna($materias, $nivel);      
-        //obtiene lista de estudiantes matriculados de seccion: nocturna
-        $nocturna = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionNocturna($materias, $nivel);
-        //obtiene lista de estudiantes matriculados de seccion: vespertina
-        $vespertina = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionVespertina($materias, $nivel);
         //obtiene lista de todos los niveles
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         //obtine el nivel
         $curso = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
-
-        //seccion diurna
-        $paginatorSD = $this->get('knp_paginator');
-        $paginationSD = $paginatorSD->paginate(
-                $diurna, $this->getRequest()->query->get('page', 1), 10
+        //obtiene lista de estudiantes matriculados de seccion: diurna
+        $secciones = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSecciones($materias, $nivel);      
+        
+        //secciones
+        $paginatorSS = $this->get('knp_paginator');
+        $paginationSS = $paginatorSS->paginate(
+                $secciones, $this->getRequest()->query->get('page', 1), 10
         );
         
-        //seccion vespertina
-        $paginatorSV = $this->get('knp_paginator');
-        $paginationSV = $paginatorSV->paginate(
-                $vespertina, $this->getRequest()->query->get('page', 1), 10
-        );
-        
-        //seccion nocturna
-        $paginatorSN = $this->get('knp_paginator');
-        $paginationSN = $paginatorSN->paginate(
-                $nocturna, $this->getRequest()->query->get('page', 1), 10
-        );
         $sd=0; 
-        $sv=0;
-        $sn=0;
-        if($diurna){
+        
+        if($secciones){
             $sd=1;
         }
-        if($vespertina){
-            $sv=1;
+        $itemsecciones = new AsistenciaEstudiante();
+        
+        foreach ($secciones as $sec) {
+            $cr = new Asistencia(); //creo un objeto nuevo: asistencia
+            $cr->setId($sec->getId());
+            $cr->setFaltasjustificadas($sec->getFaltasjustificadas());
+            $cr->setFaltasinjustificadas($sec->getFaltasinjustificadas());
+            $cr->setAtrasos($sec->getAtrasos());
+            $cr->setPromediofinal($sec->getPromediofinal());
+            $cr->setMateriaasignada($sec->getMateriaasignada());
+            //lleno el objto tarea con varios objetos asistencia
+            $itemsecciones->getFaltasjustificadas()->add($cr);
         }
-        if($nocturna){
-            $sn=1;
-        } 
+        
+        $formsecciones = $this->createForm(new EstudianteAsistenciaType(), $itemsecciones);
+        
+        $formsecciones->handleRequest($request);
+          
+             if ( $formsecciones->isValid() ) {     
+            
+                foreach ($itemsecciones->getFaltasjustificadas() as $item) {
+                    $cod= $item->getId();
+                    //$ha=$item->getHorasasistidas();
+                    $fj=$item->getFaltasjustificadas();
+                    $fi=$item->getFaltasinjustificadas();
+                    $a=$item->getAtrasos();
+                    
+                    $cr= $em->getRepository('academicoBundle:Asistencia')->find($cod);                    
+                    $cr->setFaltasjustificadas($fj);
+                    $cr->setFaltasinjustificadas($fi);
+                    $cr->setAtrasos($a);
+                    $em->flush();
+                }         
+                $this->get('session')->getFlashBag()->add('Info', 'Asistencia ha sido actualizada');
+                $usuario = $this->get('security.context')->getToken()->getUser();
+                $rol = strtolower($usuario->getRol());
+                return $this->redirect($this->generateUrl('estudiante_lista_matriculados_x_materia_x_secciones', array('materias' => $materias, 'nivel' => $nivel)));
+      
+
+            }
+        
         return $this->render('academicoBundle:default:listaestudiantesmatriculadosasistecia.html.twig', array(
                     'periodo' => $periodo,
                     'niveles' => $niveles,
-                    'diurna' => $paginationSD,
-                    'nocturna' => $paginationSN,
-                    'vespertina' => $paginationSV,
-                    'curso' => $curso,
-                    'sd'=>$sd,
-                    'sv'=>$sv,
-                    'sn'=>$sn,
+                    'secciones' => $paginationSS,            
+                    'curso' => $curso,                    
                     'materias'=>$materias,
-                    'listamaterias'=>$listamaterias,
-                    'form'=>$form->createView()
-                    
+                    'listamaterias'=>$listamaterias,            
+                    'formsecciones'=>$formsecciones->createView(),                       
+                    'sd'=>$sd,
                 ));
     }
+        
+    
         
     
     //METODO: lista las materias por nivel    
@@ -1054,5 +1058,36 @@ class DefaultController extends Controller {
     }
     
     
+    //METODO: modifica los datos de la matricula de un estudiante previamente matriculado 
+    public function modificarmatriculaAction($mid) {
+        
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+
+        $matricula = $em->getRepository('academicoBundle:Matricula')->findOneBy(array(
+            'id' => $mid
+                ));
+               
+        $formulario = $this->createForm(new MatriculaType(), $matricula);
+
+        $formulario->handleRequest($peticion);
+        if ($formulario->isValid()) {
+            $em->persist($matricula);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('Info', 'Datos actualizados');
+        }
+
+
+        return $this->render('academicoBundle:default:modificarestudiantematricula.html.twig', array(
+                    'periodo' => $periodo,
+                    'mid' => $mid,
+                    'formulario' => $formulario->createView(),
+                    'matricula' => $matricula
+                    //'estudiante' => $estudiante
+                ));
+    }
+
     
 }

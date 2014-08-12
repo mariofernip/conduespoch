@@ -2,32 +2,23 @@
 
 namespace Acad\academicoBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Acad\academicoBundle\Form\AsistenciaType;
 
-class EstudianteType extends AbstractType
+class EstudianteAsistenciaType extends AbstractType
 {
+    
         /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('cedula')
-            ->add('nombre')
-            ->add('apellido')
-            ->add('telefonofijo')
-            ->add('celular')
-            ->add('calle')
-            ->add('barrio')
-            ->add('parroquia')
-            ->add('ciudad')
-            ->add('email','email')
-            ->add('ocupacion')
-            ->add('lugarnacimiento')            
-            ->add('file')    
+        $builder                     
+        ->add('faltasjustificadas','collection',array('type'=> new AsistenciaType(),'required'=>false))                                   
         ;
     }
     
@@ -37,7 +28,7 @@ class EstudianteType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Acad\academicoBundle\Entity\Estudiante'
+            'data_class' => 'Acad\academicoBundle\Entity\AsistenciaEstudiante'
         ));
     }
 
@@ -46,6 +37,6 @@ class EstudianteType extends AbstractType
      */
     public function getName()
     {
-        return 'acad_academicobundle_estudiante';
+        return 'estudiante_asistencia_form';
     }
 }

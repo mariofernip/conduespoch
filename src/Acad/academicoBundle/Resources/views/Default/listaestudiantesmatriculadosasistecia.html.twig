@@ -7,121 +7,53 @@
         {% include 'academicoBundle:Default:menu_inspector.html.twig' with {'niveles': niveles, 'listamaterias': listamaterias}%}
 </section>
 <h3><p align="center">{{curso}}</p><h3>
-{#LISTA DE ESTUDIANTES: SECCION DIURNA#}
+        
+{#LISTA DE ESTUDIANTES: SECCIONES#}
 {% if sd== 1 %}
-<strong><p>Seccion Diurna:</p></strong>
+<strong><p>Listado de estudiantes</p></strong>
 <div id="dt_example">
     <div id="demo">
+        <form name="diurna" method="post" {{form_enctype(formsecciones) }}>
+            {{ form_start(formsecciones) }}
         <table class="display" id="example">
             <thead>
                 <tr >
-                    {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Fecha</th><th>Acción</th>#}
-                    <th>{{ knp_pagination_sortable(diurna, 'Cedula', 'e.cedula') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Nombre/Apellido', 'e.nombre') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Injustificadas', 'a.faltasinjustificadas') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Atrasos', 'a.atrasos') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Horas Asistidas', 'a.horasasistidas') }}</th>
+                    <th>{{ knp_pagination_sortable(secciones, 'Seccion- Cedula- Nombre Completo', 'e.nombre') }}</th>
+                    <th>{{ knp_pagination_sortable(secciones, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
+                    <th>{{ knp_pagination_sortable(secciones, 'Faltas Injustificadas', 'a.faltasinjustificadas') }}</th>
+                    <th>{{ knp_pagination_sortable(secciones, 'Atrasos', 'a.atrasos') }}</th>
+                    <th>{{ knp_pagination_sortable(secciones, 'Promedio', 'a.horasasistidas') }}</th>
                    
-                    <th>Accion</th>
-                </tr>
-            </thead>
-    {% for est in diurna %}
-            <tbody>
-                <tr {% if loop.index is odd %}class="color"{% endif %}>                    
-                        <td>{{est.materiaasiganda.matricula.estudiante.cedula}}</td>
-                        <td>{{est.materiaasiganda.matricula.estudiante.nombre | title}}&nbsp{{est.materiaasiganda.matricula.estudiante.apellido | title}}</td>                                                           
-                        <td>{{est.faltasjustificadas | title}}</td><td>{{est.faltasinjustificadas | title}}</td>
-                        <td>{{est.atrasos | title}}</td><td>{{est.horasasistidas | title}}</td>
-                        <td><a class='activate_modal' name='modal_window' id="{{ est.id }}">Mod</a></td>
-                <tr>
-            </tbody>
-
+                 </tr>
+                </thead>
+                            
+        {# iterate over each existing tag and render its only field: name #}
+        {% for est in formsecciones.faltasjustificadas %}
+<tbody>
+    <tr>            
+        <td>{{ form_widget(est.materiaasignada) }}</td>                
+        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_errors(est.faltasjustificadas ) }} {{ form_widget(est.faltasjustificadas ) }} </td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(est.faltasinjustificadas)}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(est.atrasos) }}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(est.promediofinal) }}</td>
+        
+    </tr>
+</tbody>                       
     {% endfor%}
+     
+                        
         </table>
             <div class="paginacion">
-                        {{ knp_pagination_render(diurna) }}
+                        {{ knp_pagination_render(secciones) }}
                      </div>
+    <input type="submit" value="guardar" class="boton" >       
+    {{ form_end(formsecciones) }}            
+    
+    </form>
     </div>
 </div>
 <br>
 {% endif %}
-{#LISTA DE ESTUDIANTES: SECCION VESPERTINA#}
-{% if sv== 1 %}
-<strong><p>Seccion Vespertina</p></strong>
-<div id="dt_example">
-    <div id="demo">
-        <table class="display" id="example">
-            <thead>
-                <tr >
-                    <th>{{ knp_pagination_sortable(diurna, 'Cedula', 'e.cedula') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Nombre/Apellido', 'e.nombre') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Injustificadas', 'a.faltasinjustificadas') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Atrasos', 'a.atrasos') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Horas Asistidas', 'a.horasasistidas') }}</th>
-                    <th>Accion</th>
-                </tr>
-            </thead>
-    {% for est in vespertina %}
-            <tbody>
-                <tr {% if loop.index is odd %}class="color"{% endif %}>
-                        <td>{{est.materiaasiganda.matricula.estudiante.cedula}}</td>
-                        <td>{{est.materiaasiganda.matricula.estudiante.nombre | title}}&nbsp{{est.materiaasiganda.matricula.estudiante.apellido | title}}</td>
-                        <td>{{est.faltasjustificadas | title}}</td><td>{{est.faltasinjustificadas | title}}</td>
-                        <td>{{est.atrasos | title}}</td><td>{{est.horasasistidas | title}}</td>
-                        <td><a class='activate_modal' name='modal_window' id="{{ est.id }}">Mod</a></td>
-                <tr>
-            </tbody>
-
-    {% endfor%}
-        </table>
-            <div class="paginacion">
-                        {{ knp_pagination_render(vespertina) }}
-                     </div>
-    </div>
-
-</div>
-<br>
-{% endif%}
-{#ESTUDIANTE SECCION NOCTURNA#}
-{% if sn== 1 %}
-<strong><p>Seccion Noctuna</p></strong>
-<div id="dt_example">
-    <div id="demo">
-        <table class="display" id="example">
-            <thead>
-                <tr >
-                    <th>{{ knp_pagination_sortable(diurna, 'Cedula', 'e.cedula') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Nombre/Apellido', 'e.nombre') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Faltas Injustificadas', 'a.faltasinjustificadas') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Atrasos', 'a.atrasos') }}</th>
-                    <th>{{ knp_pagination_sortable(diurna, 'Horas Asistidas', 'a.horasasistidas') }}</th>
-                    <th>Accion</th>    
-                </tr>
-            </thead>
-    {% for est in nocturna %}
-            <tbody>
-                <tr {% if loop.index is odd %}class="color"{% endif %}>
-                        <td>{{est.materiaasiganda.matricula.estudiante.cedula}}</td>
-                        <td>{{est.materiaasiganda.matricula.estudiante.nombre | title}}&nbsp{{est.materiaasiganda.matricula.estudiante.apellido | title}}</td>
-                        <td>{{est.faltasjustificadas | title}}</td><td>{{est.faltasinjustificadas | title}}</td>
-                        <td>{{est.atrasos | title}}</td><td>{{est.horasasistidas | title}}</td>
-                        <td><a class='activate_modal' name='modal_window' id="{{ est.id }}">Mod</a></td>
-            <tr>
-            </tbody>
-
-    {% endfor%}
-        </table>
-            <div class="paginacion">
-                        {{ knp_pagination_render(nocturna) }}
-                     </div>
-    </div>
-
-</div>
-<br><br>
-{% endif%}
 
 {% endblock%}
 {% block aside %}
@@ -130,9 +62,6 @@
           <strong><p align="left">Materias</p></strong>
     <div id="relacionadas">
         <ul>
-    {#{% for mat in listamaterias %}
-                <li><a class="boton" href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materia.id, 'nivel': mat.nivel.id})}}">{{mat.materia.nombre | title}}&nbsp;&nbsp;{{mat.nivel.curso.nombre | title}}&nbsp;&nbsp;{{mat.nivel.paralelo.nombre | title}}</a></li>            
-    {% endfor%}#}
        {% for mat in listamaterias %}
                 {#<li><a class="boton" href="{{path('estudiante_lista_matriculados_x_secciones',{'nivel': niv.id, 'nivel': niv.id})}}">{{niv.curso | title}}&nbsp;&nbsp;{{niv.paralelo | title}}</a></li>#}
                 <li><a href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materia.id, 'nivel': mat.nivel.id})}}" class="boton">{{mat.materia.nombre | title}}</a></li>
@@ -161,70 +90,12 @@
     //vertical and horizontal centering of modal window(s)
     /*we will use each function so if we have more then 1 
     modal window we center them all*/
-    $('.modal_window').each(function(){
-        
-        //get the height and width of the modal
-        var modal_height = $(this).outerHeight();
-        var modal_width = $(this).outerWidth();
-        
-        //calculate top and left offset needed for centering
-        var top = (window_height-modal_height)/2;
-        var left = (window_width-modal_width)/2;
-        
-        //apply new top and left css values 
-        $(this).css({'top' : top , 'left' : left});
-        
-    });
-
-        
-        $('.activate_modal').click(function(){
-                
-              //get the id of the modal window stored in the name of the activating element       
-              var modal_id = $(this).attr('name');
-              
-              //use the function to show it
-              show_modal(modal_id);
-              
-              //A la ruta le agregamos el codigo como parametro
-              _url = '{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': 3, 'nivel': 1,})}}' + "?codigo="+$(this).attr("id");
-              
-                 //Reemplazaos el action
-                $("#login").attr("action", _url);             
-              
-        });
-        
-        $('.close_modal').click(function(){
-            
-            //use the function to close it
-            close_modal();
-            
-        });
         
     });
     
     //THE FUNCTIONS
     
-    function close_modal(){
-        
-        //hide the mask
-        $('#mask').fadeOut(500);
-        
-        //hide modal window(s)
-        $('.modal_window').fadeOut(500);
-        
-    }
-    function show_modal(modal_id){
     
-        //set display to block and opacity to 0 so we can use fadeTo
-        $('#mask').css({ 'display' : 'block', opacity : 0});
-        
-        //fade in the mask to opacity 0.8 
-        $('#mask').fadeTo(500,0.8);
-         
-         //show the modal window
-        $('#'+modal_id).fadeIn(500);
-        
-    }
     
 </script>
 
@@ -235,59 +106,14 @@
 {% block stylesheets %}
 {{ parent() }}
 <style>
- 
-/* ESTILO PARA LA VENTANA MODAL */
-
-  #mask{ 
-        position:absolute; /* important */
-        top:0px; /* start from top */
-        left:0px; /* start from left */
-        height:100%; /* cover the whole page */
-        width:100%;  /* cover the whole page */
-        display:none; /* don't show it '*/          
-        
-        /* styling bellow */
-        background-color: black; 
-    }
-    
-    .modal_window{
-        position:absolute; /* important so we can position it on center later */
-        display:none; /* don't show it */
-        
-        /* styling bellow */
-        color:white;
-    }
-    
-    /* style a specific modal window  */
-    #modal_window{
-        padding:50px;
-        border:1px solid gray;
-        background: #246493;
-        color:black;
-    }
-  /* CIERRE BLOQUE ESTILO PARA LA VENTANA MODAL */  
-    
+   
+  input[type="number"] {
+   width:50px;
+}
 </style>
 
 
 
-<div id='mask' class='close_modal'></div>
-<div id='modal_window' class='modal_window'>
-     <form id="login" method="post" {{
-                 form_enctype(form) }}>
-                    <fieldset>
-                  {{form_row(form.faltasjustificadas)}}
-                  {{form_row(form.faltasinjustificadas)}}                                                    
-                  {{form_row(form.atrasos)}}                                                    
-                  {{form_row(form.horasasistidas)}}                                                    
-                  {{form_row(form.observaciones)}}                                                    
-                  
-              </fieldset>   
-         {{form_rest(form)}}                   
-          <input  class="boton" type="submit" value="Guardar"/>
-                </form>
-
-</div>
    {% endblock %}
      
 

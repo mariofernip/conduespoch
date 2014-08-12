@@ -99,6 +99,9 @@ class MateriaAsignada {
     }
     
     public function __toString() {
-        return $this->matricula->getEstudiante()->getNombre();
+        //return $this->matricula->getEstudiante()->getNombre();
+        return $this->matricula->getSeccion().' - '.$this->matricula->getEstudiante()->getCedula().' - '.$this->matricula->getEstudiante()->getApellido().' '.$this->matricula->getEstudiante()->getNombre();
+        //return $this->matricula->getSeccion();
+        
     }
 }

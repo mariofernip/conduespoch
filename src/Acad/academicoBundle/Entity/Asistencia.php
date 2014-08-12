@@ -26,7 +26,7 @@ class Asistencia
      * @ORM\JoinColumn(name="materiaasignada_id", referencedColumnName="id")
      * 
      */
-    protected $materiaasiganda;
+    protected $materiaasignada;
 
     /**
      *
@@ -97,7 +97,15 @@ class Asistencia
      */
     protected $promediototal;
 
-
+public function setId($id)
+    {
+        $this->id = $id;
+    
+        return $this;
+    }
+    
+    
+    
     /**
      * Get id
      *
@@ -339,25 +347,25 @@ class Asistencia
     }
 
     /**
-     * Set materiaasiganda
+     * Set materiaasignada
      *
-     * @param \Acad\academicoBundle\Entity\MateriaAsignada $materiaasiganda
+     * @param \Acad\academicoBundle\Entity\MateriaAsignada $materiaasignada
      * @return Asistencia
      */
-    public function setMateriaasiganda(\Acad\academicoBundle\Entity\MateriaAsignada $materiaasiganda = null)
+    public function setMateriaasignada(\Acad\academicoBundle\Entity\MateriaAsignada $materiaasignada = null)
     {
-        $this->materiaasiganda = $materiaasiganda;
+        $this->materiaasignada = $materiaasignada;
     
         return $this;
     }
 
     /**
-     * Get materiaasiganda
+     * Get materiaasignada
      *
      * @return \Acad\academicoBundle\Entity\MateriaAsignada 
      */
-    public function getMateriaasiganda()
+    public function getMateriaasignada()
     {
-        return $this->materiaasiganda;
+        return $this->materiaasignada;
     }
 }

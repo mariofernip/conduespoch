@@ -35,7 +35,13 @@
                         {% if estado==0%}
                             {% set esta='Inactivo'%}                                                    
                         {% endif%}
-                        <td>{{est.estudiante.cedula}}</td><td>{{est.estudiante.nombre | title}}</td><td>{{est.estudiante.apellido | title}}</td><td>{{est.estudiante.email | lower}}</td><td>{{esta}}</td><td>{{est.fechamatricula | date('Y-m-d')}}</td><td><a href="#">Mod</a></td>
+                        <td>{{est.estudiante.cedula}}</td>
+                        <td>{{est.estudiante.nombre | title}}</td>
+                        <td>{{est.estudiante.apellido | title}}</td>
+                        <td>{{est.estudiante.email | lower}}</td>
+                        <td>{{esta}}</td>
+                        <td>{{est.fechamatricula | date('Y-m-d')}}</td>
+                        <td><a href="{{path('estudiante_matriculado_modificar',{'mid':est.id})}}">Mod</a></td>
                 <tr>
             </tbody>
 
@@ -76,7 +82,12 @@
                         {% if estado==0%}
                             {% set esta='Inactivo'%}                                                    
                         {% endif%}
-                        <td>{{est.estudiante.cedula}}</td><td>{{est.estudiante.nombre | title}}</td><td>{{est.estudiante.apellido | title}}</td><td>{{est.estudiante.email | lower}}</td><td>{{esta}}</td><td>{{est.fechamatricula | date('Y-m-d')}}</td><td><a href="#">Mod</a></td>
+                        <td>{{est.estudiante.cedula}}</td>
+                        <td>{{est.estudiante.nombre | title}}</td>
+                        <td>{{est.estudiante.apellido | title}}</td>
+                        <td>{{est.estudiante.email | lower}}</td>
+                        <td>{{esta}}</td><td>{{est.fechamatricula | date('Y-m-d')}}</td>
+                        <td><a href="{{path('estudiante_matriculado_modificar',{'mid':est.id})}}">Mod</a></td>
                 <tr>
             </tbody>
 
@@ -119,7 +130,12 @@
                         {% if estado==0%}
                             {% set esta='Inactivo'%}                                                    
                         {% endif%}
-                        <td>{{est.estudiante.cedula}}</td><td>{{est.estudiante.nombre | title}}</td><td>{{est.estudiante.apellido | title}}</td><td>{{est.estudiante.email | lower}}</td><td>{{esta}}</td><td>{{est.fechamatricula | date('Y-m-d')}}</td><td><a href="#">Mod</a></td>
+                        <td>{{est.estudiante.cedula}}</td><td>{{est.estudiante.nombre | title}}</td>
+                        <td>{{est.estudiante.apellido | title}}</td>
+                        <td>{{est.estudiante.email | lower}}</td>
+                        <td>{{esta}}</td>
+                        <td>{{est.fechamatricula | date('Y-m-d')}}</td>
+                        <td><a href="{{path('estudiante_matriculado_modificar',{'mid':est.id})}}">Mod</a></td>
                 <tr>
             </tbody>
 

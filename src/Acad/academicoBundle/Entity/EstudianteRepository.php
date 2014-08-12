@@ -75,8 +75,7 @@ class EstudianteRepository extends EntityRepository {
 
                 $consulta = $em->createQuery('
                 SELECT i FROM academicoBundle:Inscripcion i
-                WHERE i.estado = 1
-                AND i.estudiante = :id_estudiante');
+                WHERE i.estudiante = :id_estudiante');
                 $consulta->setParameter('id_estudiante', $eid);     
 
         return $consulta->getOneOrNullResult();
@@ -115,7 +114,7 @@ class EstudianteRepository extends EntityRepository {
         $em = $this->getEntityManager();
         $seccion='Nocturna';
         $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
-                join a.materiaasiganda ma
+                join a.materiaasignada ma
                 join ma.matricula m
                 join m.estudiante e
                 join m.nivel n
@@ -137,7 +136,7 @@ class EstudianteRepository extends EntityRepository {
         $em = $this->getEntityManager();
         $seccion='Diurna';
         $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
-                join a.materiaasiganda ma
+                join a.materiaasignada ma
                 join ma.matricula m
                 join m.estudiante e
                 join m.nivel n
@@ -159,7 +158,7 @@ class EstudianteRepository extends EntityRepository {
         $em = $this->getEntityManager();
         $seccion='Vespertina';
         $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
-                join a.materiaasiganda ma
+                join a.materiaasignada ma
                 join ma.matricula m
                 join m.estudiante e
                 join m.nivel n
@@ -176,6 +175,28 @@ class EstudianteRepository extends EntityRepository {
         
     }
     
+    
+     public function findEstudiantexMateriaxSecciones($materias, $nivel) {
+        
+        $em = $this->getEntityManager();
+        $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
+                join a.materiaasignada ma
+                join ma.matricula m
+                join m.estudiante e
+                join m.nivel n
+                
+                WHERE m.estado = 1 
+                AND n.id =:nid 
+                AND ma.materia = :mid 
+                ORDER BY m.seccion
+                ';   
+                
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('mid', $materias);
+        $estudiante->setParameter('nid', $nivel);
+        return $estudiante->getResult();
+        
+    }
     
         public function getMaterias() {
         

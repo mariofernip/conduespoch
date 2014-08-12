@@ -1,0 +1,39 @@
+{% set  iactiva=  'now' | date('Ymd') <= periodo.ffininscripcion | date('Ymd') %}
+{% extends '::frontend.html.twig' %}
+
+{% block id 'estudiante' %}
+
+{% block title %}Modificar datos de matricula de estudiante{% endblock%}
+
+{% block article %}
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
+</section>
+<h1>{{ block ('title')}}</h1>
+<strong>DATOS DEL ESTUDIANTE</strong><br><br>
+<strong>Cédula:</strong>{{matricula.estudiante.cedula}}<br>
+<strong>Nombres:</strong>{{matricula.estudiante.nombre}}<br>
+<strong>Apellidos:</strong>{{matricula.estudiante.apellido}}<br><br>
+{% set eidm= mid %}
+<strong><br>DATOS DE MATRICULA</strong><br><br>
+{#<strong>Cédula:</strong>{{eid ? eid.estudiante.cedula }}<br>#}
+<form action="{{ path('estudiante_matriculado_modificar',{'mid':eidm})}}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_row(formulario.periodo)}}
+                  {{form_row(formulario.nivel)}}
+                  {{form_label(formulario.seccion,'Seccion de estudio:')}}{{form_widget(formulario.seccion)}}                                                        
+                  {{form_row(formulario.observaciones, { 'attr': {'autocomplete' : 'off' } }) }}
+          
+          </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+          </form>
+
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}
