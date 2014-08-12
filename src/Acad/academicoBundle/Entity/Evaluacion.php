@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="evaluacion", 
  * uniqueConstraints={
- * @ORM\UniqueConstraint(name="unique_evaluacion", columns={"materiaasignada_id", "mesevaluacion_id", "tiponota_id"})
+ * @ORM\UniqueConstraint(name="unique_evaluacion", columns={"materiaasignada_id", "mesevaluacion_id"})
  *  })
- * @UniqueEntity(fields={"materiaasignada", "mesevaluacion", "tiponota"}, message="El registro a insertar ya existe")
+ * @UniqueEntity(fields={"materiaasignada", "mesevaluacion" }, message="El registro a insertar ya existe")
  * @ORM\Entity
  */
 
@@ -34,8 +34,7 @@ class Evaluacion
     protected $materiaasignada;
     
     /**
-     *
-     * @ORM\Column(type="float", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     protected $promedio;
 
@@ -52,16 +51,41 @@ class Evaluacion
      */
     protected $mesevaluacion;
     
+    
     /**
-     *
-     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Tiponota") 
-     * @ORM\JoinColumn(name="tiponota_id", referencedColumnName="id")
-     * @Assert\NotBlank(message="Por favor seleccione el tipo de nota")
+     * @ORM\Column(type="integer", nullable=false)
+     * @Assert\LessThan(value = 21)
+     * @Assert\GreaterThan(value = -1)
      */
-    protected $tiponota;
+    protected $notatb;
+    
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     * @Assert\Range(min=0, max=20)
+     */
+    protected $notaec;
+    
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     * @Assert\Range(min=0, max=20)
+     */
+    protected $notapp;
+    
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     * @Assert\Range(min=0, max=20)
+     */
+    protected $notapt;
+
+      public function setId($id)
+    {
+        $this->id = $id;
+    
+        return $this;
+    }
+   
 
     
-   
 
     /**
      * Get id
@@ -120,6 +144,98 @@ class Evaluacion
     }
 
     /**
+     * Set notatb
+     *
+     * @param float $notatb
+     * @return Evaluacion
+     */
+    public function setNotatb($notatb)
+    {
+        $this->notatb = $notatb;
+    
+        return $this;
+    }
+
+    /**
+     * Get notatb
+     *
+     * @return float 
+     */
+    public function getNotatb()
+    {
+        return $this->notatb;
+    }
+
+    /**
+     * Set notaec
+     *
+     * @param float $notaec
+     * @return Evaluacion
+     */
+    public function setNotaec($notaec)
+    {
+        $this->notaec = $notaec;
+    
+        return $this;
+    }
+
+    /**
+     * Get notaec
+     *
+     * @return float 
+     */
+    public function getNotaec()
+    {
+        return $this->notaec;
+    }
+
+    /**
+     * Set notapp
+     *
+     * @param float $notapp
+     * @return Evaluacion
+     */
+    public function setNotapp($notapp)
+    {
+        $this->notapp = $notapp;
+    
+        return $this;
+    }
+
+    /**
+     * Get notapp
+     *
+     * @return float 
+     */
+    public function getNotapp()
+    {
+        return $this->notapp;
+    }
+
+    /**
+     * Set notapt
+     *
+     * @param float $notapt
+     * @return Evaluacion
+     */
+    public function setNotapt($notapt)
+    {
+        $this->notapt = $notapt;
+    
+        return $this;
+    }
+
+    /**
+     * Get notapt
+     *
+     * @return float 
+     */
+    public function getNotapt()
+    {
+        return $this->notapt;
+    }
+
+    /**
      * Set materiaasignada
      *
      * @param \Acad\academicoBundle\Entity\MateriaAsignada $materiaasignada
@@ -163,28 +279,5 @@ class Evaluacion
     public function getMesevaluacion()
     {
         return $this->mesevaluacion;
-    }
-
-    /**
-     * Set tiponota
-     *
-     * @param \Acad\administrativoBundle\Entity\Tiponota $tiponota
-     * @return Evaluacion
-     */
-    public function setTiponota(\Acad\administrativoBundle\Entity\Tiponota $tiponota = null)
-    {
-        $this->tiponota = $tiponota;
-    
-        return $this;
-    }
-
-    /**
-     * Get tiponota
-     *
-     * @return \Acad\administrativoBundle\Entity\Tiponota 
-     */
-    public function getTiponota()
-    {
-        return $this->tiponota;
     }
 }

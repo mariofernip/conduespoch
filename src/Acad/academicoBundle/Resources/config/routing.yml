@@ -43,7 +43,7 @@ estudiante_buscar:
     defaults: { _controller: academicoBundle:default:matriculaBuscarEstudiante}      
     
 docente_listaest_x_materia:
-    pattern:  /docente/listaestudiantes/{materia}/{nivel}
+    pattern:  /docente/listaestudiantes/{materia}/{nivel}/{mesid}
     defaults: { _controller: academicoBundle:default:notas}
     
 docente_notas_x_estudiante:
@@ -67,7 +67,7 @@ estudiante_matriculado_modificar:
     defaults: { _controller: academicoBundle:default:modificarmatricula}    
     
 docente_lista_materias_x_nivel:    
-    pattern:  /docente/lista/materias
+    pattern:  /docente/lista/materias/{codmes}
     defaults: { _controller: academicoBundle:default:listamateriasxdocente}
 
 estudiante_lista_matriculados_x_materia_x_secciones:   

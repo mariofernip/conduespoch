@@ -12,11 +12,11 @@ way to fit your requirements.
 .preload1 {background: url(bundles/academico/images/blank_over.gif);}
 .preload2 {background: url(bundles/academico/images/blank_overa.gif);}
 
-#nave {padding:0; margin:0; list-style:none; height:16px; background: #fff; position:relative; z-index:300; font-family:arial, verdana, sans-serif;}
+#nave {padding-left: 70px; margin:-25px; list-style: none; height:16px; position:relative; z-index:300; font-family:arial, verdana, sans-serif;}
 #nave li.top {display:block; float: left;}
 #nave li a.top_link {display:block; float:left; height:5px; line-height:5px; color:  #0035C7; text-decoration:none; font-size:14px; font-weight:bold; padding:0 0 0 12px; cursor:pointer;background: url(bundles/academico/images/blank.gif);}
-#nave li a.top_link span {float:left; display:block; padding:0 4px 0 4px; height:36px;background:url(bundles/academico/images/blank.gif) right top;}
-#nave li a.top_link span.down {float:left; display:block; padding:0 14px 0 12px; height:16px; background:url(bundles/academico/images/blanka.gif) no-repeat right top;}
+#nave li a.top_link span {float:left; display:block; padding:0 14px 0 14px; height:36px;background:url(bundles/academico/images/blank.gif) right top;}
+#nave li a.top_link span.down {float:left; display:block; padding:0 1px 0 2px; height:6px; background:url(bundles/academico/images/blanka.gif) no-repeat right top;}
 #nave li a.top_link:hover {color:#fff; background: url(bundles/academico/images/bundles/academico/images/blank_over.gif) no-repeat;}
 #nave li a.top_link:hover span {background:url(bundles/academico/images/bundles/academico/images/blank_over.gif) no-repeat right top;}
 #nave li a.top_link:hover span.down {background:url(bundles/academico/images/blank_overa.gif) no-repeat right top;}
@@ -24,6 +24,7 @@ way to fit your requirements.
 #nave li:hover > a.top_link {color: #090; background: url(bundles/academico/images/blank_over.gif) no-repeat;}
 #nave li:hover > a.top_link span {background:url(bundles/academico/images/blank_over.gif) no-repeat right top;}
 #nave li:hover > a.top_link span.down {background:url(bundles/academico/images/blank_overa.gif) no-repeat right top;}
+
 
 /* Default list styling */
 

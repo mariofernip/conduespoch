@@ -8,13 +8,15 @@ use Acad\academicoBundle\Entity\CumpleRequisito;
 use Acad\academicoBundle\Entity\Dictadomateria;
 use Acad\academicoBundle\Entity\Estudiante;
 use Acad\academicoBundle\Entity\Evaluacion;
+use Acad\academicoBundle\Entity\EvaluacionEstudiante;
 use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Entity\MateriaAsignada;
 use Acad\academicoBundle\Entity\Matricula;
 use Acad\academicoBundle\Entity\RequisitoEstudiante;
 use Acad\academicoBundle\Form\DictadomateriaType;
-use Acad\academicoBundle\Form\EstudianteType;
 use Acad\academicoBundle\Form\EstudianteAsistenciaType;
+use Acad\academicoBundle\Form\EstudianteType;
+use Acad\academicoBundle\Form\EvaluacionEstudianteType;
 use Acad\academicoBundle\Form\EvaluacionType;
 use Acad\academicoBundle\Form\MatriculaAntiguosType;
 use Acad\academicoBundle\Form\MatriculaType;
@@ -502,18 +504,35 @@ class DefaultController extends Controller {
                 $em->persist($materiaasignada);
                 $em->flush();
             }
-            
+
             $matasi = $em->getRepository('academicoBundle:MateriaAsignada')->findBy(array('matricula' => $matricula->getId()));
-            
-             foreach ($matasi as $matasi1) {
+            $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+                'periodo' => $periodo->getId()
+                    ));
+            foreach ($matasi as $matasi1) {
                 $asistencia = new Asistencia();
-                $asistencia->setMateriaasiganda($matasi1);
+                $asistencia->setMateriaasignada($matasi1);
                 $em->persist($asistencia);
                 $em->flush();
+
+                foreach ($listamesevaluacion as $meseva) {
+                    $evaluacion = new Evaluacion();
+                    $evaluacion->setDescripcion('');
+                    $evaluacion->setMateriaasignada($matasi1);
+                    $evaluacion->setMesevaluacion($meseva);
+                    $evaluacion->setNotatb(0);
+                    $evaluacion->setNotaec(0);
+                    $evaluacion->setNotapp(0);
+                    $evaluacion->setNotapt(0);
+                    $evaluacion->setPromedio(0);
+
+                    $em->persist($evaluacion);
+                    $em->flush();
+                }
             }
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Estudiante matriculado');
-            
+
             //codigo para hacer que retorne a la pagina principal del usuario autenticado
             $usuario = $this->get('security.context')->getToken()->getUser();
             $rol = strtolower($usuario->getRol());
@@ -525,7 +544,7 @@ class DefaultController extends Controller {
 
     //METODO PRA lISTAR LOS ESTUDIANTE DEL DOCENTE X MATERIA, NIVEL, SECCION
 
-    public function notasAction($materia, $nivel) {
+    public function notasAction($materia, $nivel, $mesid) {
 
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
@@ -539,74 +558,86 @@ class DefaultController extends Controller {
         $cedula = $usuario->getCedula();
         //obtiene las materias del docente autenticado
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
-        //obtiene los estudiante que reciben una materia en un nivel de la seccion diruna
-        $estudiantesxmateriaSD = $em->getRepository('academicoBundle:Dictadomateria')->getEstudiantesxMateriaSD($materia, $periodo->getId(), $nivel);
-        //obtiene los estudiante que reciben una materia en un nivel de la seccion vespertina
-        $estudiantesxmateriaSV = $em->getRepository('academicoBundle:Dictadomateria')->getEstudiantesxMateriaSV($materia, $periodo->getId(), $nivel);
-        //obtiene los estudiante que reciben una materia en un nivel de la seccion nocturna
-        $estudiantesxmateriaSN = $em->getRepository('academicoBundle:Dictadomateria')->getEstudiantesxMateriaSN($materia, $periodo->getId(), $nivel);
-        $evaluacionestudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia, $periodo->getId(), $nivel);
-
-        $evaluacion = new Evaluacion();
-        $formulario = $this->createForm(new EvaluacionType(), $evaluacion);
-
-        $formulario->handleRequest($peticion);
+        //obtiene lista de estudiantes
+        $evaluacionestudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia, $periodo->getId(), $nivel, $mesid);
+        
         $mat = $em->getRepository('administrativoBundle:Materia')->find($materia);
         $niv = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
 
+        $objmes = $em->getRepository('administrativoBundle:MesEvaluacion')->find($mesid);
 
-        //PAGINACION
-        //seccion diurna
-        $paginatorSD = $this->get('knp_paginator');
-        $paginationSD = $paginatorSD->paginate(
-                $estudiantesxmateriaSD, $this->getRequest()->query->get('page', 1), 10
+        /**
+         * NUEVO PROCESO -  EVALUACION DE ESTUDIANTES
+         */
+        
+        $evaluacionestudiante = new EvaluacionEstudiante();
+        
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+                $evaluacionestudiantesxmateria, $this->getRequest()->query->get('page', 1), 10
         );
+        
+        foreach ($evaluacionestudiantesxmateria as $req) {
 
-        //seccion vespertina
-        $paginatorSV = $this->get('knp_paginator');
-        $paginationSV = $paginatorSV->paginate(
-                $estudiantesxmateriaSV, $this->getRequest()->query->get('page', 1), 10
-        );
-
-        //seccion nocturna
-        $paginatorSN = $this->get('knp_paginator');
-        $paginationSN = $paginatorSN->paginate(
-                $estudiantesxmateriaSN, $this->getRequest()->query->get('page', 1), 10
-        );
-        $sd = 0;
-        $sv = 0;
-        $sn = 0;
-        if ($estudiantesxmateriaSD) {
-            $sd = 1;
-        }
-        if ($estudiantesxmateriaSV) {
-            $sv = 1;
-        }
-        if ($estudiantesxmateriaSN) {
-            $sn = 1;
+            $cr = new Evaluacion(); //creo un objeto nuevo: cumplerequisito
+            //obtengo los datos de cada objeto cumplerequisito
+            $cr->setId($req->getId());
+            $cr->setMateriaasignada($req->getMateriaAsignada());
+            $cr->setMesevaluacion($req->getMesEvaluacion());
+            $cr->setNotatb($req->getNotatb());
+            $cr->setNotaec($req->getNotaec());
+            $cr->setNotapp($req->getNotapp());
+            $cr->setNotapt($req->getNotapt());
+            $cr->setPromedio($req->getPromedio());
+            
+            //lleno el objto tarea con varios objetos cumplerequisito
+            $evaluacionestudiante->getEvaEst()->add($cr);
         }
 
 
+        $form = $this->createForm(new EvaluacionEstudianteType(), $evaluacionestudiante);
 
+        $form->handleRequest($peticion);
+        if ($form->isValid()) {
 
+            foreach ($evaluacionestudiante->getEvaEst() as $req) {// recorro lista de objetos: cumplerequisito
+                $cod = $req->getId(); // ontengo el id de cada objeto
+                $notatb = $req->getNotatb(); // obtengo el estado de cada objto
+                $notaec = $req->getNotaec(); // obtengo el estado de cada objto
+                $notapp = $req->getNotapp(); // obtengo el estado de cada objto
+                $notapt = $req->getNotapt(); // obtengo el estado de cada objto
+                $cr = $em->getRepository('academicoBundle:Evaluacion')->find($cod); //consulto el objeto cumplerequisito
+                $cr->setNotatb($notatb);
+                $cr->setNotaec($notaec);
+                $cr->setNotapp($notapp);
+                $cr->setNotapt($notapt);
+                $em->persist($cr);
+                $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+            }
 
+            $this->get('session')->getFlashBag()->add('Info', 'Notas actualizadas..!!');
+            $url = explode("?", $_SERVER['HTTP_REFERER']);
+            $redir = $url[0];
+
+            return $this->redirect($redir);
+        }
+        $cod=0;
+        if($evaluacionestudiantesxmateria){
+            $cod=1;
+        }
+        
         //creo la vista
         return $this->render('academicoBundle:default:notasdocente.html.twig', array(
                     'periodo' => $periodo,
                     'materiasdoc' => $materiasdocente,
-                    'estudiantes' => $estudiantesxmateriaSD,
-                    'evaest' => $evaluacionestudiantesxmateria,
+                    'evaest' => $pagination,
                     'mat' => $mat,
                     'niv' => $niv,
                     'codmat' => $materia,
                     'codniv' => $nivel,
-                    'paginationSD' => $paginationSD,
-                    'paginationSV' => $paginationSV,
-                    'paginationSN' => $paginationSN,
-                    'sd' => $sd,
-                    'sv' => $sv,
-                    'sn' => $sn,
-                    'formulario' => $formulario->createView()
+                    'codmes' => $objmes,                    
+                    'form' => $form->createView(),
+                    'cod'=>$cod
                 ));
     }
 
@@ -940,7 +971,7 @@ class DefaultController extends Controller {
     }
     
     
-    public function listamateriasxdocenteAction() {
+    public function listamateriasxdocenteAction($codmes) {
 
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -959,13 +990,20 @@ class DefaultController extends Controller {
         $cedula = $usuario->getCedula();
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
 
-
-
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado' => true
+                ));
+        //$sesion= new Session();
+        //$sesion->start();        
+        $objmes = $em->getRepository('administrativoBundle:MesEvaluacion')->find($codmes);
         return $this->render('academicoBundle:default:listamateriasxdocente.html.twig', array(
                     'periodo' => $periodo,
-                    'materiasdoc' => $materiasdocente
+                    'materiasdoc' => $materiasdocente,
+                    'listames' => $mes,
+                    'codmes' => $objmes
                 ));
     }
+
 
     public function listadictadomateriaAction() {
 

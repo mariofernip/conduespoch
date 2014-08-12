@@ -105,26 +105,32 @@ class DictadomateriaRepository extends EntityRepository {
         
     }
     
-    public function getEvaluacionEstudiantesxMateria($mid,$pid,$nid) {
+    public function getEvaluacionEstudiantesxMateria($mid,$pid,$nid,$mesid) {
         
         $em = $this->getEntityManager();
 
-        $dql = 'select ev,ma,m,p,e,n
+        $dql = 'select ev, ma,me,m,p
                 FROM academicoBundle:Evaluacion ev
                 Join ev.materiaasignada ma
                 Join ma.matricula m
                 Join m.periodo p
-                Join m.estudiante e
                 Join m.nivel n
-                WHERE ma.materia = :mid and
-                          p.id = :pid and
-                          m.estado = 1 and
-                          m.nivel= :nid
+                
+                
+                
+                Join ev.mesevaluacion me
+                WHERE ma.materia = :mid and                          
+                          me.id = :mesid and
+                          p.id= :pid and
+                          n.id = :nid
+                       
                 ';
         $consulta = $em->createQuery($dql);
         $consulta->setParameter('mid', $mid);                
         $consulta->setParameter('pid', $pid);                        
-        $consulta->setParameter('nid', $nid);                        
+        $consulta->setParameter('nid', $nid);    
+        $consulta->setParameter('mesid', $mesid);    
+        
         
         return $consulta->getResult();
         

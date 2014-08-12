@@ -3,13 +3,19 @@
 {% set rol='docente'%}
 <ul id="nave">
     <li class="top"><a href="{{path('portada',{'role': rol })}}" class="top_link"><span>INICIO</span></a></li>
-    <li class="top"><a  id="products" class="top_link"><span class="down">Asignar notas</span></a>        
+    <li class="top"><a id="products" class="top_link"><span class="down">Notas</span></a>        
         <ul class="sub">
             <li>
-                <a href="{{path('docente_lista_materias_x_nivel')}}" class="fly">Ver materias</a>
+                <a  class="fly">Ingresar / Mes</a>
+                <ul>
+                    {% for m in listames %}
+                        <li><a  href="{{path('docente_lista_materias_x_nivel',{'codmes': m.id})}}">{{m.mes}}</a></li>                        
+                    {% endfor%}
+                    
+                </ul>
             </li>                
 
-            <li><a  class="fly">Ver</a>
+            <li><a href="" class="fly">Ver</a>
                 <ul>
                     <li><a href="#nogo4">Nikon</a></li>
                     <li><a href="#nogo5">Minolta</a></li>
@@ -18,13 +24,13 @@
             </li>
         </ul>
     </li>
-    <li class="top"><a  id="services" class="top_link"><span class="down">Consultas</span></a>
+    <li class="top"><a href="#nogo22" id="services" class="top_link"><span class="down">Consultas</span></a>
         <ul class="sub">
             <li><a href="">Nueva</a></li>
 
         </ul>
     </li>
-    <li class="top"><a  id="contacts" class="top_link"><span class="down">Reportes</span></a>
+    <li class="top"><a href="#nogo27" id="contacts" class="top_link"><span class="down">Reportes</span></a>
         <ul class="sub">
             <li><a href="#nogo28">Reporte 1</a></li>
             <li><a href="#nogo29" class="fly">Lista Estudiantes</a>

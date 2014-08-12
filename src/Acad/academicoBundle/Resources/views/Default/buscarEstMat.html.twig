@@ -29,5 +29,7 @@
             {{ flashMessage }}
         </div>
     {% endfor %}
+{%set secretaria='secretaria'%}
+                    <p align="center"><a class="boton" href="{{path('portada',{'role':secretaria})}}">PORTADA</a></p>
     {{parent()}}
 {% endblock%}

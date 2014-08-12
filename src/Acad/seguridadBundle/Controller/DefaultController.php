@@ -90,28 +90,25 @@ class DefaultController extends Controller
         
         $em= $this->getDoctrine()->getEntityManager();
         
-        $usuario = $this->get('security.context')->getToken()->getUser();
-        $periodo= $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
-            'estado'=>1
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $mes= $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado'=>true
         ));
-        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
-        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMaterias();
-       
         if($role=='docente'){
-            $cedula=$usuario->getCedula();
-            $materiasdocente= $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula,$periodo->getId());
             return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
-                'materiasdoc'=>$materiasdocente,
-                'periodo'=>$periodo
+                'periodo'=>$periodo,
+                'listames'=>$mes
             ));
         }
-        
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMaterias();
         if($role=='secretaria'){
             
             return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
                 'periodo'=>$periodo
             ));
         }
+        
         if($role=='inspector'){
             
             return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
@@ -122,6 +119,8 @@ class DefaultController extends Controller
             ));
         }
         
+        
+        
         if($role=='amaterias'){
             
             return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
@@ -129,6 +128,7 @@ class DefaultController extends Controller
             ));
         }
         
+    }       
         
-    }        
+    
 }
