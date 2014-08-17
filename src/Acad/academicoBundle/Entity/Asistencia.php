@@ -76,26 +76,7 @@ class Asistencia
      */
     protected $promediofinal;
 
-    /**
-     *
-     * @ORM\Column(type="float", nullable=true)
-     * @Assert\Range(min=0, max=20)
-     */
-    protected $suspenso;
-
-    /**
-     *
-     * @ORM\Column(type="float", nullable=true)
-     * @Assert\Range(min=0, max=20)
-     */
-    protected $notagrado;
-
-    /**
-     *
-     * @ORM\Column(type="float", nullable=true)
-     * @Assert\Range(min=0, max=20)
-     */
-    protected $promediototal;
+    
 
 public function setId($id)
     {
@@ -106,6 +87,8 @@ public function setId($id)
     
     
     
+   
+
     /**
      * Get id
      *
@@ -234,7 +217,7 @@ public function setId($id)
     /**
      * Set observaciones
      *
-     * @param integer $observaciones
+     * @param string $observaciones
      * @return Asistencia
      */
     public function setObservaciones($observaciones)
@@ -247,7 +230,7 @@ public function setId($id)
     /**
      * Get observaciones
      *
-     * @return integer 
+     * @return string 
      */
     public function getObservaciones()
     {
@@ -275,75 +258,6 @@ public function setId($id)
     public function getPromediofinal()
     {
         return $this->promediofinal;
-    }
-
-    /**
-     * Set suspenso
-     *
-     * @param float $suspenso
-     * @return Asistencia
-     */
-    public function setSuspenso($suspenso)
-    {
-        $this->suspenso = $suspenso;
-    
-        return $this;
-    }
-
-    /**
-     * Get suspenso
-     *
-     * @return float 
-     */
-    public function getSuspenso()
-    {
-        return $this->suspenso;
-    }
-
-    /**
-     * Set notagrado
-     *
-     * @param float $notagrado
-     * @return Asistencia
-     */
-    public function setNotagrado($notagrado)
-    {
-        $this->notagrado = $notagrado;
-    
-        return $this;
-    }
-
-    /**
-     * Get notagrado
-     *
-     * @return float 
-     */
-    public function getNotagrado()
-    {
-        return $this->notagrado;
-    }
-
-    /**
-     * Set promediototal
-     *
-     * @param float $promediototal
-     * @return Asistencia
-     */
-    public function setPromediototal($promediototal)
-    {
-        $this->promediototal = $promediototal;
-    
-        return $this;
-    }
-
-    /**
-     * Get promediototal
-     *
-     * @return float 
-     */
-    public function getPromediototal()
-    {
-        return $this->promediototal;
     }
 
     /**

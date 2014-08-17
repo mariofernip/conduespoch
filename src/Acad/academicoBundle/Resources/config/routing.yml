@@ -42,14 +42,10 @@ estudiante_buscar:
     pattern:  /secretaria/estudiante/consulta/matricula
     defaults: { _controller: academicoBundle:default:matriculaBuscarEstudiante}      
     
-docente_listaest_x_materia:
-    pattern:  /docente/listaestudiantes/{materia}/{nivel}/{mesid}
+docente_notas_x_materia:
+    pattern:  /docente/notas/parciales/lista/estudiantes/{mesid}
     defaults: { _controller: academicoBundle:default:notas}
-    
-docente_notas_x_estudiante:
-    pattern:  /docente/notas/estudiante
-    defaults: { _controller: academicoBundle:default:evaluacion}
-    
+     
 estudiante_lista_inscritos:
     pattern:  /secretaria/estudiante/lista/inscritos
     defaults: { _controller: academicoBundle:default:listaestudiantesinscritos}
@@ -66,10 +62,6 @@ estudiante_matriculado_modificar:
     pattern:  /secretaria/estudiante/matriculado/modificar/{mid}
     defaults: { _controller: academicoBundle:default:modificarmatricula}    
     
-docente_lista_materias_x_nivel:    
-    pattern:  /docente/lista/materias/{codmes}
-    defaults: { _controller: academicoBundle:default:listamateriasxdocente}
-
 estudiante_lista_matriculados_x_materia_x_secciones:   
     pattern:  /inspector/estudiante/lista/materias/{materias}/{nivel}
     defaults: { _controller: academicoBundle:default:listaestudiantesxseccionesmateria}
@@ -78,3 +70,18 @@ lista_materia_x_nivel:
     pattern:  /inspector/lista/materias/{nivel}
     defaults: { _controller: academicoBundle:default:listamateriasxnivel}    
 
+docente_lista_materias_suspenso:    
+    pattern:  /docente/notas/suspenso/lista/estudiantes
+    defaults: { _controller: academicoBundle:default:notasuspenso} 
+    
+docente_notas_suspenso:    
+    pattern:  /docente/notas/suspenso/lista/estudiantes
+    defaults: { _controller: academicoBundle:default:notasuspenso} 
+    
+docente_variable_sesion:    
+    pattern:  /docente/portada/{niv}/{mat}
+    defaults: { _controller: academicoBundle:default:sesionportada}    
+
+docente_notas_parciales_x_mes:    
+    pattern:  /docente/notas/parciales/mes/{codmes}
+    defaults: { _controller: academicoBundle:default:notasparcialesxmes}

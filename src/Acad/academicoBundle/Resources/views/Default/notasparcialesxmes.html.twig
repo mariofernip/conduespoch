@@ -1,0 +1,74 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} INICIO {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_docente.html.twig'%}
+</section>    
+
+<div id="dt_example">
+    <div id="demo">
+        <div class="count">
+            {#{{ pagination.getTotalItemCount }}#}
+            </div>
+            <table class="display" id="example">
+                <thead>
+                    <tr>
+                        <th colspan="7">NOTAS PARCIALES DEL MES DE: {{mes | upper}}</th>
+                    </tr>
+                    <tr>
+                        {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Acción</th>#}
+
+                            <th>{{ knp_pagination_sortable(listaeva, 'Cedula', 'e.cedula') }}</th>
+                            <th>{{ knp_pagination_sortable(listaeva, 'Nombre', 'e.nombre') }}</th>                            
+                            <th>{{ knp_pagination_sortable(listaeva, 'Sección', 'm.seccion') }}</th>                            
+                            <th>{{ knp_pagination_sortable(listaeva, 'Trabajo en grupo', 'ev.notatb') }}</th>                            
+                            <th>{{ knp_pagination_sortable(listaeva, 'Estudio de casos', 'ev.notaec') }}</th>
+                            <th>{{ knp_pagination_sortable(listaeva, 'Prueba práctica', 'ev.notapp') }}</th>
+                            <th>{{ knp_pagination_sortable(listaeva, 'Prueba teórica', 'ev.notapt') }}</th>
+
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                    {% for est in listaeva %}
+                        <tr {% if loop.index is odd %}class="color"{% endif %}>
+                                <td>{{est.materiaasignada.matricula.estudiante.cedula}}</td>
+                                <td>{{est.materiaasignada.matricula.estudiante.nombre}}&nbsp;{{est.materiaasignada.matricula.estudiante.apellido}}</td>
+                                <td>{{est.materiaasignada.matricula.seccion}}</td>
+                                <td>{{est.notatb}}</td>
+                                <td>{{est.notaec}}</td>
+                                <td>{{est.notapp}}</td>
+                                <td>{{est.notapt}}</td>                                
+                         <tr>
+                        </tbody>
+                    {% endfor%}
+                    </table>
+
+                    <div class="paginacion">
+                        {{ knp_pagination_render(listaeva) }}
+                     </div>
+               </div>
+
+<br><br>
+{% endblock%}
+{% block aside%}
+    {{parent()}}
+    <p align="center">Materia actual</p>
+    <strong>{{nivel}}&nbsp;{{materia}}</strong>
+    <p></p>
+    <strong>
+        <p align="left">Curso / Materia</p>
+    </strong>
+    <div id="relacionadas">
+        <ul>
+    {% for matdoc in materiasdoc %}
+                <li><a class="boton" href="{{path('docente_variable_sesion',{'niv': matdoc.nivel.id, 'mat': matdoc.materia.id})}}">{{matdoc.nivel | title}}&nbsp;&nbsp;{{matdoc.materia.nombre | title}}</a></li>
+    {% endfor%}
+
+            </ul>
+        </div>
+
+    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+{% endblock%}

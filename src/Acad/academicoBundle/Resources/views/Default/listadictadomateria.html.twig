@@ -43,6 +43,7 @@
     {%set rol='amaterias'%}
         <p align="center"><a class="boton" href="{{path('portada',{'role': rol})}}">INICIO</a></p>
     {{ parent()}}
+        <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
 {% endblock%}
 
 {% block javascripts %}
@@ -56,4 +57,5 @@
             }
         }
     </script>
+    
 {% endblock%}        

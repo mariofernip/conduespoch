@@ -8,7 +8,7 @@
     
 {% if is_granted('ROLE_SECRETARIA' ) or is_granted('ROLE_DOCENTE') or is_granted('ROLE_INSPECTOR') or is_granted('ROLE_AMATERIAS')%}
     
-    {# el usuario todavía no ha hecho login #}
+    
 {% else %}
     <a class="boton" href="{{ path('usuario_registro') }}">Regístrate</a>
 <h2>Accede a tu cuenta</h2>
@@ -16,7 +16,7 @@
 
 
     <label for="login_user">Email:</label>
-    <input id="login_user" type="text" name="_username" value="{{last_username | default('')}}" autocomplete="off"/>            
+    <input id="login_user" type="text" name="_username" value="{{last_username | default('')}}" />            
     <label for="login_pass">Contraseña:</label>
     <input id="login_pass" type="password" name="_password"/><br>
     <input type="checkbox" id="no_cerrar" name="_remember_me" checked/>

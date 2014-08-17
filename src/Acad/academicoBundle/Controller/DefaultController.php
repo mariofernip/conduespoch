@@ -13,6 +13,7 @@ use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Entity\MateriaAsignada;
 use Acad\academicoBundle\Entity\Matricula;
 use Acad\academicoBundle\Entity\RequisitoEstudiante;
+use Acad\academicoBundle\Entity\SuspensoEstudiante;
 use Acad\academicoBundle\Form\DictadomateriaType;
 use Acad\academicoBundle\Form\EstudianteAsistenciaType;
 use Acad\academicoBundle\Form\EstudianteType;
@@ -21,6 +22,7 @@ use Acad\academicoBundle\Form\EvaluacionType;
 use Acad\academicoBundle\Form\MatriculaAntiguosType;
 use Acad\academicoBundle\Form\MatriculaType;
 use Acad\academicoBundle\Form\RequisitoEstudianteType;
+use Acad\academicoBundle\Form\SuspensoEstudianteType;
 use Acad\administrativoBundle\Entity\Docente;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -544,39 +546,42 @@ class DefaultController extends Controller {
 
     //METODO PRA lISTAR LOS ESTUDIANTE DEL DOCENTE X MATERIA, NIVEL, SECCION
 
-    public function notasAction($materia, $nivel, $mesid) {
+    public function notasAction($mesid) {
 
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
         //obtengo el objeto autenticado: en este caso el docente
         $usuario = $this->get('security.context')->getToken()->getUser();
         //consulto periodo actual
-        $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
-            'estado' => 1
-                ));
+        $sesion = $this->getRequest()->getSession();
+        $periodo = $sesion->get('periodo'); //$em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
+        //'estado' => 1
+        //  ));
+
+        $materia = $sesion->get('materia');
+        $nivel = $sesion->get('nivel');
         //obtengo cedula del docente autenticado
         $cedula = $usuario->getCedula();
         //obtiene las materias del docente autenticado
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
         //obtiene lista de estudiantes
         $evaluacionestudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia, $periodo->getId(), $nivel, $mesid);
-        
-        $mat = $em->getRepository('administrativoBundle:Materia')->find($materia);
-        $niv = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
+
+
+
 
         $objmes = $em->getRepository('administrativoBundle:MesEvaluacion')->find($mesid);
 
         /**
          * NUEVO PROCESO -  EVALUACION DE ESTUDIANTES
          */
-        
         $evaluacionestudiante = new EvaluacionEstudiante();
-        
+
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
                 $evaluacionestudiantesxmateria, $this->getRequest()->query->get('page', 1), 10
         );
-        
+
         foreach ($evaluacionestudiantesxmateria as $req) {
 
             $cr = new Evaluacion(); //creo un objeto nuevo: cumplerequisito
@@ -589,7 +594,7 @@ class DefaultController extends Controller {
             $cr->setNotapp($req->getNotapp());
             $cr->setNotapt($req->getNotapt());
             $cr->setPromedio($req->getPromedio());
-            
+
             //lleno el objto tarea con varios objetos cumplerequisito
             $evaluacionestudiante->getEvaEst()->add($cr);
         }
@@ -621,97 +626,31 @@ class DefaultController extends Controller {
 
             return $this->redirect($redir);
         }
-        $cod=0;
-        if($evaluacionestudiantesxmateria){
-            $cod=1;
+        $cod = 0;
+        if ($evaluacionestudiantesxmateria) {
+            $cod = 1;
         }
-        
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado' => true
+                ));
+        $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
         //creo la vista
         return $this->render('academicoBundle:default:notasdocente.html.twig', array(
                     'periodo' => $periodo,
                     'materiasdoc' => $materiasdocente,
                     'evaest' => $pagination,
-                    'mat' => $mat,
-                    'niv' => $niv,
+                    'materia' => $materia,
+                    'nivel' => $nivel,
                     'codmat' => $materia,
                     'codniv' => $nivel,
-                    'codmes' => $objmes,                    
+                    'codmes' => $objmes,
                     'form' => $form->createView(),
-                    'cod'=>$cod
+                    'cod' => $cod,
+                    'listames' => $mes,
+                    'mesevac' => $listamesesEv
                 ));
     }
 
-    public function evaluacionAction() {
-
-        $peticion = $this->getRequest();
-        $em = $this->getDoctrine()->getEntityManager();
-        //obtengo el objeto autenticado: en este caso el docente
-        $usuario = $this->get('security.context')->getToken()->getUser();
-        //consulto periodo actual
-        $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
-            'estado' => 1
-                ));
-        //obtengo cedula del docente autenticado
-        $cedula = $usuario->getCedula();
-        //obtiene las materias del docente autenticado
-        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
-        //obtiene los estudiante que reciben una materia en un nivel
-        //$estudiantesxmateria = $em->getRepository('AcadacademicoBundle:Dictadomateria')->getEstudiantesxMateria($materia, $periodo->getId(), $nivel);
-        $codigo = $this->getRequest()->get('codigo');
-        $materiaasig = $em->getRepository('academicoBundle:MateriaAsignada')->find($codigo);
-
-        $evaluacion = new Evaluacion();
-        $formulario = $this->createForm(new EvaluacionType(), $evaluacion);
-
-        $formulario->handleRequest($peticion);
-        if (!$materiaasig) {
-            return $this->redirect($this->generateUrl('portada', array('role' => 'docente')));
-        }
-        $evaluacion->setMateriaasignada($materiaasig);
-
-
-        $url = explode("?", $_SERVER['HTTP_REFERER']);
-        $redir = $url[0];
-
-        if ($formulario->isValid()) {
-            $codmes = $formulario->getData()->getMesEvaluacion();
-            $codtiponota = $formulario->getData()->getTipoNota();
-            $matasi = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionExistente($codigo, $codmes->getId(), $codtiponota->getId());
-            if (!$matasi) {
-                $evaluacion->setMateriaasignada($materiaasig);
-                $em->persist($evaluacion);
-                $em->flush();
-
-                //mensaje
-                $this->get('session')->getFlashBag()->add('Info', 'Nota guardada');
-                //redirecciono a la pagina anterior
-                return $this->redirect($redir);
-            } else {
-
-                //mensaje
-                $this->get('session')->getFlashBag()->add('Info', 'Nota previamente ingresada');
-                //redirecciono a la pagina anterior
-                return $this->redirect($redir);
-            }
-        } else {
-
-            $this->get('session')->getFlashBag()->add('Info', 'Nota no válida');
-            //redirecciono a la pagina anterior
-            return $this->redirect($redir);
-        }
-
-        //creo la vista
-        return $this->render('academicoBundle:default:evaluacion.html.twig', array(
-                    'periodo' => $periodo,
-                    'materiasdoc' => $materiasdocente,
-                    'datos' => $materiaasig,
-                    'codigo' => $codigo,
-                    'formulario' => $formulario->createView()
-                ));
-    }
-
-
-    
     //METODO: listar los estudiantes inscritos en el periodo actual
     public function listaestudiantesinscritosAction() {
 
@@ -1127,5 +1066,245 @@ class DefaultController extends Controller {
                 ));
     }
 
+    //METODO: listar materias del docnete, para luego ingresar las notas de suspenso
+
+    public function listamateriasxdocentexsuspAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        $cedula = $usuario->getCedula();
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
+
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado' => true
+                ));
+
+
+        return $this->render('academicoBundle:default:listamateriasxdocentexsusp.html.twig', array(
+                    'periodo' => $periodo,
+                    'materiasdoc' => $materiasdocente,
+                    'listames' => $mes,
+                ));
+    }
+
+    //METODO: insertar notas de suspenso
+
+    public function notasuspensoAction() {
+
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getEntityManager();
+        //obtengo el objeto autenticado: en este caso el docente
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        //consulto periodo actual
+        $sesion = $this->getRequest()->getSession();
+        $periodo = $sesion->get('periodo'); //$em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
+        //'estado' => 1
+        //  ));
+
+        $materia = $sesion->get('materia');
+        $nivel = $sesion->get('nivel');
+        //obtengo cedula del docente autenticado
+        $cedula = $usuario->getCedula();
+        //obtiene las materias del docente autenticado
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
+        //obtiene lista de estudiantes
+        $suspensoestudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getSuspensoEstudiantesxMateria($materia, $periodo->getId(), $nivel);
+
+        $mat = $em->getRepository('administrativoBundle:Materia')->find($materia->getId());
+        $niv = $em->getRepository('administrativoBundle:Nivel')->find($nivel->getId());
+
+        /**
+         * NUEVO PROCESO -  SUSPENSION DE ESTUDIANTES
+         */
+        $suspensoestudiante = new SuspensoEstudiante();
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+                $suspensoestudiantesxmateria, $this->getRequest()->query->get('page', 1), 10
+        );
+        $eqbd = '';
+        foreach ($suspensoestudiantesxmateria as $req) {
+
+            $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
+            if (($asistencia->getPromediofinal() < 70) && ($req->getPromediofinal() < 14)) {
+                $eqbd = 'Reprobado';
+            } else {
+                $eqbd = 'Aprobado';
+            }
+            //obtengo los datos de cada objeto materiaasignada                        
+            $ma = new MateriaAsignada(); //creo un objeto nuevo: materiaasignada                                    
+            $ma->setId($req->getId());
+            $ma->setEquivalencia($req->getEquivalencia());
+            $ma->setMateria($req->getMateria());
+            $ma->setMatricula($req->getMatricula());
+            $ma->setNotasuspenso($req->getNotasuspenso());
+            $ma->setPromediofinal($req->getPromediofinal());
+
+
+            //lleno el objto tarea con varios objetos materiaasignada
+            $suspensoestudiante->getEvaEst()->add($ma);
+        }
+
+
+        $form = $this->createForm(new SuspensoEstudianteType(), $suspensoestudiante);
+
+        $form->handleRequest($peticion);
+        $eq = '';
+        $npf = 0;
+        if ($form->isValid()) {
+
+            foreach ($suspensoestudiante->getEvaEst() as $req) {// recorro lista de objetos: MA
+                if ($req->getPromediofinal() < 14) {
+                    $cod = $req->getId(); // ontengo el id de cada objeto
+                    $suspenso = $req->getNotasuspenso();
+                    $pf = $req->getPromediofinal();
+                    $examens = round(20 - ($pf / 2));
+                    if ($suspenso >= $examens) {
+                        $npf = round(($suspenso + $pf) / 2);
+                        $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
+                        if ($asistencia->getPromediofinal() < 70) {
+                            $eq = 'Reprobado';
+                        } else {
+                            $eq = 'Aprobado';
+                        }
+                    } else {
+                        $npf = round(($suspenso + $pf) / 2);
+                        $eq = 'Reprobado';
+                    }
+
+                    $ma = $em->getRepository('academicoBundle:MateriaAsignada')->find($cod); //consulto el objeto materiaasignada
+                    $ma->setNotasuspenso($suspenso);
+                    $ma->setEquivalencia($eq);
+                    $ma->setPromediofinal($npf);
+                    $em->persist($ma);
+                    $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+                } else {
+                    $cod = $req->getId(); // ontengo el id de cada objeto                    
+                    $pf = $req->getPromediofinal();
+                    $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
+                    if (($asistencia->getPromediofinal() < 70)) {
+                        $eq = 'Reprobado';
+                    } else {
+                        $eq = 'Aprobado';
+                    }
+
+                    $ma = $em->getRepository('academicoBundle:MateriaAsignada')->find($cod); //consulto el objeto materiaasignada
+                    $ma->setNotasuspenso(0);
+                    $ma->setPromediofinal($pf);
+                    $ma->setEquivalencia($eq);
+                    $em->persist($ma);
+                    $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+                }
+            }
+
+            $this->get('session')->getFlashBag()->add('Info', 'Notas actualizadas..!!');
+            $url = explode("?", $_SERVER['HTTP_REFERER']);
+            $redir = $url[0];
+
+            return $this->redirect($redir);
+        }
+        $cod = 0;
+        if ($suspensoestudiantesxmateria) {
+            $cod = 1;
+        }
+
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado' => true
+                ));
+        $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
+        //creo la vista
+        return $this->render('academicoBundle:default:notasuspenso.html.twig', array(
+                    'periodo' => $periodo,
+                    'materiasdoc' => $materiasdocente,
+                    'evaest' => $pagination,
+                    'mat' => $mat,
+                    'niv' => $niv,
+                    'materia' => $materia,
+                    'cod' => $cod,
+                    'nivel' => $nivel,
+                    'listames' => $mes,
+                    'mesevac' => $listamesesEv,
+                    'form' => $form->createView()
+                ));
+    }
+
+    public function sesionportadaAction($niv, $mat) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        //obtengo el objeto autenticado: en este caso el docente
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $nivel = $em->getRepository('administrativoBundle:Nivel')->find($niv);
+        $materia = $em->getRepository('administrativoBundle:Materia')->find($mat);
+        //consulto periodo actual
+        $sesion = $this->getRequest()->getSession();
+        $periodo = $sesion->get('periodo');
+
+        $sesion->set('nivel', $nivel);
+        $sesion->set('materia', $materia);
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado' => true
+                ));
+
+        $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
+        return $this->render('academicoBundle:Default:portada_docente2.html.twig', array(
+                    'periodo' => $periodo,
+                    'mesevac' => $listamesesEv,
+                    'materiasdoc' => $materiasdocente,
+                    'listames' => $mes,
+                    'materia' => $materia,
+                    'nivel' => $nivel,
+                ));
+    }
+
+    
+    public function notasparcialesxmesAction($codmes) {
+        
+        $sesion = $this->getRequest()->getSession();
+        $em = $this->getDoctrine()->getEntityManager();
+        //obtengo el objeto autenticado: en este caso el docente
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        //variables de sesion activas
+        $periodo = $sesion->get('periodo'); 
+        $materia = $sesion->get('materia');
+        $nivel = $sesion->get('nivel');
+        
+        
+        $evaluacion= $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia->getId(),$periodo->getId(),$nivel->getId(),$codmes);
+        $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado' => true
+                ));
+        
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+                $evaluacion, $this->getRequest()->query->get('page', 1), 10
+        );
+        $mesactual=$em->getRepository('administrativoBundle:Mes')->find($codmes);
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
+        return $this->render('academicoBundle:default:notasparcialesxmes.html.twig',array(
+            'periodo'=>$periodo,
+            'materia'=>$materia,
+            'nivel'=>$nivel,
+            'mesevac'=>$listamesesEv,
+            'listames'=>$mes,
+            'mes'=>$mesactual,
+            'materiasdoc'=>$materiasdocente,
+            'listaeva'=>$pagination
+        ));
+    }
+    
     
 }

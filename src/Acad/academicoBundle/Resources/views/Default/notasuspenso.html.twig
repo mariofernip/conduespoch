@@ -7,33 +7,36 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_docente.html.twig'%}
 </section>    
-    <strong><p align="left">Ingreso de evaluaciones: {{codmes}}</p></strong>    
+    <br>
     {% if cod==1%}
-    <form action="{{ path('docente_notas_x_materia',{'mesid': codmes.id}) }}" method="post" {{
+    
+    <form action="{{ path('docente_notas_suspenso',{'materia': mat.id, 'nivel': niv.id}) }}" method="post" {{
         form_enctype(form) }} >
         {{ form_start(form) }}
-              <div id="dt_example">
-              <table id="itsthetable" >
+            
+        <div id="dt_example">
+                <table class="display" id="example">
                     <thead>
                         <tr>
-                            <th>Sección / Cédula / Estudiante</th>            
-                            <th>Trabajo en grupo</th>
-                            <th>Estudio de casos</th>
-                            <th>Prueba práctica</th>
-                            <th>Prueba teórica</th>
-                            <th>Promedio</th>
+                            <th colspan="4">NOTAS DE SUSPLETORIOS</th>                     
+                            
+                        </tr>
+                        <tr>
+                            <th>Sección / Cédula / Estudiante</th>                     
+                            <th>Suspenso</th>
+                            <th>Promedio final</th>
+                            <th>Equivalencia</th>
                         </tr>
                         </thead>        
                      <tbody>
                     {% for req in form.evaest %}
                     
-                        <tr >
-                            <td>{{ form_widget(req.materiaasignada, { 'attr': {'disabled' : true } }) }}</td>             
-                            <td>{{ form_widget(req.notatb) }}</td> 
-                            <td>{{ form_widget(req.notaec) }}</td> 
-                            <td>{{ form_widget(req.notapp) }}</td> 
-                            <td>{{ form_widget(req.notapt) }}</td>
-                            <td>{{ form_widget(req.promedio)}}</td>
+                        <tr {% if loop.index is odd %} class="color" {% endif %}>
+                            <td>{{ form_widget(req.matricula, { 'attr': {'disabled' : true } }) }}</td>             
+                            <td>{{ form_widget(req.notasuspenso)}}</td> 
+                            <td>{{ form_widget(req.promediofinal) }}</td> 
+                            <td>{{ form_widget(req.equivalencia) }}</td>
+                            
                         <tr>
                     <tbody>
                     {% endfor %}
@@ -41,13 +44,12 @@
                 <div class="paginacion">
                     {{ knp_pagination_render(evaest) }}
                 </div>                
-                  </div>
-        
+            </div> 
         <input type="submit" value="guardar" class="boton" >
         {{ form_end(form) }}
     </form>
-    {%else%}
-        <h1>No hay estudiantes</h1>
+    {% else%}
+    <strong>No hay registros de estudiantes</strong>
     {% endif%}
     
  
@@ -72,12 +74,12 @@
 
     <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
 {% endblock%}
-    
+
 {% block javascripts %}
     {{ parent() }}
 {% endblock%}
 {% block stylesheets %}
-{{ parent() }}
-    {% include 'academicoBundle:Default:tablecss.html.twig'%}
- {% endblock %}
+      {{ parent()}}                 
+        {% include 'academicoBundle:Default:tablecss.html.twig'%}
+{% endblock %}
 

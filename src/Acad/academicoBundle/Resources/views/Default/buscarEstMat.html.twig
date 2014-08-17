@@ -32,4 +32,5 @@
 {%set secretaria='secretaria'%}
                     <p align="center"><a class="boton" href="{{path('portada',{'role':secretaria})}}">PORTADA</a></p>
     {{parent()}}
+    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
 {% endblock%}

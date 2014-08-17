@@ -6,6 +6,7 @@ use Acad\seguridadBundle\Entity\Usuario;
 use Acad\seguridadBundle\Form\UsuarioType;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -89,15 +90,36 @@ class DefaultController extends Controller
     public function portadaAction($role) {
         
         $em= $this->getDoctrine()->getEntityManager();
-        
+        $usuario = $this->get('security.context')->getToken()->getUser();
         $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         $mes= $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado'=>true
         ));
+        
+        $sesion= new Session();        
+        $sesion->set('periodo', $periodo);
         if($role=='docente'){
+            $listameses= $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
+            $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
+            $x=1;
+            foreach ($materiasdocente as $matd) {
+                for ($index = 0; $index < $x; $index++) {
+                    $codn=$matd->getNivel();
+                    $nivel=$em->getRepository('administrativoBundle:Nivel')->find($codn);
+                    $codm=$matd->getMateria();
+                    $materia=$em->getRepository('administrativoBundle:Materia')->find($codm);
+                    $sesion->set('nivel',$matd->getNivel());
+                    $sesion->set('materia',$matd->getMateria());
+                }
+            }
+            
             return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
                 'periodo'=>$periodo,
-                'listames'=>$mes
+                'listames'=>$mes,
+                'mesevac'=>$listameses,
+                'lmd'=>$materiasdocente,
+                'nivel'=>$nivel,
+                'materia'=>$materia
             ));
         }
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();

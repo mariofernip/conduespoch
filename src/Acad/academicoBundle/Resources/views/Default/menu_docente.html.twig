@@ -2,31 +2,35 @@
 <span class="preload2"></span>
 {% set rol='docente'%}
 <ul id="nave">
-    <li class="top"><a href="{{path('portada',{'role': rol })}}" class="top_link"><span>INICIO</span></a></li>
-    <li class="top"><a id="products" class="top_link"><span class="down">Notas</span></a>        
+    <li class="top"><a href="{{path('docente_variable_sesion',{'niv': nivel.id, 'mat': materia.id })}}" class="top_link"><span>INICIO</span></a></li>
+    <li class="top"><a id="products" class="top_link"><span class="down">Calificaciones</span></a>        
         <ul class="sub">
             <li>
-                <a  class="fly">Ingresar / Mes</a>
+                <a  class="fly">Parciales</a>
                 <ul>
                     {% for m in listames %}
-                        <li><a  href="{{path('docente_lista_materias_x_nivel',{'codmes': m.id})}}">{{m.mes}}</a></li>                        
+                        <li><a  href="{{path('docente_notas_x_materia',{'mesid': m.id})}}">{{m.mes}}</a></li>                        
                     {% endfor%}
                     
                 </ul>
             </li>                
-
-            <li><a href="" class="fly">Ver</a>
+            <li><a href="{{path('docente_lista_materias_suspenso')}}" class="fly">Suspensos</a></li>
+            <li><a href="" class="fly">Actas</a>
                 <ul>
-                    <li><a href="#nogo4">Nikon</a></li>
-                    <li><a href="#nogo5">Minolta</a></li>
-                    <li><a href="#nogo6">Pentax</a></li>
+                    <li><a href="#nogo4">Generales</a></li>                    
                 </ul>
             </li>
         </ul>
     </li>
     <li class="top"><a href="#nogo22" id="services" class="top_link"><span class="down">Consultas</span></a>
         <ul class="sub">
-            <li><a href="">Nueva</a></li>
+            <li><a href="">Notas parciales</a>
+                <ul>
+                    {% for me in mesevac%}
+                        <li><a href="{{path('docente_notas_parciales_x_mes',{'codmes': me.id})}}">{{me.mes}}</a></li>                    
+                    {% endfor%}
+                </ul>
+            </li>
 
         </ul>
     </li>
@@ -43,37 +47,6 @@
 </ul>
 
 
-<script type="text/javascript">
-
-    /* Credits: Stu Nicholls */
-/* URL: http://www.stunicholls.com/menu/pro_drop_1/stuHover.js */
-
-stuHover = function() {
-        var cssRule;
-        var newSelector;
-        for (var i = 0; i < document.styleSheets.length; i++)
-                for (var x = 0; x < document.styleSheets[i].rules.length ; x++)
-                        {
-                        cssRule = document.styleSheets[i].rules[x];
-                        if (cssRule.selectorText.indexOf("LI:hover") >= 0)
-                        {
-                                 newSelector = cssRule.selectorText.replace(/LI:hover/gi, "LI.iehover");
-                                document.styleSheets[i].addRule(newSelector , cssRule.style.cssText);
-                        }
-                }
-        var getElm = document.getElementById("nave").getElementsByTagName("LI");
-        for (var i=0; i<getElm.length; i++) {
-                getElm[i].onmouseover=function() {
-                        this.className+=" iehover";
-                }
-                getElm[i].onmouseout=function() {
-                        this.className=this.className.replace(new RegExp(" iehover\\b"), "");
-                }
-        }
-}
-if (window.attachEvent) window.attachEvent("onload", stuHover);
-
-    </script>
 
 
 

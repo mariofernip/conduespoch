@@ -6,7 +6,9 @@
 {% block article%}
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_docente.html.twig'%}
-</section>    
+</section>
+
+
 {% endblock%}
 {% block aside%}
     {{parent()}}
@@ -18,7 +20,7 @@
     </strong>
     <div id="relacionadas">
         <ul>
-    {% for matdoc in lmd %}
+    {% for matdoc in materiasdoc %}
                 <li><a class="boton" href="{{path('docente_variable_sesion',{'niv': matdoc.nivel.id, 'mat': matdoc.materia.id})}}">{{matdoc.nivel | title}}&nbsp;&nbsp;{{matdoc.materia.nombre | title}}</a></li>
     {% endfor%}
 

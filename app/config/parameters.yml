@@ -1,9 +1,8 @@
-# This file is auto-generated during the composer install
 parameters:
     database_driver: pdo_sqlsrv
     database_host: 127.0.0.1
     database_port: '1433'
-    database_name: bdconduespoch
+    database_name: bdconduespoch4
     database_user: yonynet
     database_password: qwerty
     mailer_transport: smtp
@@ -12,3 +11,4 @@ parameters:
     mailer_password: null
     locale: en
     secret: ThisTokenIsNotSoSecretChangeIt
+    database_path: null
