@@ -13,3 +13,7 @@ periodo_registro:
 mes_evaluacion:
     pattern:  /admin/mes/evaluacion/{pid}
     defaults: { _controller: administrativoBundle:Default:mesevaluacion}
+    
+admin_portada:
+    pattern:  /admin/portada
+    defaults: { _controller: administrativoBundle:Default:portada}    

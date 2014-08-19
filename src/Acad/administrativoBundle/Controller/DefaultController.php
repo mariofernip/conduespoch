@@ -167,6 +167,13 @@ class DefaultController extends Controller
                 ));
     }
     
+    public function portadaAction() {
+        $periodo='';
+        return $this->render('administrativoBundle:Default:portada_admin.html.twig',array(
+            'periodo'=>$periodo
+        ));
+        
+    }
     
     
 }
