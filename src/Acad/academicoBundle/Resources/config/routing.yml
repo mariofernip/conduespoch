@@ -85,3 +85,7 @@ docente_variable_sesion:
 docente_notas_parciales_x_mes:    
     pattern:  /docente/notas/parciales/mes/{codmes}
     defaults: { _controller: academicoBundle:default:notasparcialesxmes}
+      
+docente_acta_general_calificaciones_estudiantes:    
+    pattern:  /docente/acta/general/estudiantes
+    defaults: { _controller: academicoBundle:default:actageneralcalificacionesestudiantes}

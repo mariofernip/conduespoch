@@ -3,40 +3,53 @@
 {% block title %} INICIO {% endblock%}
 {% block id 'portada' %}
 {% block article%}
-<section id="menu_inspector">
-        {% include 'academicoBundle:Default:menu_inspector.html.twig' with {'niveles': niveles, 'listamaterias': listamaterias}%}
+<section id="menu_docente">
+        {% include 'academicoBundle:Default:menu_docente.html.twig' with {'mesevac': mesevac, 'listamaterias': listamaterias}%}
 </section>
-<h3><p align="center">{{curso}}</p><h3>
+<h3><p align="center"></p><h3>
         
 {#LISTA DE ESTUDIANTES: SECCIONES#}
 
-<strong><p>Listado de estudiantes</p></strong>
+<strong><p>Acta General de Calificaciones</p></strong>
+
+<div>{{nivel.curso.nombre | title}}&nbsp;&nbsp;{{nivel.paralelo.nombre | title}}&nbsp;&nbsp;{{materia.nombre}}</div>
+
 <div id="dt_example">
+    
     <div id="demo">
-    {% if sd== 1 %}
-        <form name="diurna" method="post" {{form_enctype(formsecciones) }}>
-            {{ form_start(formsecciones) }}
-        <table class="display" id="example">
+         {% if sd== 1 %}
+        <table class="display" id="itsthetable">
             <thead>
                 <tr >
-                    <th>{{ knp_pagination_sortable(secciones, 'Seccion- Cedula- Nombre Completo', 'e.nombre') }}</th>
-                    <th>{{ knp_pagination_sortable(secciones, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
-                    <th>{{ knp_pagination_sortable(secciones, 'Faltas Injustificadas', 'a.faltasinjustificadas') }}</th>
-                    <th>{{ knp_pagination_sortable(secciones, 'Atrasos', 'a.atrasos') }}</th>
-                    <th>{{ knp_pagination_sortable(secciones, 'Promedio', 'a.horasasistidas') }}</th>
+                    <th>{{'Seccion- Cedula- Nombre Completo'}}</th>
+                    <th>{{'Prom. Tra. Gru'}}</th>
+                    <th>{{'Prom. Est. Cas'}}</th>
+                    <th>{{'Prom. Pra.'}}</th>
+                    <th>{{'Prom. Teo.'}}</th>
+                    <th>{{'Prom. Tot.'}}</th>                    
+                    <th>{{'Sus.'}}</th>                                       
+                    <th>{{'Equi.'}}</th>
                    
                  </tr>
                 </thead>
                             
-        {# iterate over each existing tag and render its only field: name #}
-        {% for est in formsecciones.faltasjustificadas %}
+        {% for est in estudiantes %}
 <tbody>
     <tr>            
-        <td>{{ form_widget(est.materiaasignada) }}</td>                
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_errors(est.faltasjustificadas ) }} {{ form_widget(est.faltasjustificadas ) }} </td>
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(est.faltasinjustificadas)}}</td>
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(est.atrasos) }}</td>
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(est.promediofinal) }}</td>
+        <td>{{est.seccion}}{{' - '}}{{est.cedula}}{{' - '}}{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
+        <td ALIGN="CENTER" style="vertical-align:middle">{{'%.2f'|format((est.notatb/mesconteo))}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{'%.2f'|format((est.notaec/mesconteo))}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{'%.2f'|format((est.notapp/mesconteo))}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{'%.2f'|format((est.notapt/mesconteo))}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{#{{est.promedio}}#}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">
+        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 14 %}
+            <strong>Reprobado</strong>
+        {% endif %}
+        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 > 14 %}
+            <strong>Aprobado</strong>
+        {% endif %}</td>
         
     </tr>
 </tbody>                       
@@ -44,34 +57,29 @@
      
                         
         </table>
-            <div class="paginacion">
-                        {{ knp_pagination_render(secciones) }}
-                     </div>
-    <input type="submit" value="guardar" class="boton" >       
-    {{ form_end(formsecciones) }}            
-    
-    </form>
-            {%else%}
+    {%else%}
         <h1>No hay estudiantes</h1>
     {% endif%}
     </div>
 </div>
 <br>
+{#{% endif %}#}
 
 {% endblock%}
 {% block aside %}
 {{parent()}}
-    {%set inspector='inspector'%}
-        <p align="center"><a class="boton" href="{{path('portada',{'role':inspector})}}">PORTADA</a></p>
+    {%set docente='docente'%}
+        <p align="center"><a class="boton" href="{{path('portada',{'role':docente})}}">PORTADA</a></p>
           <strong><p align="left">Materias</p></strong>
     <div id="relacionadas">
         <ul>
        {% for mat in listamaterias %}
-                {#<li><a class="boton" href="{{path('estudiante_lista_matriculados_x_secciones',{'nivel': niv.id, 'nivel': niv.id})}}">{{niv.curso | title}}&nbsp;&nbsp;{{niv.paralelo | title}}</a></li>#}
-                <li><a href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materia.id, 'nivel': mat.nivel.id})}}" class="boton">{{mat.materia.nombre | title}}</a></li>
-   {% endfor%}
+                <li><a href="{{path('docente_variable_sesion', {'niv': mat.nivel.id, 'mat': mat.materia.id})}}" class="boton">{{mat.nivel | title}}&nbsp;&nbsp;{{mat.materia.nombre | title}}</a></li>
+       {% endfor%}
             </ul>
         </div>
+          
+    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
 {% endblock%}
 
           
@@ -109,14 +117,8 @@
 
 {% block stylesheets %}
 {{ parent() }}
-<style>
-   
-  input[type="number"] {
-   width:50px;
-}
-</style>
 
-
+{% include 'academicoBundle:Default:tablecss.html.twig'%}
 
    {% endblock %}
      

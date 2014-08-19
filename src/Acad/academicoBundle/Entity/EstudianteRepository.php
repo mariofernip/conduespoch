@@ -226,8 +226,45 @@ class EstudianteRepository extends EntityRepository {
         
     }
     
+public function findEstudiantexActaGeneral($materias, $nivel) {
+        
+        $em = $this->getEntityManager();
+        
+        $dql =  'SELECT sum(a.notatb) as notatb, sum(a.notaec) as notaec, sum(a.notapp) as notapp, sum(a.notapt) as notapt, e.cedula, e.apellido, e.nombre, m.seccion FROM academicoBundle:Evaluacion a
+                join a.materiaasignada ma
+                join ma.matricula m
+                join m.estudiante e
+                join m.nivel n
+                WHERE m.estado = 1 
+                AND n.id =:nid 
+                AND ma.materia = :mid
+                GROUP BY e.cedula, e.apellido, e.nombre, m.seccion
+                ';   
+        
+        
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('mid', $materias);
+        $estudiante->setParameter('nid', $nivel);
+        return $estudiante->getResult();        
+    }
+ 
+    public function getMesEvaluacionxPeriodoxActivo($pid) {
+        
+        
+        $em = $this->getEntityManager();
 
-    
+        $dql = 'select count(me.id)
+                FROM administrativoBundle:MesEvaluacion me                                               
+                Join me.periodo p
+                WHERE p.id = :pid
+                ';
+
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('pid', $pid);
+              
+        $count = $consulta->getSingleScalarResult();
+         return $count;  
+    }
 }
 
 ?>

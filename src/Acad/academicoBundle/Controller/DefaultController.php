@@ -1305,6 +1305,75 @@ class DefaultController extends Controller {
             'listaeva'=>$pagination
         ));
     }
+       
+    
+    //METODO: lista materias para presentar acta de calificaciones estudiantes de un periodo actual    
+    public function actageneralcalificacionesestudiantesAction() {
+
+       $em = $this->getDoctrine()->getManager();
+       
+        //obtengo el objeto autenticado: en este caso el docente
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        //consulto periodo actual
+        $sesion = $this->getRequest()->getSession();
+        $periodo = $sesion->get('periodo'); //$em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
+        //'estado' => 1
+        //  ));
+
+        $materia = $sesion->get('materia');
+        $nivel = $sesion->get('nivel');
+        //obtengo cedula del docente autenticado
+        $cedula = $usuario->getCedula();
+        //obtiene las materias del docente autenticado
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
+         
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+     
+        //obtiene lista de todos los niveles
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado' => true
+                ));
+        $estudiantes = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral($materia, $nivel);        
+        $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
+   
+        //estudiantes
+        $paginatorSS = $this->get('knp_paginator');
+        $paginationSS = $paginatorSS->paginate(
+                $estudiantes, $this->getRequest()->query->get('page', 1), 10
+        );
+        
+         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
+       
+        
+        $sd=0; 
+        
+        if($estudiantes){
+            $sd=1;
+        }
+               
+        return $this->render('academicoBundle:default:actageneralcalificaciones.html.twig', array(
+                    'periodo' => $periodo,
+                    'niveles' => $niveles,
+                    'nivel'=> $nivel,
+                    'materia'=>$materia,  
+                    'listamaterias'=>$materiasdocente,    
+                    'listames'=>$mes,
+                    'estudiantes'=>$paginationSS,
+                    'materia'=>$materia,    
+                    'sd'=>$sd,
+                    'mesconteo' => $mesconteo,
+                    'mesevac' => $listamesesEv
+                ));
+    }
     
     
 }
