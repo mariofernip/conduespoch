@@ -1,0 +1,31 @@
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'materia' %}
+
+{% block title %}Registro de una nueva materia{% endblock%}
+
+{% block article %}
+<h1>PERIODO ACADÉMICO ACTUAL </h1><br><br>
+<h1>{{ block ('title')}}</h1>
+
+<form action="{{ path('materia_ingresar') }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.area, { 'attr': {'autocomplete' : 'off' } }) }}                                  
+                  {{form_row(formulario.numerocreditos, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.descripcion, { 'attr': {'autocomplete' : 'off' } }) }}                                  
+                  {{form_row(formulario.estado, { 'attr': {'autocomplete' : 'off' } }) }}
+           </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}

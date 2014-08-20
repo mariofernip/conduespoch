@@ -1,0 +1,62 @@
+{% extends '::frontend.html.twig' %}
+
+{% block title %} INICIO {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+
+<h3><p align="center">Docentes </p><h3>
+{#LISTA DE DOCENTES#}
+{% if sd== 1 %}
+<div id="dt_example">
+    <div id="demo">
+        <table class="display" id="example">
+            <thead>
+                <tr >
+                    <th>{{'Cedula' }}</th>
+                    <th>{{'Nombres/Apellidos' }}</th>
+                    <th>{{'e-mail'}}</th>                   
+                    <th>{{'Estado'}}</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+    
+            <tbody>{% for doc in listadocentes %}
+                <tr>
+                        <td  ALIGN="CENTER" style="vertical-align:middle">{{doc.cedula}}</td> 
+                        <td  ALIGN="CENTER" style="vertical-align:middle">{{doc.apellido}}{{' '}}{{doc.nombre}}</td>   
+                        <td  ALIGN="CENTER" style="vertical-align:middle">{{doc.email}}</td> 
+                        <td  ALIGN="CENTER" style="vertical-align:middle">{% if (doc.estado) ==1 %}
+            <strong>Activo</strong>
+        {% endif %}
+        {% if (doc.estado) ==0 %}
+            <strong>No activo</strong>
+        {% endif %}</td> 
+                        <td  ALIGN="CENTER" style="vertical-align:middle"><a  href="{{path('docente_modificar_id',{'did':doc.id})}}"><img border="0" src="{{ asset('uploads/documents/modificar.gif') }}" width="40" height="40"></a></td>
+                <tr> 
+                    {% endfor%}
+            </tbody>
+
+   
+        </table>
+            
+    </div>
+</div>
+<br>
+{% endif %}
+
+
+{% endblock%}
+{% block aside %}
+    
+    {{parent()}}
+     
+        <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+{% endblock%}
+                    
+{% block stylesheets %}
+{{ parent() }}
+
+{% include 'academicoBundle:Default:tablecss.html.twig'%}
+
+   {% endblock %}
+     

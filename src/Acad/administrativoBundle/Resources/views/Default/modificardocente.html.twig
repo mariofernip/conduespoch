@@ -1,0 +1,34 @@
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'docente' %}
+
+{% block title %}Modificar docente{% endblock%}
+
+{% block article %}
+<h1>PERIODO ACADÉMICO ACTUAL </h1><br><br>
+<h1>{{ block ('title')}}</h1>
+
+<form action="{{ path('docente_modificar_id',{'did':id} )}}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_label(formulario.cedula,'Número de cédula:')}}{{form_errors(formulario.cedula)}}{{form_widget(formulario.cedula, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.apellido, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_label(formulario.direccion,'Dirección')}}{{form_widget(formulario.direccion, { 'attr': {'autocomplete' : 'off' } }) }}                                    
+                  {{form_row(formulario.telefonofijo)}}{{form_widget(formulario.telefonofijo,{ 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.celular, { 'attr': {'autocomplete' : 'off' } }) }}{{form_errors(formulario.email)}}                  
+                  {{form_label(formulario.email,'Correo:')}}{{form_errors(formulario.email)}}{{form_widget(formulario.email, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  {{form_row(formulario.trabajoanterior, { 'attr': {'autocomplete' : 'off' } }) }}  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}

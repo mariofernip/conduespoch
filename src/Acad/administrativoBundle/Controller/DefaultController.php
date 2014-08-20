@@ -2,12 +2,21 @@
 
 namespace Acad\administrativoBundle\Controller;
 
+
+use Acad\administrativoBundle\Entity\Area;
+use Acad\administrativoBundle\Entity\Curso;
 use Acad\administrativoBundle\Entity\Docente;
+use Acad\administrativoBundle\Entity\Hora;
 use Acad\administrativoBundle\Entity\EvaluacionxMes;
+use Acad\administrativoBundle\Entity\Materia;
 use Acad\administrativoBundle\Entity\MesEvaluacion;
 use Acad\administrativoBundle\Entity\Periodo;
 use Acad\administrativoBundle\Form\DocenteType;
+use Acad\administrativoBundle\Form\AreaType;
+use Acad\administrativoBundle\Form\CursoType;
+use Acad\administrativoBundle\Form\HoraType;
 use Acad\administrativoBundle\Form\EvaluacionxMesType;
+use Acad\administrativoBundle\Form\MateriaType;
 use Acad\administrativoBundle\Form\PeriodoType;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -59,6 +68,62 @@ class DefaultController extends Controller
         
     }
     
+    
+     //METODO: lista los datos de las areas 
+    public function listadocenteModificarAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo='';
+
+        $listadocentes = $em->getRepository('administrativoBundle:Docente')->findBy(array("estado" => 1));
+        
+        if($listadocentes){
+            $sd=1;
+        }
+        return $this->render('administrativoBundle:default:listadocentes.html.twig', array(                   
+                    
+                    'periodo' => $periodo,
+                    'listadocentes'=>$listadocentes,
+                    'sd'=>$sd
+                ));
+    }
+    
+    
+     //METODO: modifica los datos de las areas
+    public function docenteModificarAction($did) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+
+        $periodo='';
+        $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array(
+            'id' => $did
+                ));
+        
+        
+        $formulario = $this->createForm(new DocenteType(), $docente);
+
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->persist($docente);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Datos actualizados');
+
+
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+
+        
+        return $this->render('administrativoBundle:default:modificardocente.html.twig', array(                   
+                    'id' => $did,
+                    'periodo' => $periodo,                    
+                    'formulario' => $formulario->createView()
+                ));
+    }
+        
     
     public function registroperiodoAction() {
         
@@ -173,6 +238,361 @@ class DefaultController extends Controller
             'periodo'=>$periodo
         ));
         
+    }
+    
+    
+    public function areaIngresarAction(){
+        
+        $periodo=''; 
+        
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $area = new Area();
+
+        $formulario = $this->createForm(new AreaType(), $area);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->persist($area);
+            $em->flush();
+
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Area ingresada'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:registroarea.html.twig', array(
+                    'periodo' => $periodo,
+                    'formulario' => $formulario->createView())
+        );
+    }
+    
+    //METODO: lista los datos de las areas 
+    public function listaareaModificarAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo='';
+
+        $listaareas = $em->getRepository('administrativoBundle:Area')->findAll();
+        
+ 
+
+
+        if($listaareas){
+            $sd=1;
+        }
+        return $this->render('administrativoBundle:default:listaareas.html.twig', array(                   
+                    
+                    'periodo' => $periodo,
+                    'listaareas'=>$listaareas,
+                    'sd'=>$sd
+                ));
+    }
+    
+    
+     //METODO: modifica los datos de las areas
+    public function areaModificarAction($aid) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+
+        $periodo='';
+        $area = $em->getRepository('administrativoBundle:Area')->findOneBy(array(
+            'id' => $aid
+                ));
+        
+        
+        $formulario = $this->createForm(new AreaType(), $area);
+
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->persist($area);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Datos actualizados');
+
+
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+
+        
+        return $this->render('administrativoBundle:default:modificararea.html.twig', array(                   
+                    'id' => $aid,
+                    'periodo' => $periodo,                    
+                    'formulario' => $formulario->createView()
+                ));
+    }
+    
+    
+    public function cursoIngresarAction(){
+        
+        $periodo=''; 
+        
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $curso = new Curso();
+
+        $formulario = $this->createForm(new CursoType(), $curso);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->persist($curso);
+            $em->flush();
+
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Curso ingresada'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:registrocurso.html.twig', array(
+                    'periodo' => $periodo,
+                    'formulario' => $formulario->createView())
+        );
+    }
+    
+    //METODO: lista los datos de las areas 
+    public function listacursoModificarAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo='';
+
+        $listacursos = $em->getRepository('administrativoBundle:Curso')->findAll();
+        
+ 
+
+
+        if($listacursos){
+            $sd=1;
+        }
+        return $this->render('administrativoBundle:default:listacursos.html.twig', array(                   
+                    
+                    'periodo' => $periodo,
+                    'listacursos'=>$listacursos,
+                    'sd'=>$sd
+                ));
+    }
+    
+    
+     //METODO: modifica los datos de las areas
+    public function cursoModificarAction($cid) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+
+        $periodo='';
+        $curso = $em->getRepository('administrativoBundle:Curso')->findOneBy(array(
+            'id' => $cid
+                ));
+        
+        
+        $formulario = $this->createForm(new CursoType(), $curso);
+
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->persist($curso);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Datos actualizados');
+
+
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:default:modificarcurso.html.twig', array(                   
+                    'id' => $cid,
+                    'periodo' => $periodo,                    
+                    'formulario' => $formulario->createView()
+                ));
+    }
+    
+    
+     public function horaIngresarAction(){
+        
+        $periodo=''; 
+        
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $hora = new Hora();
+
+        $formulario = $this->createForm(new HoraType(), $hora);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->persist($hora);
+            $em->flush();
+
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Hora ingresada'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:registrohora.html.twig', array(
+                    'periodo' => $periodo,
+                    'formulario' => $formulario->createView())
+        );
+    }
+    
+    //METODO: lista los datos de las horas
+    public function listahoraModificarAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo='';
+
+        $listahoras = $em->getRepository('administrativoBundle:Hora')->findAll();
+   
+        if($listahoras){
+            $sd=1;
+        }
+        return $this->render('administrativoBundle:default:listahoras.html.twig', array(                   
+                    
+                    'periodo' => $periodo,
+                    'listahoras'=>$listahoras,
+                    'sd'=>$sd
+                ));
+    }
+    
+    
+     //METODO: modifica los datos de las horas
+    public function horaModificarAction($hid) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+
+        $periodo='';
+        $hora = $em->getRepository('administrativoBundle:Hora')->findOneBy(array(
+            'id' => $hid
+                ));
+        
+        
+        $formulario = $this->createForm(new HoraType(), $hora);
+
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->persist($hora);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Datos actualizados');
+
+
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:default:modificarhora.html.twig', array(                   
+                    'id' => $hid,
+                    'periodo' => $periodo,                    
+                    'formulario' => $formulario->createView()
+                ));
+    }
+    
+    
+     public function materiaIngresarAction(){
+        
+        $periodo=''; 
+        
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $materia = new Materia();
+
+        $formulario = $this->createForm(new MateriaType(), $materia);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->persist($materia);
+            $em->flush();
+
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia ingresada'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:registromateria.html.twig', array(
+                    'periodo' => $periodo,
+                    'formulario' => $formulario->createView())
+        );
+    }
+    
+    //METODO: lista los datos de las materias
+    public function listamateriaModificarAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo='';
+
+        $listamaterias = $em->getRepository('administrativoBundle:Materia')->findAll();
+   
+        if($listamaterias){
+            $sd=1;
+        }
+        return $this->render('administrativoBundle:default:listamaterias.html.twig', array(                   
+                    
+                    'periodo' => $periodo,
+                    'listamaterias'=>$listamaterias,
+                    'sd'=>$sd
+                ));
+    }
+    
+    
+     //METODO: modifica los datos de las materia
+    public function materiaModificarAction($mid) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+
+        $periodo='';
+        $materia = $em->getRepository('administrativoBundle:Materia')->findOneBy(array(
+            'id' => $mid
+                ));
+        
+        
+        $formulario = $this->createForm(new MateriaType(), $materia);
+
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->persist($materia);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Datos actualizados');
+
+
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:default:modificarmateria.html.twig', array(                   
+                    'id' => $mid,
+                    'periodo' => $periodo,                    
+                    'formulario' => $formulario->createView()
+                ));
     }
     
     

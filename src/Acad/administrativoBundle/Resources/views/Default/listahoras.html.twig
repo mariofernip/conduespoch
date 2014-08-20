@@ -1,0 +1,55 @@
+{% extends '::frontend.html.twig' %}
+
+{% block title %} INICIO {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+
+<h3><p align="center">Horas </p><h3>
+{#LISTA DE HORAS#}
+{% if sd== 1 %}
+<div id="dt_example">
+    <div id="demo">
+        <table class="display" id="example">
+            <thead>
+                <tr >
+                    <th>{{'Hora de inicio' }}</th>                 
+                    <th>{{'Hora de finalizacion' }}</th>                  
+                    <th>{{'Descripcion' }}</th>                  
+                    
+                    <th>Accion</th>
+                </tr>
+            </thead>
+    
+            <tbody>{% for hor in listahoras %}
+                <tr>
+                        <td ALIGN="CENTER" style="vertical-align:middle">{#{hor.hora_inicio | date('TH:i:sP')}#}</td>
+                        <td ALIGN="CENTER" style="vertical-align:middle">{#{hor.hora_fin}#}</td>
+                        <td ALIGN="CENTER" style="vertical-align:middle">{{hor.descripcion}}</td>
+                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('hora_modificar_id',{'hid':hor.id})}}"><img border="0" src="{{ asset('uploads/documents/modificar.gif') }}" width="40" height="40"></a></td>
+                <tr>{% endfor%}
+            </tbody>
+
+    
+        </table>
+            
+    </div>
+</div>
+<br>
+{% endif %}
+
+
+{% endblock%}
+{% block aside %}
+    
+    {{parent()}}
+     
+        <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+{% endblock%}
+                    
+{% block stylesheets %}
+{{ parent() }}
+
+{% include 'academicoBundle:Default:tablecss.html.twig'%}
+
+   {% endblock %}
+     

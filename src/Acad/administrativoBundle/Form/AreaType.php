@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DocenteType extends AbstractType
+class AreaType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -15,15 +15,8 @@ class DocenteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('cedula')
             ->add('nombre')
-            ->add('apellido')
-            ->add('direccion')
-            ->add('telefonofijo')
-            ->add('celular')
-            ->add('email','email')
-            ->add('trabajoanterior')
-            ->add('estado','checkbox',array('required'  => false,))
+            ->add('descripcion')                                              
         ;
     }
     
@@ -33,7 +26,7 @@ class DocenteType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Acad\administrativoBundle\Entity\Docente'
+            'data_class' => 'Acad\administrativoBundle\Entity\Area'
         ));
     }
 
@@ -42,6 +35,6 @@ class DocenteType extends AbstractType
      */
     public function getName()
     {
-        return 'acad_administrativobundle_docente';
+        return 'acad_administrativobundle_area';
     }
 }

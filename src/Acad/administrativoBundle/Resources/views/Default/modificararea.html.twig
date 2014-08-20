@@ -1,0 +1,28 @@
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'area' %}
+
+{% block title %}Modificar area{% endblock%}
+
+{% block article %}
+<h1>PERIODO ACADÉMICO ACTUAL </h1><br><br>
+<h1>{{ block ('title')}}</h1>
+
+<form action="{{ path('area_modificar_id',{'aid':id} )}}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.descripcion, { 'attr': {'autocomplete' : 'off' } }) }}                                  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}
