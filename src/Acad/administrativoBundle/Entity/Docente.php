@@ -95,10 +95,8 @@ class Docente
      */
     protected $fechasalida;
 
-    /**
-     *
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    /** @ORM\Column(type="boolean", nullable=true)      
+     */ 
     protected $estado;
 
 
