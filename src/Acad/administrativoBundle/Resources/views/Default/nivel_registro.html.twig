@@ -1,0 +1,68 @@
+
+{% extends '::frontend.html.twig' %}
+
+{% block id 'portada' %}
+
+{% block title %}Registro de un nuevo curso{% endblock%}
+
+{% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<h1>{{ block ('title')}}</h1>
+<br><br>
+<form action="{{ path('admin_nivel_registro') }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                
+                  {{form_label(formulario.curso,'Nivel:')}}{{form_errors(formulario.curso)}}{{form_widget(formulario.curso, { 'attr': {'autocomplete' : 'off' } }) }}<br>                  
+                  {{form_label(formulario.paralelo,'Paralelo:')}}{{form_errors(formulario.paralelo)}}{{form_widget(formulario.paralelo, { 'attr': {'autocomplete' : 'off' } }) }}<br>                  
+                  
+                  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+<hr>
+<strong><p align="center">LISTA CURSOS</p></strong>
+<div id="dt_example">
+    <div id="demo">
+            <table class="display" id="example" >
+                    <thead>
+                        <tr>
+                            <th colspan="4">PREVIAMENTE REGISTRADOS</th>                                                 
+                        <tr>
+                            <th>Nivel</th>            
+                            <th>Paralelo</th>
+                            <th>Descripcion</th>
+                            <th>Accion</th>
+                        </tr>
+                        </thead>        
+                     <tbody>
+                    {% for m in lista %}
+                        
+                        <tr >
+                            <td>{{m.curso }}</td> <td>{{ m.paralelo }}</td><td>{{m.descripcion}}</td> <td><a href="{{path('admin_nivel_modificar', {'codnivel': m.id})}}">Mod</a></td>                        
+                            
+                        <tr>
+                    <tbody>
+                    {% endfor %}
+                </table>
+        </div>
+    </div>
+<br><br>
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock%}
+{% block stylesheets %}
+{{ parent() }}
+    
+ {% endblock %}
+
+        

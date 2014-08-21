@@ -4,7 +4,7 @@
 
 {% block id 'portada' %}
 
-{% block title %}Evaluaciones{% endblock%}
+{% block title %}Requisitos{% endblock%}
 
 {% block article %}
 <section id="menu_admin">
@@ -15,21 +15,19 @@
 
 
 
-<form action="{{ path('mes_evaluacion',{'pid': codigo}) }}" method="post" {{
+<form action="{{ path('admin_requisito_modificar_estados') }}" method="post" {{
         form_enctype(form) }} >
     {{ form_start(form) }}
         {# render the task's only field: description #}
     
     <br>
-    <h3>Requisitos</h3>
+    
     <ul>
         {# iterate over each existing tag and render its only field: name #}
-        {% for req in form.evames %}
-            {{ form_widget(req.estado) }} &nbsp;<strong>{{ form_widget(req.mes, { 'attr': {'disabled' : 'true' } }) }} </strong>
-            <li>{{ form_label(req.finiciomes,('Fecha Inicio:')) }}{{ form_widget(req.finiciomes) }}</li>
-            <li>{{ form_label(req.finiciomes,('Fecha Fin:')) }}{{ form_widget(req.ffinmes) }}</li>
-            <br><br>
-            <hr>
+        {% for req in form.estreq %}
+            
+            <li>{{ form_widget(req.estado) }}&nbsp;&nbsp;{{ form_widget(req.descripcion) }}</li>
+            
         {% endfor %}
     </ul>
 

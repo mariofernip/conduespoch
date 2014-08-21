@@ -6,7 +6,9 @@
 {% block title %}Modificar hora{% endblock%}
 
 {% block article %}
-<h1>PERIODO ACADÉMICO ACTUAL </h1><br><br>
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
 <h1>{{ block ('title')}}</h1>
 
 <form action="{{ path('hora_modificar_id',{'hid':id} )}}" method="post" {{

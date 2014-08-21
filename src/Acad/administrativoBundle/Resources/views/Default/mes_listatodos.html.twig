@@ -1,0 +1,57 @@
+
+{% extends '::frontend.html.twig' %}
+
+{% block id 'portada' %}
+
+{% block title %}Lista de meses{% endblock%}
+
+{% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<h1>{{ block ('title')}}</h1>
+<strong><p align="center">LISTA MESES</p></strong>
+<div id="dt_example">
+    <div id="demo">
+            <table class="display" id="example" >
+                    <thead>
+                        <tr>
+                            <th colspan="3">PREVIAMENTE REGISTRADOS</th>                                                 
+                        <tr>
+                            <th style="width: 30px">Nombre</th>            
+                            <th style="width: 30px" width="30">Estado</th>
+                            <th style="width: 30px" width="30">Acción</th>
+                        </tr>
+                        </thead>        
+                     <tbody>
+                    {% for m in listam %}
+                        {% set estado=m.estado%}
+                        {% if estado==1%}
+                            {% set esta='Activo'%}                                                    
+                        {% endif%}
+                        {% if estado==0%}
+                            {% set esta='Inactivo'%}                                                    
+                        {% endif%}
+                        <tr >
+                            <td>{{m.nombre }}</td> <td>{{ esta }}</td> <td><a href="{{path('admin_mes_modificar', {'codmes': m.id})}}">Mod</a></td>                        
+                            
+                        <tr>
+                    <tbody>
+                    {% endfor %}
+                </table>
+        </div>
+    </div>
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock%}
+{% block stylesheets %}
+{{ parent() }}
+    
+ {% endblock %}
+
+        

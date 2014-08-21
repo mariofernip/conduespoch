@@ -64,6 +64,26 @@ class Mes {
     {
         return $this->nombre;
     }
+ 
+    
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     * @return Mes
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+    
+        return $this;
+    }
+
+    
+    public function getEstado()
+    {
+        return $this->estado;
+    }
     
     public function __toString() {
         return $this->getNombre();

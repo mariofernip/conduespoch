@@ -7,6 +7,9 @@
 {% block title %}Registro de un nuevo periodo{% endblock%}
 
 {% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
 <h1>{{ block ('title')}}</h1>
 <br><br>
 <form action="{{ path('periodo_registro') }}" method="post" {{

@@ -3,10 +3,12 @@
 
 {% block id 'curso' %}
 
-{% block title %}Registro de un nuevo curso{% endblock%}
+{% block title %}Registro de un nuevo nivel{% endblock%}
 
 {% block article %}
-<h1>PERIODO ACADÉMICO ACTUAL </h1><br><br>
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
 <h1>{{ block ('title')}}</h1>
 
 <form action="{{ path('curso_ingresar') }}" method="post" {{

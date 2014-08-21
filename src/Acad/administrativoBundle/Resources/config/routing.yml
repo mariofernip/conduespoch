@@ -3,7 +3,7 @@ administrativo_homepage:
     defaults: { _controller: administrativoBundle:Default:index }
 
 docente_registro:
-    pattern:  /docente/registro
+    pattern:  /admin/docente/registro
     defaults: { _controller: administrativoBundle:Default:registrodocente}
     
 periodo_registro:
@@ -17,3 +17,104 @@ mes_evaluacion:
 admin_portada:
     pattern:  /admin/portada
     defaults: { _controller: administrativoBundle:Default:portada}    
+
+admin_mes_registro:
+    pattern:  /admin/mes/registro
+    defaults: { _controller: administrativoBundle:Default:registromes}    
+
+admin_mes_listar_todos:
+    pattern:  /admin/mes/lista
+    defaults: { _controller: administrativoBundle:Default:listatodosmeses}        
+
+admin_mes_modificar:
+    pattern:  /admin/mes/modificar/{codmes}
+    defaults: { _controller: administrativoBundle:Default:mesmodicar}            
+
+admin_nivel_registro:
+    pattern:  /admin/nivel/registro
+    defaults: { _controller: administrativoBundle:Default:nivelregistro}                
+    
+admin_nivel_listar_todos:
+    pattern:  /admin/nivel/lista
+    defaults: { _controller: administrativoBundle:Default:listatodosniveles}            
+    
+admin_nivel_modificar:
+    pattern:  /admin/nivel/modificar/{codnivel}
+    defaults: { _controller: administrativoBundle:Default:nivelmodicar}               
+
+admin_requisito_registro:
+    pattern:  /admin/requisito/registro
+    defaults: { _controller: administrativoBundle:Default:requisitoregistro}                    
+    
+admin_requisito_listar_todos:
+    pattern:  /admin/requisito/lista
+    defaults: { _controller: administrativoBundle:Default:listatodosrequisitos}                
+    
+admin_requisito_modificar:
+    pattern:  /admin/requisito/modificar/{codreq}
+    defaults: { _controller: administrativoBundle:Default:requisitomodicar}                   
+    
+admin_requisito_modificar_estados:
+    pattern:  /admin/requisito/cambiar/estados
+    defaults: { _controller: administrativoBundle:Default:requisitomodicarestados}                           
+    
+area_ingresar:
+    pattern:  /admin/area/ingresar
+    defaults: { _controller: administrativoBundle:Default:areaIngresar}
+    
+area_modificar:    
+    pattern:  /admin/area/listar
+    defaults: { _controller: administrativoBundle:Default:listaareaModificar}
+    
+area_modificar_id:    
+    pattern:  /admin/area/modificar/{aid}
+    defaults: { _controller: administrativoBundle:Default:areaModificar}    
+    
+curso_ingresar:
+    pattern:  /admin/curso/ingresar
+    defaults: { _controller: administrativoBundle:Default:cursoIngresar}
+    
+curso_modificar:    
+    pattern:  /admin/curso/listar
+    defaults: { _controller: administrativoBundle:Default:listacursoModificar}
+    
+curso_modificar_id:    
+    pattern:  /admin/curso/modificar/{cid}
+    defaults: { _controller: administrativoBundle:Default:cursoModificar}     
+    
+    
+docente_ingresar:
+    pattern:  /admin/docente/ingresar
+    defaults: { _controller: administrativoBundle:Default:registrodocente}
+    
+docente_modificar:    
+    pattern:  /admin/docente/listar
+    defaults: { _controller: administrativoBundle:Default:listadocenteModificar}
+    
+docente_modificar_id:    
+    pattern:  /admin/docente/modificar/{did}
+    defaults: { _controller: administrativoBundle:Default:docenteModificar}        
+    
+hora_ingresar:
+    pattern:  /admin/hora/ingresar
+    defaults: { _controller: administrativoBundle:Default:horaIngresar}
+    
+hora_modificar:    
+    pattern:  /admin/hora/listar
+    defaults: { _controller: administrativoBundle:Default:listahoraModificar}
+    
+hora_modificar_id:    
+    pattern:  /admin/hora/modificar/{hid}
+    defaults: { _controller: administrativoBundle:Default:horaModificar}
+    
+materia_ingresar:
+    pattern:  /admin/materia/ingresar
+    defaults: { _controller: administrativoBundle:Default:materiaIngresar}
+    
+materia_modificar:    
+    pattern:  /admin/materia/listar
+    defaults: { _controller: administrativoBundle:Default:listamateriaModificar}
+    
+materia_modificar_id:    
+    pattern:  /admin/materia/modificar/{mid}
+    defaults: { _controller: administrativoBundle:Default:materiaModificar}    

@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * uniqueConstraints={
  * @ORM\UniqueConstraint(name="unique_nivel", columns={"curso_id","paralelo_id"})
  *  })
- * @UniqueEntity(fields={"curso_id","paralelo_id"}, message="El registro a insertar ya existe")
+ * @UniqueEntity(fields={"curso","paralelo"}, message="El registro a insertar ya existe")
  * @ORM\Entity
  */
 
@@ -31,7 +31,6 @@ class Nivel {
     
     
     /** @ORM\Column(type="string", length=128, nullable=true) 
-     * @Assert\Blank()
      */    
     protected $descripcion;
     

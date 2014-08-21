@@ -1,0 +1,153 @@
+<span class="preload1"></span>
+<span class="preload2"></span>
+{% set rol='admin'%}
+<ul id="nave">
+    <li class="top"><a href="{{path('admin_portada')}}" class="top_link">INCIO</a></li>
+    <li class="top"><a id="products" class="top_link">PERIODO</a>        
+        <ul class="sub">
+            <li>
+                <a  href="{{path('periodo_registro')}}" class="fly">Nuevo</a>                
+            </li>                
+            <li><a href="" class="fly">Modificar actual</a></li>
+            <li><a  class="fly">Ver</a>
+                <ul>
+                    <li>
+                        <a  href="" class="fly">Actual</a>                        
+                    </li>
+                    <li>
+                        <a  href="" class="fly">Todos</a>                        
+                    </li>
+                </ul>
+            </li>
+
+            <li><strong><a  class="fly">Meses</a></strong>
+                <ul>
+                    <li>
+                        <a  href="{{path('admin_mes_registro')}}" class="fly">Nuevo</a>                        
+                    </li>
+                    <li>
+                        <a  href="{{path('admin_mes_listar_todos')}}" class="fly">Ver todos</a>                        
+                    </li>
+                    <li>
+                        <a  href="" class="fly">Cambiar estados</a>                        
+                    </li>
+                </ul>
+            </li>
+            <li><strong><a  class="fly">Días</a><strong>
+                <ul>
+                    <li>
+                        <a  href="" class="fly">Nuevo</a>                        
+                    </li>
+                    <li>
+                        <a  href="" class="fly">Ver todos</a>                        
+                    </li>
+                </ul>
+            </li>
+            <li><strong><a  class="fly">Horas</a><strong>
+                <ul>
+                    <li>
+                        <a  href="{{path('hora_ingresar')}}" class="fly">Nueva</a>                        
+                    </li>
+                    <li>
+                        <a  href="{{path('hora_modificar')}}" class="fly">Ver todas</a>                        
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li class="top"><a id="products" class="top_link">MATERIAS</a>        
+        <ul class="sub">
+            <li>
+                <a  href="{{path('materia_ingresar')}}" class="fly">Nueva</a>                
+            </li>                
+            <li><a  href="{{path('materia_modificar')}}" class="fly">Ver todas</a>
+
+            </li>
+            <li><a  class="fly">Modificar todas</a>
+                
+            </li>
+            <li><strong><a  class="fly">Areas</a></strong>
+                <ul>
+                    <li>
+                        <a  href="{{path('area_ingresar')}}" class="fly">Nueva</a>                        
+                    </li>
+                    <li>
+                        <a  href="{{path('area_modificar')}}" class="fly">Ver todas</a>                        
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+
+
+    <li class="top"><a id="products" class="top_link">CURSOS</a>        
+        <ul class="sub">
+            <li><strong><a  class="fly">Paralelo</a></strong>
+                <ul>
+                    <li>
+                        <a  href="" class="fly">Nuevo</a>                        
+                    </li>
+                    <li>
+                        <a  href="" class="fly">Ver todos</a>                        
+                    </li>
+
+                </ul>
+            </li>            
+
+            <li><strong><a  class="fly">Curso</a></strong>
+                <ul>
+                    <li>
+                        <a  href="{{path('admin_nivel_registro')}}" class="fly">Nuevo</a>                        
+                    </li>
+                    <li>
+                        <a  href="{{path('admin_nivel_listar_todos')}}" class="fly">Ver todos</a>                        
+                    </li>
+
+                </ul>
+            </li>            
+
+            <li><strong> <a  class="fly">Nivel</a></strong>
+                <ul>
+                    <li>
+                        <a  href="{{path('curso_ingresar')}}" class="fly">Nuevo</a>                        
+                    </li>
+                    <li>
+                        <a  href="{{path('curso_modificar')}}" class="fly">Ver todos</a>                        
+                    </li>
+
+                </ul>
+            </li>            
+
+        </ul>
+    </li>
+
+    <li class="top"><a id="products" class="top_link">REQUISITOS</a>        
+        <ul class="sub">
+            <li>
+                <a  href="{{path('admin_requisito_registro')}}" class="fly">Nuevo</a>                
+            </li>                
+            <li><a  href="{{path('admin_requisito_listar_todos')}}" class="fly">Ver todos</a>                
+            </li>            
+            <li>
+                <a  href="{{path('admin_requisito_modificar_estados')}}" class="fly">Modificar todos</a>                        
+            </li>
+        </ul>
+    </li>
+    <li class="top"><a id="products" class="top_link">DOCENTES</a>        
+        <ul class="sub">
+            <li>
+                <a  href="{{path('docente_registro')}}" class="fly">Nuevo</a>                
+            </li>                
+            <li><a href="{{path('docente_modificar')}}"  class="fly">Ver todos</a>                
+            </li>            
+            
+        </ul>
+    </li>
+</ul>
+
+
+
+
+
+
+

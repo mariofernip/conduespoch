@@ -3,8 +3,10 @@
 {% block title %} INICIO {% endblock%}
 {% block id 'portada' %}
 {% block article%}
-
-<h3><p align="center">Cursos </p><h3>
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<h3><p align="center">Niveles </p><h3>
 {#LISTA DE CURSOS#}
 {% if sd== 1 %}
 <div id="dt_example">

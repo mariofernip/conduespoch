@@ -1,0 +1,74 @@
+
+
+{% extends '::frontend.html.twig' %}
+
+{% block id 'portada' %}
+
+{% block title %}Modificar un requisito{% endblock%}
+
+{% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<h1>{{ block ('title')}}</h1>
+<br><br>
+<form action="{{ path('admin_requisito_modificar',{'codreq': codreq}) }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          
+          <fieldset>
+                  {{form_label(formulario.descripcion,'Nombre:')}}{{form_errors(formulario.descripcion)}}<br>{{form_widget(formulario.descripcion, { 'attr': {'autocomplete' : 'off' , 'size': 80} }) }}<br>                  
+                  {{form_label(formulario.estado,'Estado:')}}{{form_widget(formulario.estado) }}
+          </fieldset>
+                  
+          
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+<hr>
+<strong><p align="center">LISTA REQUISITOS</p></strong>
+<div id="dt_example">
+    <div id="demo">
+            <table class="display" id="example" >
+                    <thead>
+                        <tr>
+                            <th colspan="3">PREVIAMENTE REGISTRADOS</th>                                                 
+                        <tr>
+                            <th>Nombre</th>            
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                        </thead>        
+                     <tbody>
+                    {% for m in lista %}
+                        {% set estado=m.estado%}
+                        {% if estado==1%}
+                            {% set esta='Activo'%}                                                    
+                        {% endif%}
+                        {% if estado==0%}
+                            {% set esta='Inactivo'%}                                                    
+                        {% endif%}
+                        <tr >
+                            <td>{{m.descripcion }}</td> <td>{{ esta }}</td> <td><a href="{{path('admin_requisito_modificar', {'codreq': m.id})}}">Mod</a></td>                        
+                            
+                        <tr>
+                    <tbody>
+                    {% endfor %}
+                </table>
+        </div>
+    </div>
+<br><br>
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock%}
+{% block stylesheets %}
+{{ parent() }}
+    
+ {% endblock %}
+
+        

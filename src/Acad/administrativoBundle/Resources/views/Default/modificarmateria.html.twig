@@ -6,7 +6,9 @@
 {% block title %}Modificar materia{% endblock%}
 
 {% block article %}
-<h1>PERIODO ACADÉMICO ACTUAL </h1><br><br>
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
 <h1>{{ block ('title')}}</h1>
 
 <form action="{{ path('materia_modificar_id',{'mid':id} )}}" method="post" {{

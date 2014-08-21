@@ -3,7 +3,9 @@
 {% block title %} INICIO {% endblock%}
 {% block id 'portada' %}
 {% block article%}
-
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
 <h3><p align="center">Areas </p><h3>
 {#LISTA DE AREAS#}
 {% if sd== 1 %}

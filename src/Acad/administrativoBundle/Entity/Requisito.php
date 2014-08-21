@@ -27,11 +27,18 @@ class Requisito {
      *  */
     protected $descripcion;
     
-    /** @ORM\Column(type="integer", length=128, nullable=false) 
+    /** @ORM\Column(type="boolean", nullable=true) 
      */
     protected $estado;
     
     
+    
+    public function setId($id)
+    {
+        $this->id = $id;
+    
+        return $this;
+    }
     
 
     /**
