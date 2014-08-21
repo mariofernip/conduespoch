@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PeriodoType extends AbstractType
+class DiaType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -16,13 +16,6 @@ class PeriodoType extends AbstractType
     {
         $builder
             ->add('nombre')
-//            ->add('finicioperiodo','date')
-//            ->add('ffinperiodo','date')
-//            ->add('finiciomatricula')
-//            ->add('ffinmatricula')
-//            ->add('finicioinscripcion')
-//            ->add('ffininscripcion')
-            ->add('estado','checkbox',array('required'=>false))
         ;
     }
     
@@ -32,7 +25,7 @@ class PeriodoType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Acad\administrativoBundle\Entity\Periodo'
+            'data_class' => 'Acad\administrativoBundle\Entity\Dia'
         ));
     }
 
@@ -41,6 +34,6 @@ class PeriodoType extends AbstractType
      */
     public function getName()
     {
-        return 'acad_administrativobundle_periodo';
+        return 'acad_administrativobundle_dia';
     }
 }
