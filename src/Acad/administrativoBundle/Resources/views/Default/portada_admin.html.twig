@@ -8,6 +8,293 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
+<strong>    
+    <h2>Areas</h2>
+    <br>
+</strong>
+<div id="areas">
+    <div id="areas_table">
+        <table class="display" id="a_table">
+            <thead>
+                <tr >
+                    <th>{{'Nombre' }}</th>
+                    <th>{{'Descripcion'}}</th>                   
+
+                </tr>
+            </thead>
+
+            <tbody>{% for are in listaareas %}
+                <tr>
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{are.nombre}}</td>
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{are.descripcion}}</td>                        
+                </tr>{% endfor%}
+            </tbody>
+
+
+        </table>
+                <p  class="big" align="right"><a href="{{path('area_ingresar')}}"><img border="0" src="{{ asset('uploads/documents/nuevo.png') }}" width="69" height="20"></a></p>
+        
+    </div>
+</div>
+
+<hr>
+<strong>    
+    <h2>Materias</h2>
+    <br>
+</strong>
+<div id="materias">
+    <div id="materias_table">
+        <table class="display" id="m_table">
+            <thead>
+                <tr>
+                    <th>{{'Nombre' }}</th>
+                    <th>{{'Area' }}</th>
+                    <th>{{'Numero Horas'}}</th> 
+                    <th>{{'Descripcion'}}</th> 
+                    <th>{{'Estado'}}</th>                                         
+                </tr>
+            </thead>
+
+            <tbody>{% for mat in listamaterias %}
+                <tr>
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{mat.nombre}}</td>
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{mat.area}}</td>                        
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{mat.numerocreditos}}</td>
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{mat.descripcion}}</td>                        
+                    <td ALIGN="CENTER" style="vertical-align:middle">{% if (mat.estado) ==1 %}
+                        <strong>Activo</strong>
+        {% endif %}
+        {% if (mat.estado) ==0 %}
+                        <strong>No activo</strong>
+        {% endif %}</td>
+                </tr>{% endfor%}
+            </tbody>    
+        </table>
+                <p class="big" align="right"><a href="{{path('materia_ingresar')}}"><img border="0" src="{{ asset('uploads/documents/nuevo.png') }}" width="69" height="20"></a></p>
+        
+    </div>
+
+
+</div>
+
+<hr>    
+<div align="center" class="contenido">
+    <div class="columna-izquierda">
+        <strong>    
+            <h2>Niveles</h2>
+            <br>
+        </strong>
+        <table class="display" id="c_table">
+            <thead>
+                <tr >
+                    <th>{{'Nombre' }}</th> 
+                </tr>
+            </thead>
+
+            <tbody>{% for cur in listacursos %}
+                <tr>
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{cur.nombre}}</td>
+                </tr>{% endfor%}
+            </tbody>
+
+
+        </table> 
+                <p class="big" align="right"><a href="{{path('curso_ingresar')}}"><img border="0" src="{{ asset('uploads/documents/nuevo.png') }}" width="69" height="20"></a></p>
+        
+    </div>
+
+    <div class="columna-derecha">
+        <strong>    
+            <h2> Paralelos</h2>
+            <br>
+        </strong>    
+        <table class="display" id="p_table">
+            <thead>
+                <tr >
+                    <th>{{'Nombre' }}</th> 
+                </tr>
+            </thead>
+
+            <tbody>{% for par in listaparalelos %}
+                <tr>
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{par.nombre}}</td>
+                </tr>{% endfor%}
+            </tbody>
+        </table> 
+                <p class="big" align="right"><a href=""><img border="0" src="{{ asset('uploads/documents/nuevo.png') }}" width="69" height="20"></a></p>
+        
+    </div>
+{#</div>#}
+
+</div>
+
+<hr>
+
+
+<strong>    
+    <h2>Cursos</h2>
+    <br>
+</strong>
+
+<div id="niveles">
+    <div id="niveles_table">
+        <table class="display" id="n_table">
+            <thead>
+                <tr >
+                    <th>{{'Nivel' }}</th> 
+                    <th>{{'Paralelo' }}</th> 
+                </tr>
+            </thead>
+
+            <tbody>{% for niv in listaniveles %}
+                <tr>
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{niv.curso}}</td>
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{niv.paralelo}}</td>
+                </tr>{% endfor%}
+            </tbody>
+        </table> 
+                <p class="big" align="right"><a href=""><img border="0" src="{{ asset('uploads/documents/nuevo.png') }}" width="69" height="20"></a></p>
+        
+    </div>
+</div>
+
+<hr>
+<strong>    
+    <h2>Requisitos</h2>
+    <br>
+</strong>
+<div id="requisitos">
+    <div id="requisitos_table">
+        <table class="display" id="r_table">
+            <thead>
+                <tr >
+                    <th>{{'Descripcion'}}</th>                   
+                    <th>{{'Estado' }}</th>
+
+                </tr>
+            </thead>
+
+            <tbody>{% for req in listarequisitos %}
+                <tr>
+
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{req.descripcion}}</td>   
+                    <td ALIGN="CENTER" style="vertical-align:middle">{% if (req.estado) ==1 %}
+                        <strong>Activo</strong>
+        {% endif %}
+        {% if (req.estado) ==0 %}
+                        <strong>No activo</strong>
+        {% endif %}</td>                      
+                </tr>{% endfor%}
+            </tbody>
+
+
+        </table>
+                <p class="big" align="right"><a href=""><img border="0" src="{{ asset('uploads/documents/nuevo.png') }}" width="69" height="20"></a></p>
+        
+    </div>
+</div>
+<hr>
+
+
+
+<div class="contenido" id="dias">
+    <div class="columna-derecha" id="dias_table">
+        <strong>    
+            <h2>Dias</h2>
+            <br>
+        </strong>
+
+        <table class="display" id="dias_table">
+            <thead>
+                <tr >
+                    <th>{{'Nombre' }}</th>
+
+                </tr>
+            </thead>
+
+            <tbody>{% for dia in listadias %}
+                <tr>                   
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{dia.nombre}}</td>                                             
+                </tr>{% endfor%}
+            </tbody>
+
+
+        </table>
+                <p class="big" align="right"><a href=""><img border="0" src="{{ asset('uploads/documents/nuevo.png') }}" width="69" height="20"></a></p>
+        
+    </div>
+
+    <div class="columna-derecha" id="mes_table">
+        <strong>    
+            <h2>Meses</h2>
+            <br>
+        </strong>
+
+        <table class="display" id="ms_table">
+            <thead>
+                <tr >
+                    <th>{{'Nombre' }}</th>
+                    <th>{{'Estado' }}</th>
+                </tr>
+            </thead>
+
+            <tbody>{% for mes in listameses %}
+                <tr>                   
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{mes.nombre}}</td>                                             
+                    <td ALIGN="CENTER" style="vertical-align:middle">
+                    {% if (mes.estado) ==1 %}
+                            <strong>Activo</strong>
+                    {% endif %}
+                    {% if (mes.estado) ==0 %}
+                            <strong>No activo</strong>
+                    {% endif %}</td>       
+                    </tr>{% endfor%}
+                </tbody>
+
+
+            </table>
+                <p class="big" align="right"><a href=""><img border="0" src="{{ asset('uploads/documents/nuevo.png') }}" width="69" height="20"></a></p>
+        
+        </div>
+    </div>
+    <hr>
+
+    <strong>    
+        <h2>Docente</h2>
+        <br>
+    </strong>
+    <div id="docente">
+        <div id="docente_table">
+            <table class="display" id="d_table">
+                <thead>
+                    <tr>
+                        <th>{{'Cedula' }}</th>
+                        <th>{{'Nombres/Apellidos' }}</th>
+                        <th>{{'e-mail'}}</th>                   
+                        <th>{{'Estado'}}</th>                                       
+                    </tr>
+                </thead>
+
+                <tbody>{% for doc in listadocentes %}
+                    <tr>
+                        <td  ALIGN="CENTER" style="vertical-align:middle">{{doc.cedula}}</td> 
+                        <td  ALIGN="CENTER" style="vertical-align:middle">{{doc.apellido}}{{' '}}{{doc.nombre}}</td>   
+                        <td  ALIGN="CENTER" style="vertical-align:middle">{{doc.email}}</td> 
+                        <td  ALIGN="CENTER" style="vertical-align:middle">{% if (doc.estado) ==1 %}
+                            <strong>Activo</strong>
+        {% endif %}
+        {% if (doc.estado) ==0 %}
+                            <strong>No activo</strong>
+        {% endif %}</td>
+                    </tr>{% endfor%}
+                </tbody>    
+            </table>
+                <p class="big" align="right"><a href="{{path('docente_ingresar')}}"><img border="0" src="{{ asset('uploads/documents/nuevo.png') }}" width="69" height="20"></a></p>
+        </div>
+
+
+    </div>
+    <hr>
 
 {% endblock%}
 {% block aside%}
@@ -16,3 +303,29 @@
     
 <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
 {% endblock%}
+
+
+{% block stylesheets %}
+{{ parent() }}
+
+{% include 'academicoBundle:Default:tablecss.html.twig'%}
+    <style>
+            .columna-izquierda{
+                text-align:left;
+                margin-right:5px;
+                padding-left: 80px;
+                float:left;
+                width:245px;
+            }
+            .columna-derecha{
+                float:right;
+                width:245px;
+                padding-right: 80px;
+            }   
+            .contenido{height:auto;overflow:auto}
+            
+            p.big {
+            line-height: 200%;
+            }
+        </style>
+   {% endblock %}

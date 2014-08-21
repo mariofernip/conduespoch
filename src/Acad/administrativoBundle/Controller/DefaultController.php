@@ -9,12 +9,14 @@ use Acad\administrativoBundle\Entity\Docente;
 use Acad\administrativoBundle\Entity\EvaluacionxMes;
 use Acad\administrativoBundle\Entity\Hora;
 use Acad\administrativoBundle\Entity\Materia;
+use Acad\administrativoBundle\Entity\MateriaAdministrador;
 use Acad\administrativoBundle\Entity\Mes;
 use Acad\administrativoBundle\Entity\MesEvaluacion;
 use Acad\administrativoBundle\Entity\Nivel;
 use Acad\administrativoBundle\Entity\Periodo;
 use Acad\administrativoBundle\Entity\Requisito;
 use Acad\administrativoBundle\Form\AreaType;
+use Acad\administrativoBundle\Form\AdministradorMateriaType;
 use Acad\administrativoBundle\Form\AuxRequisitoType;
 use Acad\administrativoBundle\Form\CursoType;
 use Acad\administrativoBundle\Form\DocenteType;
@@ -25,6 +27,7 @@ use Acad\administrativoBundle\Form\MesType;
 use Acad\administrativoBundle\Form\NivelType;
 use Acad\administrativoBundle\Form\PeriodoType;
 use Acad\administrativoBundle\Form\RequisitoType;
+
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -241,9 +244,44 @@ class DefaultController extends Controller
     
     public function portadaAction() {
         $periodo='';
+        
+        $em = $this->getDoctrine()->getEntityManager();
+
+        
+
+        $listaareas = $em->getRepository('administrativoBundle:Area')->findAll();
+        
+        $listamaterias = $em->getRepository('administrativoBundle:Materia')->findAll();
+        
+        $listacursos = $em->getRepository('administrativoBundle:Curso')->findAll();
+        
+        $listaparalelos = $em->getRepository('administrativoBundle:Paralelo')->findAll();
+        
+        $listaniveles = $em->getRepository('administrativoBundle:Nivel')->findAll();
+        
+        $listarequisitos = $em->getRepository('administrativoBundle:Requisito')->findAll();
+        
+        $listadias = $em->getRepository('administrativoBundle:Dia')->findAll();
+        
+        $listameses = $em->getRepository('administrativoBundle:Mes')->findAll();
+        
+         $listadocentes = $em->getRepository('administrativoBundle:Docente')->findAll();
+        
+
         return $this->render('administrativoBundle:Default:portada_admin.html.twig',array(
-            'periodo'=>$periodo
+            'periodo'=>$periodo,
+            'listaareas'=>$listaareas,            
+            'listamaterias'=>$listamaterias,
+            'listacursos'=>$listacursos,
+            'listaparalelos'=>$listaparalelos,            
+            'listaniveles'=>$listaniveles,
+            'listarequisitos'=>$listarequisitos,
+            'listadias'=>$listadias, 
+            'listameses'=>$listameses, 
+            'listadocentes'=>$listadocentes, 
+        
         ));
+        
         
     }
     
@@ -848,5 +886,80 @@ class DefaultController extends Controller
                 ));
     }
     
+    
+      //METODO: modifica los datos de las materia
+    public function materiaModificartodosAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();        
+        $request = $this->getRequest();
+        $periodo='';
+        
+        
+        $materias = $em->getRepository('administrativoBundle:Materia')->findAll();      
+        //obtiene la materia actual
+        
+        //secciones
+        $paginatorSS = $this->get('knp_paginator');
+        $paginationSS = $paginatorSS->paginate(
+                $materias, $this->getRequest()->query->get('page', 1), 10
+        );
+        
+        $sd=0; 
+        
+        if($materias){
+            $sd=1;
+        }
+        $itemmaterias = new MateriaAdministrador();
+        
+        foreach ($materias as $mat) {
+            $cr = new Materia(); //creo un objeto nuevo: asistencia
+            $cr->setId($mat->getId());
+            $cr->setArea($mat->getArea());
+            $cr->setNombre($mat->getNombre());
+            $cr->setEstado($mat->getEstado());
+            $cr->setNumerocreditos($mat->getNumerocreditos());
+            
+            
+            //lleno el objto tarea con varios objetos asistencia
+            $itemmaterias->getMateriaAdmin()->add($cr);
+        }
+        
+        $formmaterias = $this->createForm(new AdministradorMateriaType(), $itemmaterias);
+        
+        $formmaterias->handleRequest($request);
+          
+             if ( $formmaterias->isValid() ) {     
+            
+                foreach ($itemmaterias->getMateriaAdmin() as $item) {
+                    $cod= $item->getId();
+                    $fj=$item->getArea();
+                    $fi=$item->getNombre();
+                    $a=$item->getEstado();
+                    $ob=$item->getNumerocreditos();
+                    $cr= $em->getRepository('administrativoBundle:Materia')->find($cod);                    
+                    $cr->setArea($fj);
+                    $cr->setNombre($fi);
+                    $cr->setEstado($a);
+                    $cr->setNumerocreditos($ob);                    
+                    $em->flush();
+                }         
+                $this->get('session')->getFlashBag()->add('Info', 'Materias han sido actualizada');
+               
+                return $this->redirect($this->generateUrl('admin_portada'));
+      
+
+            }
+        
+        return $this->render('administrativoBundle:default:listamateriasmodificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'materias' => $paginationSS,            
+                    'formmaterias'=>$formmaterias->createView(),                       
+                    'sd'=>$sd,
+            
+                ));
+    
+        
+    }
+   
     
 }

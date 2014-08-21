@@ -118,3 +118,8 @@ materia_modificar:
 materia_modificar_id:    
     pattern:  /admin/materia/modificar/{mid}
     defaults: { _controller: administrativoBundle:Default:materiaModificar}    
+    
+materia_modificar_todos:    
+    pattern:  /admin/materias/modificar/todos
+    defaults: { _controller: administrativoBundle:Default:materiaModificartodos}
+    
