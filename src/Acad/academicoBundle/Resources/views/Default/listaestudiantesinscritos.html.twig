@@ -36,7 +36,7 @@
                         {% if estado==0%}
                             {% set esta='Inactivo'%}                                                    
                         {% endif%}
-                                <td>{{est.estudiante.cedula}}</td><td>{{est.estudiante.nombre | title}}&nbsp;{{est.estudiante.apellido | title}}</td><td>{{est.estudiante.email | lower}}</td><td>{{esta}}</td><td><a href="{{path('estudiante_modificar_datos',{'cedula': est.estudiante.cedula})}}">Mod</a>&nbsp;&nbsp;<a href="{{path('estudiante_requisito',{'cedula':est.estudiante.cedula})}}">Req</a></td>
+                                <td>{{est.estudiante.cedula}}</td><td>{{est.estudiante.nombre | title}}&nbsp;{{est.estudiante.apellido | title}}</td><td>{{est.estudiante.email | lower}}</td><td>{{esta}}</td><td>&nbsp;&nbsp;<a href="{{path('estudiante_modificar_datos',{'cedula': est.estudiante.cedula})}}"><img title="Editar datos"  src="{{ asset('uploads/iconos/edit.gif') }}"></a>&nbsp;&nbsp<samp>     <a href="{{path('estudiante_requisito',{'cedula':est.estudiante.cedula})}}"><img   title="Ver requisitos" src="{{ asset('uploads/iconos/list.gif') }}"></a></samp>&nbsp;&nbsp;&nbsp;<span><a href="{{path('estudiante_matricula',{'cedula':est.estudiante.cedula})}}"><img   title="Matricular" src="{{ asset('uploads/iconos/mat.gif') }}"></a></span></td>
                             <tr>
                         </tbody>
 

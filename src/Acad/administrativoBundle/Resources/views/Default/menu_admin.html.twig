@@ -6,7 +6,7 @@
     <li class="top"><a id="products" class="top_link">PERIODO</a>        
         <ul class="sub">
             <li>
-                <a  href="{{path('periodo_registro')}}" class="fly">Nuevo</a>                
+                <a  href="{{path('periodo_registro')}}" class="fly"><img src="{{ asset('uploads/iconos/add.gif') }}">&nbsp;Nuevo</a>                              
             </li>                
             <li><a href="" class="fly">Modificar actual</a></li>
             <li><a  class="fly">Ver</a>
@@ -29,17 +29,17 @@
                         <a  href="{{path('admin_mes_listar_todos')}}" class="fly">Ver todos</a>                        
                     </li>
                     <li>
-                        <a  href="" class="fly">Cambiar estados</a>                        
+                        <a  href="{{path('admin_mes_modificar_todos')}}" class="fly">Modificar todos</a>                    
                     </li>
                 </ul>
             </li>
             <li><strong><a  class="fly">Días</a><strong>
                 <ul>
                     <li>
-                        <a  href="" class="fly">Nuevo</a>                        
+                        <a  href="{{path('admin_dia_registro')}}" class="fly">Nuevo</a>                        
                     </li>
                     <li>
-                        <a  href="" class="fly">Ver todos</a>                        
+                        <a  href="{{path('admin_dia_listar_todos')}}" class="fly">Ver todos</a>                        
                     </li>
                 </ul>
             </li>
@@ -85,10 +85,10 @@
             <li><strong><a  class="fly">Paralelo</a></strong>
                 <ul>
                     <li>
-                        <a  href="" class="fly">Nuevo</a>                        
+                        <a  href="{{path('admin_paralelo_registro')}}" class="fly">Nuevo</a>                        
                     </li>
                     <li>
-                        <a  href="" class="fly">Ver todos</a>                        
+                        <a  href="{{path('admin_paralelo_listar_todos')}}" class="fly">Ver todos</a>                        
                     </li>
 
                 </ul>

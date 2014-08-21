@@ -24,7 +24,7 @@ class Dia
 
     /**
      *
-     * @ORM\Column(type="text", length=64, nullable=true)
+     * @ORM\Column(type="string", length=32, nullable=false)
      * @Assert\NotBlank(message="Por favor ingrese el nombre del dia")
      */
     protected $nombre;

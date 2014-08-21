@@ -30,7 +30,7 @@ class Periodo {
     /**
      *
      * @ORM\Column(type="date", nullable=false)
-     * @Assert\NotBlank(message="Por favor ingrese la fecha de inicio del Período")
+     
      * @Assert\Date()
      */
     protected $finicioperiodo;
@@ -38,7 +38,7 @@ class Periodo {
     /**
      *
      * @ORM\Column(type="date", nullable=false)
-     * @Assert\NotBlank(message="Por favor ingrese la fecha de finalización del Período")
+     
      * @Assert\Date()
      */
     protected $ffinperiodo;
@@ -47,7 +47,6 @@ class Periodo {
     /**
      *
      * @ORM\Column(type="date", nullable=true)
-     * @Assert\Blank()
      * @Assert\Date()
      */
     protected $finiciomatricula;
@@ -55,7 +54,6 @@ class Periodo {
     /**
      *
      * @ORM\Column(type="date", nullable=true)
-     * @Assert\Blank()
      * @Assert\Date()
      */
     protected $ffinmatricula;
@@ -63,7 +61,6 @@ class Periodo {
     /**
      *
      * @ORM\Column(type="date", nullable=true)
-     * @Assert\Blank()
      * @Assert\Date()
      */
     protected $finicioinscripcion;
@@ -71,14 +68,13 @@ class Periodo {
     /**
      *
      * @ORM\Column(type="date", nullable=true)
-     * @Assert\Blank()
      * @Assert\Date()
      */
     protected $ffininscripcion;
 
     /**
      *
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $estado;
     
@@ -254,12 +250,7 @@ class Periodo {
         return $this->ffininscripcion;
     }
 
-    /**
-     * Set estado
-     *
-     * @param integer $estado
-     * @return Periodo
-     */
+    
     public function setEstado($estado)
     {
         $this->estado = $estado;
@@ -270,7 +261,7 @@ class Periodo {
     /**
      * Get estado
      *
-     * @return integer 
+     * @return 
      */
     public function getEstado()
     {

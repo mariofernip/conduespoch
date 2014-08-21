@@ -3,7 +3,7 @@
 
 {% block id 'portada' %}
 
-{% block title %}Lista de cursos registrados{% endblock%}
+{% block title %}Registro de un nuevo dia{% endblock%}
 
 {% block article %}
 <section id="menu_admin">
@@ -11,7 +11,21 @@
 </section>
 <h1>{{ block ('title')}}</h1>
 <br><br>
-<strong><p align="center">LISTA CURSOS</p></strong>
+<form action="{{ path('admin_dia_registro') }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                
+                  {{form_label(formulario.nombre,'Nombre:')}}{{form_errors(formulario.nombre)}}{{form_widget(formulario.nombre , { 'attr': {'autocomplete' : 'off' } }) }}<br>                  
+                  
+                  
+                  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+<hr>
+<strong><p align="center">LISTA DIAS</p></strong>
 <div id="dt_example">
     <div id="demo">
             <table class="display" id="example" >
@@ -19,9 +33,7 @@
                         <tr>
                             <th colspan="4">PREVIAMENTE REGISTRADOS</th>                                                 
                         <tr>
-                            <th>Nivel</th>            
-                            <th>Paralelo</th>
-                            <th>Descripcion</th>
+                            <th>Nombre</th>                                        
                             <th>Accion</th>
                         </tr>
                         </thead>        
@@ -29,7 +41,7 @@
                     {% for m in lista %}
                         
                         <tr >
-                            <td>{{m.curso }}</td> <td>{{ m.paralelo }}</td><td>{{m.descripcion}}</td> <td><a href="{{path('admin_nivel_modificar', {'codnivel': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Editar curso"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
+                            <td>{{m.nombre }}</td><td><a href="{{path('admin_dia_modificar', {'coddia': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Editar día"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
                             
                         <tr>
                     <tbody>

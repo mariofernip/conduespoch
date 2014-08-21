@@ -12,33 +12,37 @@ use Doctrine\ORM\Mapping as ORM;
  * @UniqueEntity(fields={"nombre"}, message="El registro a insertar ya existe")
  */
 class Mes {
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
-   protected $id;
-   
-   /** @ORM\Column(type="string", length=64, nullable=false)
-    * @Assert\NotBlank(message="Por favor ingrese un nombre")
-    */    
-   protected $nombre;
+    protected $id;
 
-   /**
+    /** @ORM\Column(type="string", length=64, nullable=false)
+     * @Assert\NotBlank(message="Por favor ingrese un nombre")
+     */
+    protected $nombre;
+
+    /**
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $estado;
-  
+
+    public function setId($id) {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -48,10 +52,9 @@ class Mes {
      * @param string $nombre
      * @return Mes
      */
-    public function setNombre($nombre)
-    {
+    public function setNombre($nombre) {
         $this->nombre = $nombre;
-    
+
         return $this;
     }
 
@@ -60,32 +63,28 @@ class Mes {
      *
      * @return string 
      */
-    public function getNombre()
-    {
+    public function getNombre() {
         return $this->nombre;
     }
- 
-    
+
     /**
      * Set nombre
      *
      * @param string $nombre
      * @return Mes
      */
-    public function setEstado($estado)
-    {
+    public function setEstado($estado) {
         $this->estado = $estado;
-    
+
         return $this;
     }
 
-    
-    public function getEstado()
-    {
+    public function getEstado() {
         return $this->estado;
     }
-    
+
     public function __toString() {
         return $this->getNombre();
     }
+
 }

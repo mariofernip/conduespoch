@@ -33,7 +33,7 @@
                             {% set esta='Inactivo'%}                                                    
                         {% endif%}
                         <tr >
-                            <td>{{m.nombre }}</td> <td>{{ esta }}</td> <td><a href="{{path('admin_mes_modificar', {'codmes': m.id})}}">Mod</a></td>                        
+                            <td>{{m.nombre }}</td> <td>{{ esta }}</td> <td><a href="{{path('admin_mes_modificar', {'codmes': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Modificar mes"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
                             
                         <tr>
                     <tbody>

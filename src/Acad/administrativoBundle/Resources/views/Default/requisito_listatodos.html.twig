@@ -32,7 +32,7 @@
                             {% set esta='Inactivo'%}                                                    
                         {% endif%}
                         <tr >
-                            <td>{{m.descripcion }}</td> <td>{{ esta }}</td> <td><a href="{{path('admin_requisito_modificar', {'codreq': m.id})}}">Mod</a></td>                        
+                            <td>{{m.descripcion }}</td> <td>{{ esta }}</td> <td><a href="{{path('admin_requisito_modificar', {'codreq': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Editar requisito"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
                             
                         <tr>
                     <tbody>

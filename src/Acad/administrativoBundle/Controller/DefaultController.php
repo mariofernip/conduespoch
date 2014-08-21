@@ -3,8 +3,10 @@
 namespace Acad\administrativoBundle\Controller;
 
 use Acad\administrativoBundle\Entity\Area;
+use Acad\administrativoBundle\Entity\AuxMes;
 use Acad\administrativoBundle\Entity\AuxRequisito;
 use Acad\administrativoBundle\Entity\Curso;
+use Acad\administrativoBundle\Entity\Dia;
 use Acad\administrativoBundle\Entity\Docente;
 use Acad\administrativoBundle\Entity\EvaluacionxMes;
 use Acad\administrativoBundle\Entity\Hora;
@@ -13,23 +15,27 @@ use Acad\administrativoBundle\Entity\MateriaAdministrador;
 use Acad\administrativoBundle\Entity\Mes;
 use Acad\administrativoBundle\Entity\MesEvaluacion;
 use Acad\administrativoBundle\Entity\Nivel;
+use Acad\administrativoBundle\Entity\Paralelo;
 use Acad\administrativoBundle\Entity\Periodo;
 use Acad\administrativoBundle\Entity\Requisito;
-use Acad\administrativoBundle\Form\AreaType;
 use Acad\administrativoBundle\Form\AdministradorMateriaType;
+use Acad\administrativoBundle\Form\AreaType;
+use Acad\administrativoBundle\Form\AuxMesType;
 use Acad\administrativoBundle\Form\AuxRequisitoType;
 use Acad\administrativoBundle\Form\CursoType;
+use Acad\administrativoBundle\Form\DiaType;
 use Acad\administrativoBundle\Form\DocenteType;
 use Acad\administrativoBundle\Form\EvaluacionxMesType;
 use Acad\administrativoBundle\Form\HoraType;
 use Acad\administrativoBundle\Form\MateriaType;
 use Acad\administrativoBundle\Form\MesType;
 use Acad\administrativoBundle\Form\NivelType;
+use Acad\administrativoBundle\Form\ParaleloType;
 use Acad\administrativoBundle\Form\PeriodoType;
 use Acad\administrativoBundle\Form\RequisitoType;
-
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 
 class DefaultController extends Controller
@@ -136,49 +142,61 @@ class DefaultController extends Controller
         
     
     public function registroperiodoAction() {
-        
-        $peticion =  $this->getRequest();
-        
-        $em=  $this->getDoctrine()->getEntityManager();
-        
-        $periodo= new Periodo();
-        
-        $formulario = $this->createForm(new PeriodoType(),$periodo);        
+
+        $peticion = $this->getRequest();
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $pe= $em->getRepository('administrativoBundle:Periodo')->findBy(array(
+            'estado'=>true
+            ));
+//        if($pe){
+//            $this->get('session')->getFlashBag()->add('Info', 'Error: Ya existe un periodo activo'
+//            );
+//
+//            return $this->redirect($this->generateUrl('periodo_modificar'));
+//        }
+        $periodo = new Periodo();
+
+        $formulario = $this->createForm(new PeriodoType(), $periodo);
         $formulario->handleRequest($peticion);
-        
-        
-        
-        if($formulario->isValid()){
-            $periodo->setEstado(1);
+
+
+
+        if ($formulario->isValid()) {
+            //$periodo->setEstado(true);
+            $periodo->setFinicioperiodo(new \DateTime('now'));
+            $periodo->setFfinperiodo(new \DateTime('now'));
             $em->persist($periodo);
             $em->flush();
-            $meses=$em->getRepository('administrativoBundle:Mes')->getTodosMeses();
-            foreach ($meses as $mes) {
-                $mesevaluacion= new MesEvaluacion();
-                $mesevaluacion->setEstado(false);
-                $mesevaluacion->setFfinmes(new \DateTime('now'));
-                $mesevaluacion->setFiniciomes(new \DateTime('now'));
-                $mesevaluacion->setMes($mes);
-                $mesevaluacion->setPeriodo($periodo);
-                
-                $em->persist($mesevaluacion);
-                $em->flush();
-                
-            }
-         
+            $sesion= new Session();
+            $sesion->set('periodoA', $periodo);
+            
+//            $meses = $em->getRepository('administrativoBundle:Mes')->getTodosMeses();
+//            foreach ($meses as $mes) {
+//                $mesevaluacion = new MesEvaluacion();
+//                $mesevaluacion->setEstado(false);
+//                $mesevaluacion->setFfinmes(new \DateTime('now'));
+//                $mesevaluacion->setFiniciomes(new \DateTime('now'));
+//                $mesevaluacion->setMes($mes);
+//                $mesevaluacion->setPeriodo($periodo);
+//
+//                $em->persist($mesevaluacion);
+//                $em->flush();
+//            }
+
             $this->get('session')->getFlashBag()->add('Info', 'Periodo agregado correctamente'
             );
-            
-            return $this->redirect($this->generateUrl('mes_evaluacion',array('pid'=>$periodo->getId())));
-            
+            $this->get('session')->getFlashBag()->add('Info', 'Active los meses del nuevo periodo'
+            );
+            return $this->redirect($this->generateUrl('admin_mes_modificar_todos'));
+            //return $this->redirect($this->generateUrl('mes_evaluacion', array('pid' => $periodo->getId())));
         }
-        
-        
-        return $this->render('administrativoBundle:default:registroperiodo.html.twig',array(
-            'periodo'=>$periodo,
-            'formulario'=>$formulario->createView()
-        ));
-                
+
+
+        return $this->render('administrativoBundle:default:registroperiodo.html.twig', array(
+                    'periodo' => $periodo,
+                    'formulario' => $formulario->createView()
+                ));
     }
     
     //metodo para poner los rangos de fechas de la tabla MesEvaluacion
@@ -961,5 +979,216 @@ class DefaultController extends Controller
         
     }
    
+    
+    public function periodomodificarAction() {
+        
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion= $this->getRequest();
+        
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        if(!$periodo){
+            $this->get('session')->getFlashBag()->add('Info', 'Error: Ningún periodo activo');
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        $formulario= $this->createForm(new PeriodoType(), $periodo);
+        $formulario->handleRequest($peticion);
+        
+        if($formulario->isValid()){
+            $em->persist($periodo);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo actualizado');
+            return $this->redirect($this->generateUrl('periodo_modificar'));
+        }
+        
+        
+        return $this->render('administrativoBundle:Default:periodo_modificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'formulario' => $formulario->createView()
+                ));
+    }
+
+    //modificar el estado de todos los meses
+    
+    public function mesmodicartodosAction() {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $peticion = $this->getRequest();
+
+        //creo un objeto requisitoestudiante: el cual contiene la lista de cumplerequisito
+        $auxmes = new AuxMes();
+
+
+        //consulto los requisitos con su esstado, de un determinado estudiante que fue previamente inscrito              
+        $estadomesess = $em->getRepository('administrativoBundle:Mes')->findAll();
+
+        //recorro lista de objetos: cumplerequisito
+        foreach ($estadomesess as $req) {
+            //obtendo el id de la inscripcion            
+            $cr = new Mes();
+            //obtengo los datos de cada objeto cumplerequisito
+            $cr->setId($req->getId());
+            $cr->setEstado($req->getEstado());
+            $cr->setNombre($req->getNombre());
+            //lleno el objto tarea con varios objetos cumplerequisito
+            $auxmes->getEstMes()->add($cr);
+        }
+
+
+        $form = $this->createForm(new AuxMesType(), $auxmes);
+
+        $form->handleRequest($peticion);
+        if ($form->isValid()) {
+
+            foreach ($auxmes->getEstMes() as $req) {// recorro lista de objetos: cumplerequisito
+                $cod = $req->getId(); // ontengo el id de cada objeto
+                $est = $req->getEstado(); // obtengo el estado de cada objto
+                $ne = $req->getNombre();
+                $cr = $em->getRepository('administrativoBundle:Mes')->find($cod); //consulto el objeto cumplerequisito
+                $cr->setEstado($est); //actualizo el estado del objeto previamente encontrado
+                $cr->setNombre($ne);
+
+                $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+            }
+
+
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        $periodo = '';
+        return $this->render('administrativoBundle:Default:mes_cambiarestado.html.twig', array(
+                    'periodo' => $periodo,
+                    'form' => $form->createView()
+                ));
+    }
+    
+    //metodo: registrar un nuevo paralelo
+    public function paraleloregistroAction() {
+
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $paralelo= new Paralelo();
+        $formulario = $this->createForm(new ParaleloType(), $paralelo);
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->persist($paralelo);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Paralelo ingresado correctamente..!');
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        $periodo = '';
+        $listaparalelos = $em->getRepository('administrativoBundle:Paralelo')->findAll();
+        return $this->render('administrativoBundle:Default:paralelo_registro.html.twig', array(
+                    'periodo' => $periodo,
+                    'lista' => $listaparalelos,
+                    'formulario' => $formulario->createView()
+                ));
+    }
+    
+    //metodo: permite modificar todos los paralelos previamente registrados
+    public function paralelomodificarAction($codpar) {
+
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $paralelo = $em->getRepository('administrativoBundle:Paralelo')->find($codpar);
+        $formulario = $this->createForm(new ParaleloType(), $paralelo);
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('Info', 'Paralelo actualizado');
+            return $this->redirect($this->generateUrl('admin_paralelo_listar_todos'));
+        }
+        $periodo = '';
+        $listaparalelos = $em->getRepository('administrativoBundle:Paralelo')->findAll();
+        return $this->render('administrativoBundle:Default:paralelo_modificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'lista' => $listaparalelos,
+                    'codpar' => $codpar,
+                    'formulario' => $formulario->createView()
+                ));
+    }
+
+    
+    //metodo: permite listar todos los paralelos previamente registrados
+    public function listatodosparalelosAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo = '';
+        $listaparalelos = $em->getRepository('administrativoBundle:Paralelo')->findAll();
+        return $this->render('administrativoBundle:Default:paralelo_listatodos.html.twig', array(
+                    'periodo' => $periodo,
+                    'lista' => $listaparalelos,
+                ));
+    }
+    
+    //metodo: registrar un nuevo dia
+    public function diaregistroAction() {
+
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $dia= new Dia();
+        $formulario = $this->createForm(new DiaType(), $dia);
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->persist($dia);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Día ingresado correctamente..!');
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        $periodo = '';
+        $listadias = $em->getRepository('administrativoBundle:Dia')->findAll();
+        return $this->render('administrativoBundle:Default:dia_registro.html.twig', array(
+                    'periodo' => $periodo,
+                    'lista' => $listadias,
+                    'formulario' => $formulario->createView()
+                ));
+    }
+    
+    
+    //metodo: permite modificar todos los dias previamente registrados
+    public function diamodificarAction($coddia) {
+
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $dia = $em->getRepository('administrativoBundle:Dia')->find($coddia);
+        $formulario = $this->createForm(new DiaType(), $dia);
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('Info', 'Día actualizado');
+            return $this->redirect($this->generateUrl('admin_dia_listar_todos'));
+        }
+        $periodo = '';
+        $listadias = $em->getRepository('administrativoBundle:Dia')->findAll();
+        return $this->render('administrativoBundle:Default:dia_modificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'lista' => $listadias,
+                    'coddia' => $coddia,
+                    'formulario' => $formulario->createView()
+                ));
+    }
+
+    //metodo: permite listar todos los paralelos previamente registrados
+    public function listartodosdiasAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo = '';
+        $listadias = $em->getRepository('administrativoBundle:Dia')->findAll();
+        return $this->render('administrativoBundle:Default:dia_listatodos.html.twig', array(
+                    'periodo' => $periodo,
+                    'lista' => $listadias,
+                ));
+    }
     
 }

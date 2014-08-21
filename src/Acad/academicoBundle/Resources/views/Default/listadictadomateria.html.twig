@@ -26,7 +26,7 @@
                     <td>{{dm.docente.nombre}}&nbsp;{{dm.docente.apellido}}</td>
                     <td>{{dm.nivel}}</td>
                     <td>{{dm.materia.nombre}}</td>
-                    <td><a href="{{ path('amaterias_modificar_materias_asignadas',{'codm': dm.id}) }}">Mod</a>&nbsp;&nbsp;<a  onclick="cargaVentana({{ dm.id }});">Del</a></td>
+                    <td><a href="{{ path('amaterias_modificar_materias_asignadas',{'codm': dm.id}) }}">&nbsp;&nbsp<img title="Modificar materia asignada"  src="{{ asset('uploads/iconos/edit.gif') }}"></a>&nbsp;&nbsp;&nbsp;<a  onclick="cargaVentana({{ dm.id }});"><img title="Eliminar materia asignada"  src="{{ asset('uploads/iconos/delete.gif') }}"></a></td>
                 </tr>
             </tbody>
             {% endfor%}

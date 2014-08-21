@@ -1,0 +1,45 @@
+
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'portada' %}
+
+{% block title %}Modificar todos los meses{% endblock%}
+
+{% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<h1>{{ block ('title')}}</h1>
+
+
+
+
+<form action="{{ path('admin_mes_modificar_todos') }}" method="post" {{
+        form_enctype(form) }} >
+    {{ form_start(form) }}
+        {# render the task's only field: description #}
+    
+    <br>
+    
+    <ul>
+        {# iterate over each existing tag and render its only field: name #}
+        {% for req in form.estmes %}
+            
+            <li>{{ form_widget(req.estado) }}&nbsp;&nbsp;{{ form_widget(req.nombre) }}</li>
+            
+        {% endfor %}
+    </ul>
+
+    
+    <input type="submit" value="guardar" class="boton" >
+    {{ form_end(form) }}
+    </form>
+
+
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}

@@ -9,6 +9,10 @@ docente_registro:
 periodo_registro:
     pattern:  /admin/periodo/registro
     defaults: { _controller: administrativoBundle:Default:registroperiodo}    
+
+periodo_modificar:
+    pattern:  /admin/periodo/modificar
+    defaults: { _controller: administrativoBundle:Default:periodomodificar}            
     
 mes_evaluacion:
     pattern:  /admin/mes/evaluacion/{pid}
@@ -29,6 +33,10 @@ admin_mes_listar_todos:
 admin_mes_modificar:
     pattern:  /admin/mes/modificar/{codmes}
     defaults: { _controller: administrativoBundle:Default:mesmodicar}            
+
+admin_mes_modificar_todos:
+    pattern:  /admin/mes/cambiar/estados
+    defaults: { _controller: administrativoBundle:Default:mesmodicartodos}     
 
 admin_nivel_registro:
     pattern:  /admin/nivel/registro
@@ -122,4 +130,27 @@ materia_modificar_id:
 materia_modificar_todos:    
     pattern:  /admin/materias/modificar/todos
     defaults: { _controller: administrativoBundle:Default:materiaModificartodos}
+
+admin_paralelo_registro:
+    pattern:  /admin/paralelo/registro
+    defaults: { _controller: administrativoBundle:Default:paraleloregistro}
+
+admin_paralelo_modificar:
+    pattern:  /admin/paralelo/modificar/{codpar}
+    defaults: { _controller: administrativoBundle:Default:paralelomodificar}    
     
+admin_paralelo_listar_todos:
+    pattern:  /admin/paralelo/listar
+    defaults: { _controller: administrativoBundle:Default:listatodosparalelos}        
+
+admin_dia_registro:
+    pattern:  /admin/dias/registro
+    defaults: { _controller: administrativoBundle:Default:diaregistro}    
+    
+admin_dia_modificar:
+    pattern:  /admin/dias/modificar/{coddia}
+    defaults: { _controller: administrativoBundle:Default:diamodificar}        
+    
+admin_dia_listar_todos:
+    pattern:  /admin/dias/lista
+    defaults: { _controller: administrativoBundle:Default:listartodosdias}            
