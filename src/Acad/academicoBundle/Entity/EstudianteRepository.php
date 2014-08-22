@@ -30,6 +30,27 @@ class EstudianteRepository extends EntityRepository {
         return $consulta->getOneOrNullResult();
     }
     
+    public function findEstudiantexInscripcionnovalida($cedula,$pid) {
+        
+        $em = $this->getEntityManager();
+
+        $dql = 'select i,e,p
+                FROM academicoBundle:Inscripcion i                
+                Join i.estudiante e               
+                Join i.periodo p                
+                WHERE e.cedula = :cedu and
+                          p.id = :pid  and
+                          i.estado = 0
+                
+                ';
+
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('cedu', $cedula);                
+        $consulta->setParameter('pid', $pid);                
+             
+
+        return $consulta->getOneOrNullResult();
+    }
     
     public function getDictadoMateria($pid) {
         

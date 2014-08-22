@@ -118,7 +118,7 @@ class DefaultController extends Controller {
 
     }
 
-    public function requisitoEstudianteAction($cedula) {
+     public function requisitoEstudianteAction($cedula) {
 
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -186,6 +186,9 @@ class DefaultController extends Controller {
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('Info', 'Estudiante apto para matricularse');
             } else {
+                $inscripcion = $em->getRepository('academicoBundle:Inscripcion')->find($codinsc);               
+                $inscripcion-> setEstado(0);
+                $em->flush();
                 $this->get('session')->getFlashBag()->add('Info', 'requisitos ingresados');
             }
 
@@ -202,7 +205,7 @@ class DefaultController extends Controller {
                     'form' => $form->createView()
                 ));
     }
-
+    
     public function buscarEstAction() {
 
         $peticion = $this->getRequest();
@@ -484,13 +487,26 @@ class DefaultController extends Controller {
 
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array('estado' => 1));
         $mat = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado' => 1));
-
-        $formulario = $this->createForm(new MatriculaType(), $matricula);
-        $formulario->handleRequest($peticion);
-
+        
         $estudiante = $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
-            'cedula' => $cedula
-                ));
+                'cedula' => $cedula
+                    ));
+                     
+        $esti = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexInscripcionnovalida($estudiante->getCedula(), $periodo);
+        
+        $estm = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
+                if ($estm != null) {                    
+                    $this->get('session')->getFlashBag()->add('Info', 'Estudiante ya esta matriculado');
+                    return $this->redirect($this->generateUrl('estudiante_lista_inscritos'));
+                }
+               
+                if ($esti) {
+                $this->get('session')->getFlashBag()->add('Info', 'Estudiante no apto para matricularse no cumple requisitos');
+                return $this->redirect($this->generateUrl('estudiante_lista_inscritos'));
+            } 
+        
+        $formulario = $this->createForm(new MatriculaType(), $matricula);
+        $formulario->handleRequest($peticion);  
 
         if ($formulario->isSubmitted()) {
             $matricula->setEstado(1);
