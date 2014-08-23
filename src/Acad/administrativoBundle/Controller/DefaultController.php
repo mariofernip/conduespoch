@@ -149,12 +149,12 @@ class DefaultController extends Controller
         $pe= $em->getRepository('administrativoBundle:Periodo')->findBy(array(
             'estado'=>true
             ));
-//        if($pe){
-//            $this->get('session')->getFlashBag()->add('Info', 'Error: Ya existe un periodo activo'
-//            );
-//
-//            return $this->redirect($this->generateUrl('periodo_modificar'));
-//        }
+        if($pe){
+            $this->get('session')->getFlashBag()->add('Info', 'Error: Ya existe un periodo activo'
+            );
+
+            return $this->redirect($this->generateUrl('periodo_modificar'));
+        }
         $periodo = new Periodo();
 
         $formulario = $this->createForm(new PeriodoType(), $periodo);
@@ -171,18 +171,6 @@ class DefaultController extends Controller
             $sesion= new Session();
             $sesion->set('periodoA', $periodo);
             
-//            $meses = $em->getRepository('administrativoBundle:Mes')->getTodosMeses();
-//            foreach ($meses as $mes) {
-//                $mesevaluacion = new MesEvaluacion();
-//                $mesevaluacion->setEstado(false);
-//                $mesevaluacion->setFfinmes(new \DateTime('now'));
-//                $mesevaluacion->setFiniciomes(new \DateTime('now'));
-//                $mesevaluacion->setMes($mes);
-//                $mesevaluacion->setPeriodo($periodo);
-//
-//                $em->persist($mesevaluacion);
-//                $em->flush();
-//            }
 
             $this->get('session')->getFlashBag()->add('Info', 'Periodo agregado correctamente'
             );
@@ -202,18 +190,23 @@ class DefaultController extends Controller
     //metodo para poner los rangos de fechas de la tabla MesEvaluacion
     
     
-    public function mesevaluacionAction($pid) {
+    public function mesevaluacionAction() {
 
         $em = $this->getDoctrine()->getEntityManager();
 
         $peticion = $this->getRequest();
 
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         
+        if(!$periodo){
+            $this->get('session')->getFlashBag()->add('Info', 'No existe un periodo activo');
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
         //creo un objeto mesevaluacion para poder crear el formulario
         $evaluacionxmes= new EvaluacionxMes();
 
         //consulto los objetos mesevaluacion con su estado activo, de un determinado periodo 
-        $mesevaluacion = $em->getRepository('administrativoBundle:Mes')->getMesEvaluacionxPeriodo($pid);
+        $mesevaluacion = $em->getRepository('administrativoBundle:Mes')->getMesEvaluacionxPeriodo($periodo->getId());
 
         //recorro lista de objetos: cumplerequisito
         foreach ($mesevaluacion as $req) {
@@ -238,22 +231,20 @@ class DefaultController extends Controller
             foreach ($evaluacionxmes->getEvaMes() as $req) {// recorro lista de objetos: cumplerequisito
                 $cod = $req->getId(); // ontengo el id de cada objeto
                 $est = $req->getEstado(); // obtengo el estado de cada objto
+                $fi=$req->getFiniciomes();
+                $ff=$req->getFfinmes();
                 $cr = $em->getRepository('administrativoBundle:MesEvaluacion')->find($cod); //consulto el objeto cumplerequisito
                 $cr->setEstado($est); //actualizo el estado del objeto previamente encontrado
-
+                $cr->setFiniciomes($fi);
+                $cr->setFfinmes($ff);
                 $em->flush(); // envio a guardar/actualizar el estado de cada objeto
             }
-            
                 $this->get('session')->getFlashBag()->add('Info', 'Fechas actualizadas');
-            
-
-
-            return $this->redirect($this->generateUrl('_portada'));
+                return $this->redirect($this->generateUrl('mes_evaluacion'));
         }
-
-        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        
         return $this->render('administrativoBundle:Default:evaluacionxmes.html.twig', array(
-                    'codigo'=>$pid,
+                    'codigo'=>$periodo->getId(),
                     'requisitos' => $mesevaluacion,
                      'periodo'=>$periodo,
                     'form' => $form->createView()

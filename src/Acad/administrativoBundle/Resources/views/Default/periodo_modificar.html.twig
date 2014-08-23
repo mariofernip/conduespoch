@@ -4,7 +4,7 @@
 
 {% block id 'periodo' %}
 
-{% block title %}Registro de un nuevo periodo{% endblock%}
+{% block title %}Modificar Periodo actual{% endblock%}
 
 {% block article %}
 <section id="menu_admin">
@@ -12,15 +12,14 @@
 </section>
 <h1>{{ block ('title')}}</h1>
 <br><br>
-<form action="{{ path('periodo_registro') }}" method="post" {{
+<form action="{{ path('periodo_modificar') }}" method="post" {{
         form_enctype(formulario) }}>
         {{ form_errors(formulario) }}
           <fieldset>
-                
-                  <p>Periodo académico</p>
-                  {{form_label(formulario.estado,'Estado:')}}{{form_errors(formulario.estado)}}{{form_widget(formulario.estado) }}<br>
+              <p>Periodo académico</p>
+                  {{form_label(formulario.estado,'Estado:')}}{{form_errors(formulario.estado)}}{{form_widget(formulario.estado ) }}<br>
                   {{form_label(formulario.nombre,'Nombre:')}}{{form_errors(formulario.nombre)}}{{form_widget(formulario.nombre, { 'attr': {'autocomplete' : 'off', 'size': 60 } }) }}<br>
-                  {{form_label(formulario.finicioperiodo,'Incia:')}}{{form_widget(formulario.finicioperiodo, { 'attr': {'autocomplete' : 'off' } }) }}<br>
+                  {{form_label(formulario.finicioperiodo,'Incia:')}}{{form_widget(formulario.finicioperiodo , { 'attr': {'autocomplete' : 'off' } }) }}<br>
                   {{form_label(formulario.ffinperiodo,'Finaliza:')}}{{form_errors(formulario.ffinperiodo)}}{{form_widget(formulario.ffinperiodo, { 'attr': {'autocomplete' : 'off' } }) }}<br>                  
                   <hr>
                   
@@ -33,6 +32,7 @@
                   {{form_label(formulario.finicioinscripcion,'Inicia:')}}{{form_errors(formulario.finicioinscripcion)}}{{form_widget(formulario.finicioinscripcion, { 'attr': {'autocomplete' : 'off' } }) }}<br>
                   {{form_label(formulario.ffininscripcion,'Finaliza:')}}{{form_errors(formulario.ffininscripcion)}}{{form_widget(formulario.ffininscripcion, { 'attr': {'autocomplete' : 'off' } }) }}<br>
 
+                  
                   
               </fieldset>   
          {{form_rest(formulario)}}                   

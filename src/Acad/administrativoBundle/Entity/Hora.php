@@ -38,8 +38,7 @@ class Hora
 
     /**
      *
-     * @ORM\Column(type="text", length=64, nullable=true)
-     * @Assert\NotBlank(message="Por favor ingrese la descripcion")
+     * @ORM\Column(type="string", length=64, nullable=true)
      */
     protected $descripcion;
     
@@ -58,7 +57,7 @@ class Hora
     /**
      * Set hora_inicio
      *
-     * @param \DateTime $horaInicio
+     * @param \Time $horaInicio
      * @return Hora
      */
     public function setHoraInicio($horaInicio)
@@ -71,7 +70,7 @@ class Hora
     /**
      * Get hora_inicio
      *
-     * @return \DateTime 
+     * @return \Time 
      */
     public function getHoraInicio()
     {
@@ -81,7 +80,7 @@ class Hora
     /**
      * Set hora_fin
      *
-     * @param \DateTime $horaFin
+     * @param \Time $horaFin
      * @return Hora
      */
     public function setHoraFin($horaFin)
@@ -94,7 +93,7 @@ class Hora
     /**
      * Get hora_fin
      *
-     * @return \DateTime 
+     * @return \Time 
      */
     public function getHoraFin()
     {
@@ -125,6 +124,8 @@ class Hora
     }
     
      public function __toString() {
-        return $this->getDescripcion();
+        return date_format($this->getHoraInicio(), 'H:i a').' -- '. date_format($this->getHoraFin(), 'H:i a');
     }
+    
+    
 }

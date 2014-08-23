@@ -10,7 +10,24 @@
 {% endblock%}
 
 {% block aside %}
-    
+<table class="display" id="itsthetable">
+    <thead>
+        <tr>
+            <th>ASIGNAR HORARIOS</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for doc in docentes%}
+        <tr>
+            <td> <a href="{{path('inspector_horario_asignar',{'did': doc.id})}}">{{doc}}</a></td>
+        <tr>
+    {% endfor %}
+    </tbody>
+</table>
     {{ parent()}}
         <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
 {% endblock%}
+{% block stylesheets %}
+{{ parent() }}
+{% include 'academicoBundle:Default:tablecss.html.twig'%}
+ {% endblock %}        

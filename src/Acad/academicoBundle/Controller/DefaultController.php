@@ -23,7 +23,10 @@ use Acad\academicoBundle\Form\MatriculaAntiguosType;
 use Acad\academicoBundle\Form\MatriculaType;
 use Acad\academicoBundle\Form\RequisitoEstudianteType;
 use Acad\academicoBundle\Form\SuspensoEstudianteType;
+use Acad\administrativoBundle\Entity\AuxHorarioClase;
 use Acad\administrativoBundle\Entity\Docente;
+use Acad\administrativoBundle\Entity\HorarioClase;
+use Acad\administrativoBundle\Form\AuxHorarioClaseType;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -387,6 +390,17 @@ class DefaultController extends Controller {
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia asignada al docente'
             );
 
+            for ($i = 1; $i <3; $i++) {
+                $horarioclase= new HorarioClase();
+                $horarioclase->setDictadomateria($dictadomateria);
+                $dia=$em->getRepository('administrativoBundle:Dia')->find($i);
+                $horarioclase->setDia($dia);
+                $hora=$em->getRepository('administrativoBundle:Hora')->find($i);
+                $horarioclase->setHora($hora);
+                $em->persist($horarioclase);
+                $em->flush();
+            }
+            
             return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
         }
 
@@ -1391,5 +1405,70 @@ class DefaultController extends Controller {
                 ));
     }
     
+
+    //insertar el horario de clases de cada docente en un periodo actual   
+    public function horarioclaseAction($did) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $periodoN = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $peticion = $this->getRequest();
+
+        //creo un objeto requisitoestudiante: el cual contiene la lista de cumplerequisito
+        $auxhoarioclase = new AuxHorarioClase();
+
+        
+        //consulto los requisitos con su esstado, de un determinado estudiante que fue previamente inscrito              
+        $horariosdocente = $em->getRepository('academicoBundle:Dictadomateria')->getHorarioDocente($did,$periodoN->getId());
+
+        //recorro lista de objetos: cumplerequisito
+        foreach ($horariosdocente as $req) {
+            //obtendo el id de la inscripcion            
+            $cr = new HorarioClase();
+            //obtengo los datos de cada objeto cumplerequisito
+            $cr->setId($req->getId());
+            $cr->setDictadomateria($req->getDictadomateria());
+            $cr->setDia($req->getDia());
+            $cr->setHora($req->getHora());
+            //lleno el objto tarea con varios objetos cumplerequisito
+            $auxhoarioclase->getDocHoraClase()->add($cr);
+        }
+
+
+        $form = $this->createForm(new AuxHorarioClaseType(), $auxhoarioclase);
+
+        $form->handleRequest($peticion);
+        if ($form->isValid()) {
+
+            foreach ($auxhoarioclase->getDocHoraClase() as $req) {// recorro lista de objetos: cumplerequisito
+                $cod = $req->getId(); // ontengo el id de cada objeto
+                
+                $dia = $req->getDia();
+                $hora = $req->getHora();
+                $cr = $em->getRepository('administrativoBundle:HorarioClase')->find($cod); //consulto el objeto cumplerequisito
+                
+                $cr->setDia($dia);
+                $cr->setHora($hora);
+
+                $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+            }
+            
+
+            return $this->redirect($this->generateUrl('inspector_horario_asignar',array('did'=>$did)));
+        }        
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        $docente= $em->getRepository('administrativoBundle:Docente')->find($did);
+        $listadocentes= $em->getRepository('administrativoBundle:Docente')->findBy(array(
+                'estado'=>true
+            ));
+        
+        return $this->render('academicoBundle:Default:horarioclase.html.twig', array(
+                    'periodo' => $periodoN,
+                    'niveles'=>$niveles,
+                    'did'=>$did,
+                    'docentes'=>$listadocentes,
+                    'docente'=>$docente,
+                    'did'=>$did,
+                    'form' => $form->createView()
+                ));
+    }
     
 }

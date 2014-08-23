@@ -11,9 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="horarioclase", 
  * uniqueConstraints={
- * @ORM\UniqueConstraint(name="unique_horarioclase", columns={"hora_id","dia_id","materia_id","periodo_id", "docente_id", "nivel_id"})
+ * @ORM\UniqueConstraint(name="unique_horarioclase", columns={"hora_id","dia_id","dictadomateria_id"})
  *  })
- * @UniqueEntity(fields={"hora", "dia", "materia","periodo","docente","nivel"}, message="Registro ya existe")
+ * @UniqueEntity(fields={"hora", "dia", "dictadomateria"}, message="Registro ya existe")
  * @ORM\Entity
  */
 
@@ -45,38 +45,24 @@ class HorarioClase {
 
      /**
      *
-     * @ORM\Column(type="text", length=64, nullable=true)
+     * @ORM\Column(type="string", length=64, nullable=true)
      * @Assert\NotBlank(message="Por favor ingrese la observacion")
      */
     protected $observacion;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Materia") 
-     * @ORM\JoinColumn(name="materia_id", referencedColumnName="id")
-      @Assert\NotBlank(message="Por favor seleccione una materia")   
+     * @ORM\ManyToOne(targetEntity="Acad\academicoBundle\Entity\Dictadomateria") 
+     * @ORM\JoinColumn(name="dictadomateria_id", referencedColumnName="id")
+      @Assert\NotBlank(message="Seleccione un dictado materia")   
      */
-    protected $materia;
+    protected $dictadomateria;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Periodo") 
-     * @ORM\JoinColumn(name="periodo_id", referencedColumnName="id")
-      @Assert\NotBlank(message="Por favor seleccione un periodo")   
-     */
-    protected $periodo;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Docente") 
-     * @ORM\JoinColumn(name="docente_id", referencedColumnName="id")
-      @Assert\NotBlank(message="Por favor seleccione un docente")   
-     */
-    protected $docente;
+     public function setId($id)
+    {
+        $this->id = $id;
     
-     /**
-     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Nivel") 
-     * @ORM\JoinColumn(name="nivel_id", referencedColumnName="id")
-      @Assert\NotBlank(message="Por favor seleccione un nivel")   
-     */
-    protected $nivel;
+        return $this;
+    }
 
     /**
      * Get id
@@ -158,94 +144,25 @@ class HorarioClase {
     }
 
     /**
-     * Set materia
+     * Set dictadomateria
      *
-     * @param \Acad\administrativoBundle\Entity\Materia $materia
+     * @param \Acad\academicoBundle\Entity\Dictadomateria $dictadomateria
      * @return HorarioClase
      */
-    public function setMateria(\Acad\administrativoBundle\Entity\Materia $materia = null)
+    public function setDictadomateria(\Acad\academicoBundle\Entity\Dictadomateria $dictadomateria = null)
     {
-        $this->materia = $materia;
+        $this->dictadomateria = $dictadomateria;
     
         return $this;
     }
 
     /**
-     * Get materia
+     * Get dictadomateria
      *
-     * @return \Acad\administrativoBundle\Entity\Materia 
+     * @return \Acad\academicoBundle\Entity\Dictadomateria 
      */
-    public function getMateria()
+    public function getDictadomateria()
     {
-        return $this->materia;
-    }
-
-    /**
-     * Set periodo
-     *
-     * @param \Acad\administrativoBundle\Entity\Periodo $periodo
-     * @return HorarioClase
-     */
-    public function setPeriodo(\Acad\administrativoBundle\Entity\Periodo $periodo = null)
-    {
-        $this->periodo = $periodo;
-    
-        return $this;
-    }
-
-    /**
-     * Get periodo
-     *
-     * @return \Acad\administrativoBundle\Entity\Periodo 
-     */
-    public function getPeriodo()
-    {
-        return $this->periodo;
-    }
-
-    /**
-     * Set docente
-     *
-     * @param \Acad\administrativoBundle\Entity\Docente $docente
-     * @return HorarioClase
-     */
-    public function setDocente(\Acad\administrativoBundle\Entity\Docente $docente = null)
-    {
-        $this->docente = $docente;
-    
-        return $this;
-    }
-
-    /**
-     * Get docente
-     *
-     * @return \Acad\administrativoBundle\Entity\Docente 
-     */
-    public function getDocente()
-    {
-        return $this->docente;
-    }
-
-    /**
-     * Set nivel
-     *
-     * @param \Acad\administrativoBundle\Entity\Nivel $nivel
-     * @return HorarioClase
-     */
-    public function setNivel(\Acad\administrativoBundle\Entity\Nivel $nivel = null)
-    {
-        $this->nivel = $nivel;
-    
-        return $this;
-    }
-
-    /**
-     * Get nivel
-     *
-     * @return \Acad\administrativoBundle\Entity\Nivel 
-     */
-    public function getNivel()
-    {
-        return $this->nivel;
+        return $this->dictadomateria;
     }
 }

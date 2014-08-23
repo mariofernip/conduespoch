@@ -163,4 +163,8 @@ class Dictadomateria
     {
         return $this->materia;
     }
+    
+    public function __toString() {
+        return $this->materia->getNombre();
+    }
 }

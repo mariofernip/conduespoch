@@ -6,25 +6,28 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
-<h3><p align="center">Areas </p><h3>
-{#LISTA DE AREAS#}
+<h3><p align="center">Horas </p><h3>
+{#LISTA DE HORAS#}
 {% if sd== 1 %}
 <div id="dt_example">
     <div id="demo">
         <table class="display" id="example">
             <thead>
                 <tr >
-                    <th>{{'Nombre' }}</th>
-                    <th>{{'Descripcion'}}</th>                   
+                    <th>{{'Hora inicio' }}</th>                                                       
+                    <th>{{'Hora fin' }}</th>   
+                    <th>{{'Descripcion' }}</th>                  
+                    
                     <th>Accion</th>
                 </tr>
             </thead>
     
-            <tbody>{% for are in listaareas %}
+            <tbody>{% for hor in listahoras %}
                 <tr>
-                        <td ALIGN="CENTER" style="vertical-align:middle">{{are.nombre}}</td>
-                        <td ALIGN="CENTER" style="vertical-align:middle">{{are.descripcion}}</td>                        
-                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('area_modificar_id',{'aid':are.id})}}"><img border="0" src="{{ asset('uploads/documents/modificar.gif') }}" width="40" height="40"></a></td>
+                        <td ALIGN="CENTER" style="vertical-align:middle">{{hor.horainicio | date('H:i a')}}</td>
+                        <td ALIGN="CENTER" style="vertical-align:middle">{{hor.horafin | date('H:i a')}}</td>
+                        <td ALIGN="CENTER" style="vertical-align:middle">{{hor.descripcion}}</td>
+                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('hora_modificar_id',{'hid':hor.id})}}"><img border="0" src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>
                 <tr>{% endfor%}
             </tbody>
 

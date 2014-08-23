@@ -3,7 +3,7 @@
 {% set rol='inspector'%}
 <ul id="nave">
     <li class="top"><a href="{{path('portada',{'role': rol })}}" class="top_link"><span>INICIO</span></a></li>
-    <li class="top"><a id="contacts" class="top_link"><span class="down">Asistencia</span></a>
+    <li class="top"><a id="contacts" class="top_link"><span class="down">ASISTENCIA</span></a>
         <ul class="sub">
                 <li><a href="#nogo532" id="shop" class="top_link"><span class="down">Evaluar</span></a>
                     <ul>
@@ -16,11 +16,15 @@
         </ul>
     </li>
 
-    
+    <li class="top"><a  id="shop" class="top_link"><span class="down">HORARIOS</span></a>
+        {#<ul class="sub">
+            <li><a href="{{path('inspector_horario_asignar',{'did':1})}}">Asignar</a></li>
+        </ul>#}
+    </li>
      
     
     
-    <li class="top"><a  id="shop" class="top_link"><span class="down">Reportes</span></a>
+    <li class="top"><a  id="shop" class="top_link"><span class="down">REPORTES</span></a>
         <ul class="sub">
             <li><a href="#nogo54">Reporte 1</a></li>
             <li><a href="#nogo55">Reporte 2</a></li>

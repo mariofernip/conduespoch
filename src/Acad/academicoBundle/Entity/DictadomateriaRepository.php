@@ -184,6 +184,28 @@ class DictadomateriaRepository extends EntityRepository {
         return $consulta->getResult();
         
     }
+
+    public function getHorarioDocente($did, $pid) {
+        
+        $em = $this->getEntityManager();
+
+        $dql = 'select hc,dm,p,d
+                FROM administrativoBundle:HorarioClase hc
+                Join hc.dictadomateria dm
+                Join dm. periodo p
+                Join dm.docente d                
+                WHERE p.id = :pid and                                                    
+                          d.id= :did
+                          
+                       
+                ';
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('pid', $pid);                
+        $consulta->setParameter('did', $did);                        
+        return $consulta->getResult();
+        
+    }
+    
     
 }
 

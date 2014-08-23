@@ -132,11 +132,14 @@ class DefaultController extends Controller
         }
         
         if($role=='inspector'){
-            
+           $listadocentes= $em->getRepository('administrativoBundle:Docente')->findBy(array(
+                'estado'=>true
+            ));
             return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
                 'periodo'=>$periodo,
                 'niveles'=>$niveles,
                 'listamaterias'=>$listamaterias,
+                'docentes'=>$listadocentes
         
             ));
         }
