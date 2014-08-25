@@ -33,7 +33,7 @@
         {% if (doc.estado) ==0 %}
             <strong>No activo</strong>
         {% endif %}</td> 
-                        <td  ALIGN="CENTER" style="vertical-align:middle"><a  href="{{path('docente_modificar_id',{'did':doc.id})}}"><img border="0" src="{{ asset('uploads/documents/modificar.gif') }}" width="40" height="40"></a></td>
+                        <td  ALIGN="CENTER" style="vertical-align:middle"><a  href="{{path('docente_modificar_id',{'did':doc.id})}}"><img title="Editar datos"   src="{{ asset('uploads/iconos/edit.gif') }}" ></a></td>
                 <tr> 
                     {% endfor%}
             </tbody>

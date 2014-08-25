@@ -14,8 +14,7 @@
         <table class="display" id="example">
             <thead>
                 <tr >
-                    <th>{{'Hora de inicio' }}</th>                 
-                    <th>{{'Hora de finalizacion' }}</th>                  
+                    <th>{{'Hora de inicio -- Hora de finalizacion' }}</th>             
                     <th>{{'Descripcion' }}</th>                  
                     
                     <th>Accion</th>
@@ -24,10 +23,9 @@
     
             <tbody>{% for hor in listahoras %}
                 <tr>
-                        <td ALIGN="CENTER" style="vertical-align:middle">{#{hor.hora_inicio | date('TH:i:sP')}#}</td>
-                        <td ALIGN="CENTER" style="vertical-align:middle">{#{hor.hora_fin}#}</td>
+                        <td ALIGN="CENTER" style="vertical-align:middle">{{hor}}</td>
                         <td ALIGN="CENTER" style="vertical-align:middle">{{hor.descripcion}}</td>
-                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('hora_modificar_id',{'hid':hor.id})}}"><img border="0" src="{{ asset('uploads/documents/modificar.gif') }}" width="40" height="40"></a></td>
+                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('hora_modificar_id',{'hid':hor.id})}}"><img title="Editar datos"   src="{{ asset('uploads/iconos/edit.gif') }}" ></a></td>
                 <tr>{% endfor%}
             </tbody>
 

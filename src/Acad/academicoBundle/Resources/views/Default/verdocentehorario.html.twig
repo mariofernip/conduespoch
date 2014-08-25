@@ -1,0 +1,166 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} INICIO {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+<section id="menu_docente">
+        {% include 'academicoBundle:Default:menu_docente.html.twig' with {'mesevac': mesevac, 'listamaterias': listamaterias}%}
+</section>
+        
+{#LISTA DE MATERIAS: #}
+
+<strong><p>Mi Horario</p></strong>
+<div id="dt_example">
+    <div id="demo">
+        
+        <table class="display" id="example">
+            <thead>   
+                <tr>
+                    <th colspan="6" ALIGN="CENTER">HORARIO DE CLASES</th>
+                </tr>
+                <tr>
+                    <th colspan="6" ALIGN="LEFT">CÉDULA: {{docente.cedula}}{{'    '}} NOMBRE: {{docente.nombre}}{{' '}}{{docente.apellido}}</th>
+                </tr>
+                 <tr >
+                    <th>{{ 'Hora' }}</th>                     
+                    <th>{{ 'Lunes' }}</th> 
+                    <th>{{ 'Martes' }}</th>
+                    <th>{{ 'Miercoles' }}</th>
+                    <th>{{ 'Jueves' }}</th>
+                    <th>{{ 'Viernes' }}</th>
+                 
+                 </tr>
+                </thead>                                
+        
+<tbody>
+    <tr>                            
+        <td ALIGN="CENTER" style="vertical-align:middle">8:00 10:00</td>
+        
+        <td ALIGN="CENTER" style="vertical-align:middle">
+                       {% for mat in horarioclase %}  {% if  (mat.dia) == 'LUNES' %}{% if  (mat.hora) == '08:00 -- 10:00' %} <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}
+           
+        {% endif %}{% endfor%}</td> 
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'MARTES' %}{% if  (mat.hora) == '08:00 -- 10:00' %}
+                        <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}
+        {% endif %} {% endfor%}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'MIERCOLES' %}{% if  (mat.hora) == '08:00 -- 10:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %}{% endfor%} </td>      
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'JUEVES' %}{% if  (mat.hora) == '08:00 -- 10:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %} {% endfor%}  </td>    
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'VIERNES' %}{% if  (mat.hora) == '08:00 -- 10:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %}{% endfor%}  </td>     
+        
+    </tr>
+    <tr>                            
+        <td ALIGN="CENTER" style="vertical-align:middle">12:00 14:00</td>
+        
+        <td ALIGN="CENTER" style="vertical-align:middle">
+                       {% for mat in horarioclase %}  {% if  (mat.dia) == 'LUNES' %}{% if  (mat.hora) == '12:00 -- 14:00' %} <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}
+           
+        {% endif %} {% endfor%}</td> 
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'MARTES' %}{% if  (mat.hora) == '12:00 -- 14:00' %}
+                        <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}
+        {% endif %} {% endfor%}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'MIERCOLES' %}{% if  (mat.hora) == '12:00 -- 14:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %}{% endfor%} </td>      
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'JUEVES' %}{% if  (mat.hora) == '12:00 -- 14:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %} {% endfor%}  </td>    
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'VIERNES' %}{% if  (mat.hora) == '12:00 -- 14:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %}{% endfor%}  </td>     
+        
+    </tr>
+    <tr>                            
+        <td ALIGN="CENTER" style="vertical-align:middle">14:00 16:00</td>
+        
+        <td ALIGN="CENTER" style="vertical-align:middle">
+                       {% for mat in horarioclase %}  {% if  (mat.dia) == 'LUNES' %}{% if  (mat.hora) == '14:00 -- 16:00' %} <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}
+           
+        {% endif %} {% endfor%}</td> 
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'MARTES' %}{% if  (mat.hora) == '14:00 -- 16:00' %}
+                        <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}
+        {% endif %} {% endfor%}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'MIERCOLES' %}{% if  (mat.hora) == '14:00 -- 16:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %}{% endfor%} </td>      
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'JUEVES' %}{% if  (mat.hora) == '14:00 -- 16:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %} {% endfor%}  </td>    
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'VIERNES' %}{% if  (mat.hora) == '14:00 -- 16:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %}{% endfor%}  </td>     
+        
+    </tr>
+    <tr>                            
+        <td ALIGN="CENTER" style="vertical-align:middle">16:00 18:00</td>
+        
+        <td ALIGN="CENTER" style="vertical-align:middle">
+                       {% for mat in horarioclase %}  {% if  (mat.dia) == 'LUNES' %}{% if  (mat.hora) == '16:00 -- 18:00' %} <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}
+           
+        {% endif %} {% endfor%}</td> 
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'MARTES' %}{% if  (mat.hora) == '16:00 -- 18:00' %}
+                        <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}
+        {% endif %} {% endfor%}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'MIERCOLES' %}{% if  (mat.hora) == '16:00 -- 18:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %}{% endfor%} </td>      
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'JUEVES' %}{% if  (mat.hora) == '16:00 -- 18:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %} {% endfor%}  </td>    
+        <td ALIGN="CENTER" style="vertical-align:middle">{% for mat in horarioclase %}{% if  (mat.dia) == 'VIERNES' %}{% if  (mat.hora) == '16:00 -- 18:00' %}
+            <strong>{{mat.dictadomateria.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+        {% endif %}{% endif %}{% endfor%}  </td>     
+        
+    </tr>
+</tbody>                       
+        
+                        
+        </table>
+    
+    </div>
+</div>
+<br>
+
+{% endblock%}
+{% block aside %}
+{{parent()}}
+    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+{% endblock%}
+
+          
+{% block javascripts %}
+    {{ parent() }}
+
+{% endblock%}
+
+
+{% block stylesheets %}
+{{ parent() }}
+         {% include 'academicoBundle:Default:tablecss.html.twig'%}
+
+<style>
+   
+  input[type="number"] {
+   width:50px;
+}
+</style>
+
+
+
+   {% endblock %}
+     
+
+    

@@ -1471,4 +1471,52 @@ class DefaultController extends Controller {
                 ));
     }
     
+    
+    public function verhorariodocenteAction() {
+
+       $em = $this->getDoctrine()->getManager();
+       $request = $this->getRequest();
+        
+        //obtengo el objeto autenticado: en este caso el docente
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        //consulto periodo actual
+        $sesion = $this->getRequest()->getSession();
+        $periodo = $sesion->get('periodo'); 
+
+        $materia = $sesion->get('materia');
+        $nivel = $sesion->get('nivel');
+        //obtengo cedula del docente autenticado     
+        $cedula = $usuario->getCedula();           
+        //obtiene las materias del docente autenticado
+        $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula'=>$cedula));
+        $secciones = $em->getRepository('academicoBundle:Estudiante')->getHorarioDictadoMateria($cedula, $periodo);                         
+        
+        
+        
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+            $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();           
+            $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
+             $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado' => true
+                ));
+        return $this->render('academicoBundle:default:verdocentehorario.html.twig', array(
+                    'periodo' => $periodo,
+                    'nivel'=> $nivel,
+                    'materia'=>$materia,  
+                    'horarioclase'=>$secciones,    
+                    'docente'=>$docente,    
+                    'mesevac' => $listamesesEv,
+                    'listamaterias'=>$listamaterias,
+                    'listames' => $mes,
+                    ));
+    }
+    
 }

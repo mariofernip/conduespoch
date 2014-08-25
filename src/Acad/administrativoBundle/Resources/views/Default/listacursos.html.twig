@@ -22,7 +22,7 @@
             <tbody>{% for cur in listacursos %}
                 <tr>
                         <td ALIGN="CENTER" style="vertical-align:middle">{{cur.nombre}}</td>
-                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('curso_modificar_id',{'cid':cur.id})}}"><img border="0" src="{{ asset('uploads/documents/modificar.gif') }}" width="40" height="40"></a></td>
+                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('curso_modificar_id',{'cid':cur.id})}}"><img title="Editar datos"   src="{{ asset('uploads/iconos/edit.gif') }}" ></a></td>
                 <tr>{% endfor%}
             </tbody>
 

@@ -93,3 +93,7 @@ docente_acta_general_calificaciones_estudiantes:
 inspector_horario_asignar:
     pattern:  /inspector/horario-clases/asignar/{did}
     defaults: { _controller: academicoBundle:default:horarioclase}    
+    
+docente_ver_horario:    
+    pattern:  /docente/ver/horario/docente
+    defaults: { _controller: academicoBundle:default:verhorariodocente}        

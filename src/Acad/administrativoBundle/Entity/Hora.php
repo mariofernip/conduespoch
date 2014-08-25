@@ -124,7 +124,7 @@ class Hora
     }
     
      public function __toString() {
-        return date_format($this->getHoraInicio(), 'H:i a').' -- '. date_format($this->getHoraFin(), 'H:i a');
+        return date_format($this->getHoraInicio(), 'H:i').' -- '. date_format($this->getHoraFin(), 'H:i');
     }
     
     

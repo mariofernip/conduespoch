@@ -14,20 +14,18 @@
         <table class="display" id="example">
             <thead>
                 <tr >
-                    <th>{{'Hora inicio' }}</th>                                                       
-                    <th>{{'Hora fin' }}</th>   
+                    <th>{{'Nombre' }}</th>    
                     <th>{{'Descripcion' }}</th>                  
                     
                     <th>Accion</th>
                 </tr>
             </thead>
     
-            <tbody>{% for hor in listahoras %}
+            <tbody>{% for are in listaareas %}
                 <tr>
-                        <td ALIGN="CENTER" style="vertical-align:middle">{{hor.horainicio | date('H:i a')}}</td>
-                        <td ALIGN="CENTER" style="vertical-align:middle">{{hor.horafin | date('H:i a')}}</td>
-                        <td ALIGN="CENTER" style="vertical-align:middle">{{hor.descripcion}}</td>
-                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('hora_modificar_id',{'hid':hor.id})}}"><img border="0" src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>
+                        <td ALIGN="CENTER" style="vertical-align:middle">{{are.nombre}}</td>
+                        <td ALIGN="CENTER" style="vertical-align:middle">{{are.descripcion}}</td>
+                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('area_modificar_id',{'aid':are.id})}}"><img title="Editar datos"   src="{{ asset('uploads/iconos/edit.gif') }}" ></a></td>
                 <tr>{% endfor%}
             </tbody>
 

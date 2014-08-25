@@ -274,7 +274,9 @@ class DefaultController extends Controller
         
         $listameses = $em->getRepository('administrativoBundle:Mes')->findAll();
         
-         $listadocentes = $em->getRepository('administrativoBundle:Docente')->findAll();
+        $listahoras = $em->getRepository('administrativoBundle:Hora')->findAll();
+        
+        $listadocentes = $em->getRepository('administrativoBundle:Docente')->findAll();
         
 
         return $this->render('administrativoBundle:Default:portada_admin.html.twig',array(
@@ -286,7 +288,8 @@ class DefaultController extends Controller
             'listaniveles'=>$listaniveles,
             'listarequisitos'=>$listarequisitos,
             'listadias'=>$listadias, 
-            'listameses'=>$listameses, 
+            'listameses'=>$listameses,
+            'listahoras'=>$listahoras,
             'listadocentes'=>$listadocentes, 
         
         ));

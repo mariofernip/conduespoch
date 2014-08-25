@@ -286,6 +286,32 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
         $count = $consulta->getSingleScalarResult();
          return $count;  
     }
+    
+    public function getHorarioDictadoMateria($did, $pid) {
+        
+        $em = $this->getEntityManager();
+
+        $dql = 'select dm,p,hc,m
+                FROM administrativoBundle:HorarioClase hc
+                join hc.dictadomateria dm
+                join dm.materia m
+                join dm.periodo p
+                join dm.docente d
+                where p.id = :pid
+                and d.cedula =:did
+                order by  hc.dia, m.nombre asc
+                ';
+
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('pid', $pid); 
+        $consulta->setParameter('did', $did);
+        
+
+        return $consulta->getResult();
+        
+    }
+    
+    
 }
 
 ?>
