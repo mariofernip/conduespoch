@@ -44,9 +44,9 @@
     <nav>
         <ul>            
             <li>&nbsp;</li>            
-            {% if periodo%}
-                <li>{{periodo.nombre}}</li>  
-            {% endif%}
+            {% if periodo %}
+                <li><strong>PERIODO ACADÉMICO: {{periodo}}</strong></li>            
+            {% endif %}
             <li>{{ app.user }}</li>              
         </ul>
     </nav>
