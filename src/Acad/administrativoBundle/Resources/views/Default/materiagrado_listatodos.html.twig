@@ -1,0 +1,62 @@
+
+{% extends '::frontend.html.twig' %}
+
+{% block id 'portada' %}
+
+{% block title %}Lista de materias de grado{% endblock%}
+
+{% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<h1>{{ block ('title')}}</h1>
+{% if mg==1%}
+<hr>
+<strong><p align="center">LISTA MATERIAS DE GRADO</p></strong>
+<div id="dt_example">
+    <div id="demo">
+            <table class="display" id="example" >
+                    <thead>
+                        <tr>
+                            <th colspan="4">PREVIAMENTE REGISTRADAS</th>                                                 
+                        <tr>
+                            <th>Nombre</th>                                        
+                            <th>Estado</th>     
+                            <th>Periodo</th>
+                            <th>Accion</th>
+                        </tr>
+                        </thead>        
+                     <tbody>
+                    {% for m in lista %}
+                        {% set estado=m.estado%}
+                        {% if estado==1%}
+                            {% set esta='Activo'%}                                                    
+                        {% endif%}
+                        {% if estado==0%}
+                            {% set esta='Inactivo'%}                                                    
+                        {% endif%}
+                        <tr >
+                            <td>{{m.materia.nombre }}</td><td>{{esta}}</td><td>{{m.periodo}}</td><td><a href="{{path('admin_materiagrado_modificar', {'codmg': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Editar materia de grado"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
+                            
+                        <tr>
+                    <tbody>
+                    {% endfor %}
+                </table>
+        </div>
+    </div>
+{% endif %}
+<br><br>
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock%}
+{% block stylesheets %}
+{{ parent() }}
+    
+ {% endblock %}
+
+        

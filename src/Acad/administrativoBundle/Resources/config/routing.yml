@@ -154,3 +154,15 @@ admin_dia_modificar:
 admin_dia_listar_todos:
     pattern:  /admin/dias/lista
     defaults: { _controller: administrativoBundle:Default:listartodosdias}            
+    
+admin_materiagrado_registro:    
+    pattern:  /admin/materia/grado/registro
+    defaults: { _controller: administrativoBundle:Default:materiagradoregistrar }            
+    
+admin_materiagrado_modificar:    
+    pattern:  /admin/materia/grado/modificar/{codmg}
+    defaults: { _controller: administrativoBundle:Default:materiagradomodificar }                
+    
+admin_materiagrado_listar_todos:    
+    pattern:  /admin/materia/grado/lista
+    defaults: { _controller: administrativoBundle:Default:materiagradolistatodos }                        

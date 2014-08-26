@@ -1,0 +1,79 @@
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'requisito' %}
+
+{% block title %}Notas de grado{% endblock%}
+
+{% block article %}
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
+</section>
+<h1>{{ block ('title')}}</h1>
+
+
+{% if cod==1%}
+    
+    <form action="{{ path('inspector_examengrado_registro_notas',{'codmg': codmg}) }}" method="post" {{
+        form_enctype(form) }} >
+        {{ form_start(form) }}
+            
+        <div id="dt_example">
+                <table class="display" id="example">
+                    <thead>
+                        <tr>
+                            <th colspan="5">NOTAS DE GRADO</th>                     
+                            
+                        </tr>
+                        <tr>
+                            <th>Sección / Cédula / Estudiante</th>                     
+                            <th>Nota </th>
+                            <th>Equivalencia</th>
+                            <th>Observaciones</th>
+                        </tr>
+                        </thead>        
+                     <tbody>
+                    {% for req in form.exagrado %}
+                    
+                        <tr {% if loop.index is odd %} class="color" {% endif %}>
+                            <td>{{ form_widget(req.matricula, { 'attr': {'disabled' : true } }) }}</td>             
+                            <td>{{ form_widget(req.nota) }}</td> 
+                            <td>{{ form_widget(req.equivalencia) }}</td>
+                            <td>{{ form_widget(req.descripcion) }}</td>
+                            
+                        <tr>
+                    <tbody>
+                    {% endfor %}
+                </table>
+                
+            </div> 
+        <input type="submit" value="guardar" class="boton" >
+        {{ form_end(form) }}
+    </form>
+    {% else%}
+    <strong>No hay registros de estudiantes</strong>
+    {% endif%}
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+    <strong><p align="left"><h3><p align="center">{{curso}}</p></h3></p></strong>
+    <div id="relacionadas">
+        <ul>
+    {% for mat in listamaterias %}
+                <li ><a href="{{path('inspector_examengrado_registro_notas',{'codmg': mat.id})}}" class="boton">{{mat.materia}}<a></li>
+    {% endfor%}
+
+            </ul>
+        </div>
+    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+    
+{% endblock%}
+
+
+
+{% block stylesheets %}
+{{ parent() }}
+{% include 'academicoBundle:Default:tablecss.html.twig'%}
+ {% endblock %}

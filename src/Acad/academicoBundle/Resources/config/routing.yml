@@ -97,3 +97,11 @@ inspector_horario_asignar:
 docente_ver_horario:    
     pattern:  /docente/ver/horario/docente
     defaults: { _controller: academicoBundle:default:verhorariodocente}        
+    
+inspector_lista_materiasgrado_x_nivel:    
+    pattern:  /inspector/materias/grado/lista/{codniv}
+    defaults: { _controller: academicoBundle:default:listamateriasgrado}    
+    
+inspector_examengrado_registro_notas:
+    pattern:  /inspector/examenes/grado/notas/{codmg}
+    defaults: { _controller: academicoBundle:default:notasgrado }            

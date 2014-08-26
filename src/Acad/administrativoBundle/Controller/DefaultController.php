@@ -12,6 +12,7 @@ use Acad\administrativoBundle\Entity\EvaluacionxMes;
 use Acad\administrativoBundle\Entity\Hora;
 use Acad\administrativoBundle\Entity\Materia;
 use Acad\administrativoBundle\Entity\MateriaAdministrador;
+use Acad\administrativoBundle\Entity\MateriaGrado;
 use Acad\administrativoBundle\Entity\Mes;
 use Acad\administrativoBundle\Entity\MesEvaluacion;
 use Acad\administrativoBundle\Entity\Nivel;
@@ -27,6 +28,7 @@ use Acad\administrativoBundle\Form\DiaType;
 use Acad\administrativoBundle\Form\DocenteType;
 use Acad\administrativoBundle\Form\EvaluacionxMesType;
 use Acad\administrativoBundle\Form\HoraType;
+use Acad\administrativoBundle\Form\MateriaGradoType;
 use Acad\administrativoBundle\Form\MateriaType;
 use Acad\administrativoBundle\Form\MesType;
 use Acad\administrativoBundle\Form\NivelType;
@@ -1182,6 +1184,96 @@ class DefaultController extends Controller
         return $this->render('administrativoBundle:Default:dia_listatodos.html.twig', array(
                     'periodo' => $periodo,
                     'lista' => $listadias,
+                ));
+    }
+
+    
+    //metodo: permite registrar las materias de grado en un nuevo periodo   
+    public function materiagradoregistrarAction() {
+        
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $materiagrado = new MateriaGrado();
+        $formulario = $this->createForm(new MateriaGradoType(), $materiagrado);
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->persist($materiagrado);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Materia ingresada correctamente..!');
+            return $this->redirect($this->generateUrl('admin_materiagrado_registro'));
+        }
+        $periodo = '';
+        $periodoA = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listamateriagrado = $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
+            'periodo'=>$periodoA
+        ));
+        $mg=0;
+        if($listamateriagrado){
+            $mg=1;
+        }
+        return $this->render('administrativoBundle:Default:materiagrado_registro.html.twig', array(
+                    'periodo' => $periodo,
+                    'lista' => $listamateriagrado,
+                    'mg'=>$mg,
+                    'formulario' => $formulario->createView()
+                ));                
+    }
+    
+    //metodo: permite modificar todos los dias previamente registrados
+    public function materiagradomodificarAction($codmg) {
+
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $materigrado = $em->getRepository('administrativoBundle:MateriaGrado')->find($codmg);
+        $formulario = $this->createForm(new MateriaGradoType(), $materigrado);
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('Info', 'Materia actualizada');
+            return $this->redirect($this->generateUrl('admin_materiagrado_listar_todos'));
+        }
+        $periodo = '';
+        $periodoA = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listamateriagrado = $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
+            'periodo'=>$periodoA
+        ));
+        $mg=0;
+        if($listamateriagrado){
+            $mg=1;
+        }
+        return $this->render('administrativoBundle:Default:materiagrado_modificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'lista' => $listamateriagrado,
+                    'codmg' => $codmg,
+                    'mg'=>$mg,
+                    'formulario' => $formulario->createView()
+                ));
+    }
+
+    
+    //metodo: permite listar todos las materias de grado previamente registradas
+    public function materiagradolistatodosAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo = '';
+        $periodoA = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listamateriagrado = $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
+            'periodo'=>$periodoA
+        ));
+        $mg=0;
+        if($listamateriagrado){
+            $mg=1;
+        }
+        return $this->render('administrativoBundle:Default:materiagrado_listatodos.html.twig', array(
+                    'periodo' => $periodo,
+                    'mg'=>$mg,
+                    'lista' => $listamateriagrado,
                 ));
     }
     

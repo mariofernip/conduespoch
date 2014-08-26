@@ -135,11 +135,20 @@ class DefaultController extends Controller
            $listadocentes= $em->getRepository('administrativoBundle:Docente')->findBy(array(
                 'estado'=>true
             ));
+           $listamateriasgrado= $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
+                'estado'=>true
+            ));
+           $codmg=0;
+           if($listamateriasgrado){
+               $codmg=1;
+           }
             return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
                 'periodo'=>$periodo,
                 'niveles'=>$niveles,
                 'listamaterias'=>$listamaterias,
-                'docentes'=>$listadocentes
+                'docentes'=>$listadocentes,
+                'materiagrado'=>$listamateriasgrado,
+                'codmg'=>$codmg
         
             ));
         }

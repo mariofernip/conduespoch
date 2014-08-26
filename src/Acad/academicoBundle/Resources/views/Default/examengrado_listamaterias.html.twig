@@ -1,0 +1,23 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} INICIO {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+<section id="menu_secre">
+    {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
+</section>
+
+{#LISTA DE ESTUDIANTES: SECCION DIURNA#}
+{% endblock%}
+{% block aside %}    
+        <strong><p align="left"><h3><p align="center">{{curso}}</p></h3></p></strong>
+    <div id="relacionadas">
+        <ul>
+    {% for mat in listamaterias %}
+                <li ><a href="{{path('inspector_examengrado_registro_notas',{'codmg': mat.id})}}" class="boton">{{mat.materia}}<a></li>
+    {% endfor%}
+
+            </ul>
+        </div>
+   <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+{% endblock%}

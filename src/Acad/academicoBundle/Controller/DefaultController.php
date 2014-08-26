@@ -4,21 +4,23 @@ namespace Acad\academicoBundle\Controller;
 
 use Acad\academicoBundle\Entity\Asistencia;
 use Acad\academicoBundle\Entity\AsistenciaEstudiante;
+use Acad\academicoBundle\Entity\AuxExamenGrado;
 use Acad\academicoBundle\Entity\CumpleRequisito;
 use Acad\academicoBundle\Entity\Dictadomateria;
 use Acad\academicoBundle\Entity\Estudiante;
 use Acad\academicoBundle\Entity\Evaluacion;
 use Acad\academicoBundle\Entity\EvaluacionEstudiante;
+use Acad\academicoBundle\Entity\ExamenGrado;
 use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Entity\MateriaAsignada;
 use Acad\academicoBundle\Entity\Matricula;
 use Acad\academicoBundle\Entity\RequisitoEstudiante;
 use Acad\academicoBundle\Entity\SuspensoEstudiante;
+use Acad\academicoBundle\Form\AuxExamenGradoType;
 use Acad\academicoBundle\Form\DictadomateriaType;
 use Acad\academicoBundle\Form\EstudianteAsistenciaType;
 use Acad\academicoBundle\Form\EstudianteType;
 use Acad\academicoBundle\Form\EvaluacionEstudianteType;
-use Acad\academicoBundle\Form\EvaluacionType;
 use Acad\academicoBundle\Form\MatriculaAntiguosType;
 use Acad\academicoBundle\Form\MatriculaType;
 use Acad\academicoBundle\Form\RequisitoEstudianteType;
@@ -29,6 +31,7 @@ use Acad\administrativoBundle\Entity\HorarioClase;
 use Acad\administrativoBundle\Form\AuxHorarioClaseType;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class DefaultController extends Controller {
 
@@ -495,32 +498,56 @@ class DefaultController extends Controller {
     public function matriculaEstudianteAction($cedula) {
 
         $peticion = $this->getRequest();
-
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $rol = strtolower($usuario->getRol());
         $em = $this->getDoctrine()->getManager();
         $matricula = new Matricula();
 
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array('estado' => 1));
         $mat = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado' => 1));
+        if (!$mat) {
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
         
         $estudiante = $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
-                'cedula' => $cedula
-                    ));
-                     
+            'cedula' => $cedula
+                ));
+
         $esti = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexInscripcionnovalida($estudiante->getCedula(), $periodo);
-        
+
         $estm = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
-                if ($estm != null) {                    
-                    $this->get('session')->getFlashBag()->add('Info', 'Estudiante ya esta matriculado');
-                    return $this->redirect($this->generateUrl('estudiante_lista_inscritos'));
-                }
-               
-                if ($esti) {
-                $this->get('session')->getFlashBag()->add('Info', 'Estudiante no apto para matricularse no cumple requisitos');
-                return $this->redirect($this->generateUrl('estudiante_lista_inscritos'));
-            } 
+        if ($estm != null) {
+            $this->get('session')->getFlashBag()->add('Info', 'Estudiante ya esta matriculado');
+            return $this->redirect($this->generateUrl('estudiante_lista_inscritos'));
+        }
+
+        if ($esti) {
+            $this->get('session')->getFlashBag()->add('Info', 'Estudiante no apto para matricularse no cumple requisitos');
+            return $this->redirect($this->generateUrl('estudiante_lista_inscritos'));
+        }
+
+        $listamateriagrado = $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
+            'periodo' => $periodo,
+            'estado'=>true
+                ));
+        
+        if (!$listamateriagrado) {
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias de grado para este periodo');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+                'periodo' => $periodo->getId()
+                    ));
+
+        if (!$listamesevaluacion) {
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No hay mese asignados para este periodo');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
         
         $formulario = $this->createForm(new MatriculaType(), $matricula);
-        $formulario->handleRequest($peticion);  
+        $formulario->handleRequest($peticion);
 
         if ($formulario->isSubmitted()) {
             $matricula->setEstado(1);
@@ -529,6 +556,21 @@ class DefaultController extends Controller {
             $em->persist($matricula);
             $em->flush();
 
+            
+            //LENAR LA TABLA: EXAMENGRADO
+            foreach ($listamateriagrado  as $matgrado) {
+                $examengrado = new ExamenGrado();
+                $examengrado->setMateriagrado($matgrado);
+                $examengrado->setMatricula($matricula);
+                $examengrado->setEquivalencia('Reprobado');
+                $examengrado->setDescripcion('');
+                $examengrado->setNota(0);
+                $em->persist($examengrado);
+                $em->flush();
+            }
+            
+            
+            //LENAR LA TABLA: MATERIAASIGNADA
             foreach ($mat as $mat1) {
                 $materiaasignada = new MateriaAsignada();
                 $materiaasignada->setMateria($mat1);
@@ -537,16 +579,19 @@ class DefaultController extends Controller {
                 $em->flush();
             }
 
+            
+            
+            
             $matasi = $em->getRepository('academicoBundle:MateriaAsignada')->findBy(array('matricula' => $matricula->getId()));
-            $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
-                'periodo' => $periodo->getId()
-                    ));
+            
+            //LLENAR LA TABLA: ASISTENCIA
             foreach ($matasi as $matasi1) {
                 $asistencia = new Asistencia();
                 $asistencia->setMateriaasignada($matasi1);
                 $em->persist($asistencia);
                 $em->flush();
-
+                
+                //LLENAR LA TABLA: EVALUACION
                 foreach ($listamesevaluacion as $meseva) {
                     $evaluacion = new Evaluacion();
                     $evaluacion->setDescripcion('');
@@ -566,8 +611,7 @@ class DefaultController extends Controller {
             $this->get('session')->getFlashBag()->add('Info', 'Estudiante matriculado');
 
             //codigo para hacer que retorne a la pagina principal del usuario autenticado
-            $usuario = $this->get('security.context')->getToken()->getUser();
-            $rol = strtolower($usuario->getRol());
+            
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
@@ -1517,6 +1561,130 @@ class DefaultController extends Controller {
                     'listamaterias'=>$listamaterias,
                     'listames' => $mes,
                     ));
+    }
+
+    
+     //METODO: lista las materias por nivel. PARA INGRESAR LISTAR MATERIAS DE GRADO   
+    public function listamateriasgradoAction($codniv) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $curso = $em->getRepository('administrativoBundle:Nivel')->find($codniv);
+        $sesion= new Session();        
+        $sesion->set('niveleg', $curso);
+        
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+            $usuario = $this->get('security.context')->getToken()->getUser();
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+        $listamateriasgrado= $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
+            'periodo'=>$periodo,
+            'estado'=>true
+         ));
+        
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        
+        $lmg=0;
+        if(!$listamateriasgrado){
+            $lmg=1;
+        }
+
+        return $this->render('academicoBundle:default:examengrado_listamaterias.html.twig', array(
+                    'periodo' => $periodo,
+                    'listamaterias' => $listamateriasgrado,
+                    'niveles' => $niveles,
+                    'curso' => $curso
+                ));
+    }
+    
+    public function notasgradoAction($codmg) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $sesion = $this->getRequest()->getSession();
+        
+        $nivel= $sesion->get('niveleg');
+        $peticion = $this->getRequest();
+        $periodoA= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        //creo un objeto requisitoestudiante: el cual contiene la lista de cumplerequisito
+        $auxexamengrado = new AuxExamenGrado();
+
+
+        //consulto los requisitos con su esstado, de un determinado estudiante que fue previamente inscrito              
+        $examenesgrado = $em->getRepository('academicoBundle:ExamenGrado')->getEstudiantesExamenGrado($nivel->getId(),$periodoA->getId(), $codmg);
+        
+
+        //recorro lista de objetos: cumplerequisito
+        foreach ($examenesgrado as $req) {
+            //obtendo el id de la inscripcion            
+            $cr= new ExamenGrado();
+            //obtengo los datos de cada objeto cumplerequisito
+            $cr->setId($req->getId());
+            $cr->setMatricula($req->getMatricula());
+            $cr->setMateriagrado($req->getMateriaGrado());
+            $cr->setDescripcion($req->getDescripcion());
+            $cr->setEquivalencia($req->getEquivalencia());
+            $cr->setNota($req->getNota());
+            //lleno el objto tarea con varios objetos cumplerequisito
+            $auxexamengrado->getExaGrado()->add($cr);
+        }
+
+
+        $form = $this->createForm(new AuxExamenGradoType(), $auxexamengrado);
+
+        $form->handleRequest($peticion);
+        if ($form->isValid()) {
+
+            foreach ($auxexamengrado->getExaGrado() as $req) {// recorro lista de objetos: cumplerequisito
+                $cod = $req->getId(); // ontengo el id de cada objeto
+                $nota = $req->getNota(); // obtengo el estado de cada objto                
+                
+                $cr = $em->getRepository('academicoBundle:ExamenGrado')->find($cod); //consulto el objeto cumplerequisito
+                $cr->setNota($nota); //actualizo el estado del objeto previamente encontrado
+                $neqv='';
+                if($nota < 14){
+                    $neqv='Reprobado';
+                }else{
+                    $neqv='Aprobado';
+                }                
+                $cr->setEquivalencia($neqv);
+                $cr->setDescripcion($req->getDescripcion());
+
+                $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+            }
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Notas actualizadas');
+
+            return $this->redirect($this->generateUrl('inspector_examengrado_registro_notas',array(
+                'codmg'=>$codmg
+             )));
+        }
+        $cod=0;
+        if($examenesgrado){
+            $cod=1;
+        }
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        $listamateriasgrado= $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
+            'periodo'=>$periodoA,
+            'estado'=>true
+         ));
+        return $this->render('academicoBundle:Default:notas_examengrado.html.twig', array(
+                    'periodo' => $periodoA,
+                    'cod'=>$cod,
+                    'nivel'=>$nivel,
+                    'codmg'=>$codmg,
+                    'curso'=>$nivel,
+                    'niveles'=>$niveles,
+                    'listamaterias'=>$listamateriasgrado,
+                    'form' => $form->createView()
+                ));
+        
+        
+        
     }
     
 }

@@ -1,0 +1,77 @@
+
+{% extends '::frontend.html.twig' %}
+
+{% block id 'portada' %}
+
+{% block title %}Registro de una nueva materia de grado{% endblock%}
+
+{% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<h1>{{ block ('title')}}</h1>
+<br><br>
+<form action="{{ path('admin_materiagrado_registro') }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                
+                  {{form_label(formulario.periodo,'Periodo:')}}{{form_errors(formulario.periodo)}}{{form_widget(formulario.periodo , { 'attr': {'autocomplete' : 'off' } }) }}<br>                  
+                  {{form_label(formulario.materia,'Periodo:')}}{{form_errors(formulario.materia)}}{{form_widget(formulario.materia , { 'attr': {'autocomplete' : 'off' } }) }}<br>                  
+                  {{form_row(formulario.estado)}}
+                  
+                  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+{% if mg==1%}
+<hr>
+<strong><p align="center">LISTA MATERIAS DE GRADO</p></strong>
+<div id="dt_example">
+    <div id="demo">
+            <table class="display" id="example" >
+                    <thead>
+                        <tr>
+                            <th colspan="4">PREVIAMENTE REGISTRADAS</th>                                                 
+                        <tr>
+                            <th>Nombre</th>                                        
+                            <th>Estado</th>  
+                            <th>Periodo</th>
+                            <th>Accion</th>
+                        </tr>
+                        </thead>        
+                     <tbody>
+                    {% for m in lista %}
+                        {% set estado=m.estado%}
+                        {% if estado==1%}
+                            {% set esta='Activo'%}                                                    
+                        {% endif%}
+                        {% if estado==0%}
+                            {% set esta='Inactivo'%}                                                    
+                        {% endif%}
+                        <tr >
+                            <td>{{m.materia.nombre }}</td><td>{{esta}}</td><td>{{m.periodo}}</td><td><a href="{{path('admin_materiagrado_modificar', {'codmg': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Editar materia de grado"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
+                            
+                        <tr>
+                    <tbody>
+                    {% endfor %}
+                </table>
+        </div>
+    </div>
+{% endif %}
+<br><br>
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock%}
+{% block stylesheets %}
+{{ parent() }}
+    
+ {% endblock %}
+
+        
