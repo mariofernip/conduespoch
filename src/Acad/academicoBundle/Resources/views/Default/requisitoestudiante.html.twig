@@ -9,37 +9,34 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
-
-       
-
-<table class="display" id="itsthetable">
+<p style="color: #0035C7; text-align: center"><strong>REQUISITOS DEL ESTUDIANTE</strong></p>
+<table class="display" id="itsthetable" style="width: 330px" align="left">
     <thead>
-    <th colspan="2">Datos del estudiante</th>   
+        <th colspan="2">DATOS DEL ESTUDIANTE</th>   
     </thead>
     <tbody>
         <tr>
-          <TD><strong>Cédula:</strong>{{estudiante.cedula}}</TD>
-          <TD ROWSPAN=3 ALIGN="CENTER" style="vertical-align:middle"><img src="{{ asset('uploads/documents/'~ estudiante.path) }}" width="80" height="80" border="0" alt="{{estudiante.nombre}}{{estudiante.apellido}}"></TD>
-        </tr>
-
-        <tr >
-          <TD class="odd"><strong>Nombre:</strong>{{estudiante.nombre}}</TD>
+          <td style="width: 250px"><strong>Cédula:&nbsp;&nbsp;</strong>{{estudiante.cedula}}</td>
+          <td  ROWSPAN=3 ALIGN="CENTER" style="vertical-align:middle; width: 80px; height: 80px"><img src="{{ asset('uploads/documents/'~ estudiante.path) }}" width="80" height="80" border="0" alt="{{estudiante.nombre}}{{estudiante.apellido}}"></td>
         </tr>
         <tr>
-          <TD><strong>Apellido:</strong>{{estudiante.apellido}}</TD>
+            <td  class="odd"><strong>Nombre:&nbsp;&nbsp;</strong>{{estudiante.nombre}}</td>
         </tr>
-</tbody>
+        <tr>
+          <td ><strong>Apellido:&nbsp;&nbsp;</strong>{{estudiante.apellido}}</td>
+        </tr>
+    </tbody>
 </table>
-
+<br><br><br><br><br><br>
 
 <form action="{{ path('estudiante_requisito',{'cedula': estudiante.cedula}) }}" method="post" {{
         form_enctype(form) }} >
     {{ form_start(form) }}
-        {# render the task's only field: description #}
+    
     
     <br>
-    <h3>Requisitos</h3>
+    <p style="color: #0035C7; text-align: left"><strong>REQUISITOS:</strong>&nbsp;&nbsp;estado / nombre</p>
+    
     <ul>
         {# iterate over each existing tag and render its only field: name #}
         {% for req in form.reqest %}
@@ -58,178 +55,9 @@
 
 {% block aside %}
     {{ parent()}}
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}
-
-
-
 {% block stylesheets %}
-{{ parent() }}
-<style>
-#itsthetable	{
-		background: #F0F0F0 url(back01.gif) no-repeat;
-		}
-
-table		{
-		margin: 0;
-		padding: 0;
-		font: normal 0.9em tahoma, arial, sans-serif;
-		line-height: 1.4em;
-		border-collapse: collapse;
-		border: 4px solid #ADBBCA;
-		color: #4F6480;
-		background: #F0F0F0;
-		}
-		
-
-
-table caption	{
-		margin: 0;
-		height: 32px;
-		padding: 0;
-		color: #4F6480;
-		line-height: 2em;
-		text-align: left;
-		font: bold 150% georgia, serif;
-		text-transform: uppercase;
-		letter-spacing: 0.14em;
-		}
-		
-thead		{
-		color: #fff;
-		background: #5E7796;
-		}
-		
-thead tr th	{
-		padding: 4px 8px 4px 8px;
-		}
-
-		
-thead th	{
-		border: 4px solid #ADBBCA;
-		}
-
-tfoot		{
-		background: #fff;
-		}
-		
-tfoot tr td, tfoot tr th, tbody tr td	{
-		padding: 4px;
-		}
-		
-tbody tr:hover	{
-		background: #fff;
-		}
-		
-tbody tr	{
-		border: 4px solid #ADBBCA;
-		}
-		
-tbody th	{
-		padding: 8px;
-		border: 4px solid #ADBBCA;
-		}
-		
-tbody td	{
-		background: #E9ECEE;
-		}
-
-tbody tr.odd		{
-		background: #C4CFDB;
-		}
-		
-tbody tr.odd td		{
-		background: #F0F0F0;
-		color: #4F6480;
-		}
-		
-
-		
-tbody tr.odd:hover		{
-		background: #fff;
-		}
-		
-
-		
-tbody tr th a:link		{
-		font: bold 0.9em tahoma, arial, sans-serif;
-		color: #5E7796;
-		text-decoration: underline;
-		
-		}
-		
-tbody tr th a:visited		{
-		font: bold 0.9em tahoma, arial, sans-serif;
-		color: #5E7796;
-		text-decoration: none;
-		
-		}
-		
-tbody tr th a:hover		{
-		font: bold 0.9em tahoma, arial, sans-serif;
-		color: #5E7796;
-		text-decoration: none;
-		
-		}
-		
-tbody tr th a:active		{
-		font: bold 0.9em tahoma, arial, sans-serif;
-		color: #5E7796;
-		text-decoration: line-through;
-		
-		}
-		
-tbody tr th a:visited:after {
-		content: "\00A0\221A";
-		}
-		
-tbody td a:link		{
-		font: normal 0.9em tahoma, arial, sans-serif;
-		color: #808000;
-		text-decoration: underline;
-		}
-		
-tbody td a:visited		{
-		font: normal 0.9em tahoma, arial, sans-serif;
-		color: #808000;
-		text-decoration: none;
-		}
-		
-tbody td a:hover		{
-		font: normal 0.9em tahoma, arial, sans-serif;
-		color: #808000;
-		text-decoration: none;
-		}
-		
-tbody td a:active		{
-		font: normal 0.9em tahoma, arial, sans-serif;
-		color: #808000;
-		text-decoration: underline;
-		}
-			
-tbody td a:visited:after {
-		content: "\00A0\221A";
-		color: #808000;
-		text-decoration: none;
-		}
-		
-tbody td + td + td + td a { background: transparent url(downloadcss244.gif) no-repeat scroll 0 50%; 
-			display: block;
-			height: 24px;
-			width: 24px;
-			overflow: hidden;
-			text-decoration: none;
-			text-indent: -5000px;
-			border: none;
-			}
-			
-tbody td + td + td + td a:hover { background: transparent url(downloadcss2441.gif) no-repeat scroll 0 50%; 
-			display: block;
-			height: 24px;
-			width: 24px;
-			overflow: hidden;
-			text-decoration: none;
-			text-indent: -5000px;
-			border: none;
-			}
-</style>
- {% endblock %}
+      {{ parent()}}                 
+        {% include 'academicoBundle:Default:tablecss.html.twig'%}
+{% endblock %}          

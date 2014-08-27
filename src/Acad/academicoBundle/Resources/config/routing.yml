@@ -105,3 +105,7 @@ inspector_lista_materiasgrado_x_nivel:
 inspector_examengrado_registro_notas:
     pattern:  /inspector/examenes/grado/notas/{codmg}
     defaults: { _controller: academicoBundle:default:notasgrado }            
+    
+secretaria_requisito_listar_todos:    
+    pattern:  /secretaria/consulta/requisitos/lista
+    defaults: { _controller: academicoBundle:default:listatodosrequisitos }            

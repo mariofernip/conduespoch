@@ -938,12 +938,13 @@ class DefaultController extends Controller {
       
 
             }
-        
+        $mat= $em->getRepository('administrativoBundle:Materia')->find($materias);
         return $this->render('academicoBundle:default:listaestudiantesmatriculadosasistecia.html.twig', array(
                     'periodo' => $periodo,
                     'niveles' => $niveles,
                     'secciones' => $paginationSS,            
-                    'curso' => $curso,                    
+                    'curso' => $curso,     
+                    'mat'=>$mat,
                     'materias'=>$materias,
                     'listamaterias'=>$listamaterias,            
                     'formsecciones'=>$formsecciones->createView(),                       
@@ -1551,7 +1552,7 @@ class DefaultController extends Controller {
              $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
                 ));
-        return $this->render('academicoBundle:default:verdocentehorario.html.twig', array(
+        return $this->render('academicoBundle:default:verdocentehorario2.html.twig', array(
                     'periodo' => $periodo,
                     'nivel'=> $nivel,
                     'materia'=>$materia,  
@@ -1672,11 +1673,13 @@ class DefaultController extends Controller {
             'periodo'=>$periodoA,
             'estado'=>true
          ));
+        $exag= $em->getRepository('academicoBundle:ExamenGrado')->find($codmg);
         return $this->render('academicoBundle:Default:notas_examengrado.html.twig', array(
                     'periodo' => $periodoA,
                     'cod'=>$cod,
                     'nivel'=>$nivel,
                     'codmg'=>$codmg,
+                    'mg'=>$exag,
                     'curso'=>$nivel,
                     'niveles'=>$niveles,
                     'listamaterias'=>$listamateriasgrado,
@@ -1686,5 +1689,19 @@ class DefaultController extends Controller {
         
         
     }
+
+    //metodo: permite listar todos los requisitos previamente registrados
+    public function listatodosrequisitosAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodoA= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listarequisitos = $em->getRepository('administrativoBundle:Requisito')->findAll();
+        return $this->render('academicoBundle:Default:requisito_listatodos.html.twig', array(
+                    'periodo' => $periodoA,
+                    'lista' => $listarequisitos,
+                ));
+    }
+    
     
 }

@@ -1,16 +1,14 @@
 {% extends '::frontend.html.twig'%}
 
-{% block title %} INICIO {% endblock%}
+{% block title %} ASISTENCIA {% endblock%}
 {% block id 'portada' %}
 {% block article%}
 <section id="menu_inspector">
         {% include 'academicoBundle:Default:menu_inspector.html.twig' with {'niveles': niveles, 'listamaterias': listamaterias}%}
 </section>
-<h3><p align="center">{{curso}}</p><h3>
+<p style="text-align: center ; color: #0035C7 "><strong>INGRESO DE ASISTENCIAS:&nbsp;<label style="color: #090">{{mat.nombre}}</label></strong></p>
         
-{#LISTA DE ESTUDIANTES: SECCIONES#}
 
-<strong><p>Listado de estudiantes</p></strong>
 <div id="dt_example">
     <div id="demo">
     {% if sd== 1 %}
@@ -19,12 +17,16 @@
         <table class="display" id="example">
             <thead>
                 <tr >
-                    <th>{{ knp_pagination_sortable(secciones, 'Seccion- Cedula- Nombre Completo', 'e.nombre') }}</th>
+                    {#<th>{{ knp_pagination_sortable(secciones, 'Seccion- Cedula- Nombre Completo', 'e.nombre') }}</th>
                     <th>{{ knp_pagination_sortable(secciones, 'Faltas Justificadas', 'a.faltasjustificadas') }}</th>
                     <th>{{ knp_pagination_sortable(secciones, 'Faltas Injustificadas', 'a.faltasinjustificadas') }}</th>
                     <th>{{ knp_pagination_sortable(secciones, 'Atrasos', 'a.atrasos') }}</th>
-                    <th>{{ knp_pagination_sortable(secciones, 'Promedio', 'a.horasasistidas') }}</th>
-                   
+                    <th>{{ knp_pagination_sortable(secciones, 'Promedio', 'a.horasasistidas') }}</th>#}
+                    <th>Seccion / Cédula / Estudiante</th>
+                    <th>Faltas Justificadas</th>
+                    <th>Faltas Injustificadas</th>
+                    <th>Atrasos</th>
+                    <th>Promedio</th>
                  </tr>
                 </thead>
                             
@@ -32,11 +34,11 @@
         {% for est in formsecciones.faltasjustificadas %}
 <tbody>
     <tr>            
-        <td>{{ form_widget(est.materiaasignada) }}</td>                
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_errors(est.faltasjustificadas ) }} {{ form_widget(est.faltasjustificadas ) }} </td>
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(est.faltasinjustificadas)}}</td>
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(est.atrasos) }}</td>
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(est.promediofinal) }}</td>
+        <td style="vertical-align:middle; text-align: left">{{ form_widget(est.materiaasignada) }}</td>                
+        <td style="vertical-align:middle; text-align: center">{{ form_errors(est.faltasjustificadas ) }} {{ form_widget(est.faltasjustificadas ) }} </td>
+        <td style="vertical-align:middle; text-align: center">{{ form_widget(est.faltasinjustificadas)}}</td>
+        <td style="vertical-align:middle; text-align: center">{{ form_widget(est.atrasos) }}</td>
+        <td style="vertical-align:middle; text-align: center">{{ form_widget(est.promediofinal) }}</td>
         
     </tr>
 </tbody>                       
@@ -61,9 +63,9 @@
 {% endblock%}
 {% block aside %}
 {{parent()}}
-    {%set inspector='inspector'%}
-        <p align="center"><a class="boton" href="{{path('portada',{'role':inspector})}}">PORTADA</a></p>
-          <strong><p align="left">Materias</p></strong>
+    <p style="text-align: center">Curso actual:</p>
+    <p style="text-align: left; color: #090"><strong>{{curso | upper}}</strong></p>
+    <strong><p align="center">Materias:</p></strong>
     <div id="relacionadas">
         <ul>
        {% for mat in listamaterias %}
@@ -72,6 +74,7 @@
    {% endfor%}
             </ul>
         </div>
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}
 
           
@@ -109,6 +112,7 @@
 
 {% block stylesheets %}
 {{ parent() }}
+{% include 'academicoBundle:Default:tablecss.html.twig'%}
 <style>
    
   input[type="number"] {

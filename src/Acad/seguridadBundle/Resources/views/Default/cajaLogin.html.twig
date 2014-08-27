@@ -6,11 +6,11 @@
     
 {% endfor%}    
     
-{% if is_granted('ROLE_SECRETARIA' ) or is_granted('ROLE_DOCENTE') or is_granted('ROLE_INSPECTOR') or is_granted('ROLE_AMATERIAS')%}
+{% if is_granted('ROLE_SECRETARIA' ) or is_granted('ROLE_DOCENTE') or is_granted('ROLE_INSPECTOR') or is_granted('ROLE_AMATERIAS') or is_granted('ROLE_ADMIN')%}
     
     
 {% else %}
-    <a class="boton" href="{{ path('usuario_registro') }}">Regístrate</a>
+        
 <h2>Accede a tu cuenta</h2>
 <form action="{{path('usuario_login_check')}}" method="post" >
 

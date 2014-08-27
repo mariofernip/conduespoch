@@ -7,9 +7,13 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_docente.html.twig'%}
 </section>    
-    <br>
+<p style="text-align: center ; color: #0035C7; -webkit-animation-play-state: "><strong>INGRESO NOTAS DE SUPLETORIOS</strong></p>
     {% if cod==1%}
-    
+    <p><strong>Detalles:</strong></p>
+    <ul>
+        <li style="color: #08C">Se presenta todos estudiantes ordenados por secciones, número de cédula y su nombre</li>
+        <li style="color: #08C">Tome en cuenta la materia seleccionada de color verde</li>
+            </ul>
     <form action="{{ path('docente_notas_suspenso',{'materia': mat.id, 'nivel': niv.id}) }}" method="post" {{
         form_enctype(form) }} >
         {{ form_start(form) }}
@@ -32,10 +36,10 @@
                     {% for req in form.evaest %}
                     
                         <tr {% if loop.index is odd %} class="color" {% endif %}>
-                            <td>{{ form_widget(req.matricula, { 'attr': {'disabled' : true } }) }}</td>             
-                            <td>{{ form_widget(req.notasuspenso)}}</td> 
-                            <td>{{ form_widget(req.promediofinal) }}</td> 
-                            <td>{{ form_widget(req.equivalencia) }}</td>
+                            <td style="text-align: left; vertical-align: middle">{{ form_widget(req.matricula, { 'attr': {'disabled' : true } }) }}</td>             
+                            <td style="text-align: center; width: 80px; vertical-align: middle">{{ form_widget(req.notasuspenso)}}</td> 
+                            <td style="text-align: center; width: 110px; vertical-align: middle">{{ form_widget(req.promediofinal) }}</td> 
+                            <td style="text-align: center; width: 80px; vertical-align: middle">{{ form_widget(req.equivalencia) }}</td>
                             
                         <tr>
                     <tbody>
@@ -58,7 +62,7 @@
 {% block aside%}
     {{parent()}}
     <p align="center">Materia actual</p>
-    <strong>{{nivel}}&nbsp;{{materia}}</strong>
+    <strong style="color: #090">{{nivel}}&nbsp;{{materia}}</strong>
     <p></p>
     <strong>
         <p align="left">Curso / Materia</p>
@@ -72,7 +76,7 @@
             </ul>
         </div>
 
-    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}
 
 {% block javascripts %}

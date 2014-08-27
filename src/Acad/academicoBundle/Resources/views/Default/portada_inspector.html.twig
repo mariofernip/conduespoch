@@ -6,7 +6,7 @@
 <section id="menu_inspector">
     {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
 </section>
-
+<p style="text-align: center ; color: #0035C7 "><strong>BIENVENID@ AL PERFIL DE INSPECTOR</strong></p>
 {% endblock%}
 
 {% block aside %}
@@ -25,7 +25,7 @@
     </tbody>
 </table>
     {{ parent()}}
-        <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+        <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}
 {% block stylesheets %}
 {{ parent() }}

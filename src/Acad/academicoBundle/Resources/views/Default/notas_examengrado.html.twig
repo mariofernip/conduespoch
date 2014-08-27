@@ -9,7 +9,7 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
+<p style="text-align: center ; color: #0035C7 "><strong>INGRESO NOTAS DE GRADO: <label style="color: #090">{{mg.materiagrado.materia}}</label></strong></p>
 
 
 {% if cod==1%}
@@ -36,10 +36,10 @@
                     {% for req in form.exagrado %}
                     
                         <tr {% if loop.index is odd %} class="color" {% endif %}>
-                            <td>{{ form_widget(req.matricula, { 'attr': {'disabled' : true } }) }}</td>             
-                            <td>{{ form_widget(req.nota) }}</td> 
-                            <td>{{ form_widget(req.equivalencia) }}</td>
-                            <td>{{ form_widget(req.descripcion) }}</td>
+                            <td style="vertical-align: middle; text-align: center">{{ form_widget(req.matricula, { 'attr': {'disabled' : true } }) }}</td>             
+                            <td style="vertical-align: middle; text-align: center">{{ form_widget(req.nota) }}</td> 
+                            <td style="vertical-align: middle; text-align: center">{{ form_widget(req.equivalencia) }}</td>
+                            <td style="vertical-align: middle; text-align: center" >{{ form_widget(req.descripcion) }}</td>
                             
                         <tr>
                     <tbody>
@@ -58,7 +58,9 @@
 
 {% block aside %}
     {{ parent()}}
-    <strong><p align="left"><h3><p align="center">{{curso}}</p></h3></p></strong>
+    <p style="text-align: center">Curso actual:</p>
+    <p style="text-align: left; color: #090"><strong>{{curso}}</strong></p>
+    <strong><p align="center">Materias:</p></strong>
     <div id="relacionadas">
         <ul>
     {% for mat in listamaterias %}
@@ -67,7 +69,7 @@
 
             </ul>
         </div>
-    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
     
 {% endblock%}
 

@@ -6,11 +6,16 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
 </section>
-
-{#LISTA DE ESTUDIANTES: SECCION DIURNA#}
+<p style="text-align: center ; color: #0035C7 "><strong>INGRESO NOTAS DE EXAMENES DE GRADO</strong></p>
+<p><strong>Detalles:</strong></p>
+<ul>
+    <li style="color: #0066ff">Para proceder al ingreso de las notas de examenes de grado por favor seleccione una materia</li>
+</ul>
 {% endblock%}
 {% block aside %}    
-        <strong><p align="left"><h3><p align="center">{{curso}}</p></h3></p></strong>
+    <p style="text-align: center">Curso actual:</p>
+    <p style="text-align: left; color: #090"><strong>{{curso}}</strong></p>
+    <strong><p align="center">Materias:</p></strong>
     <div id="relacionadas">
         <ul>
     {% for mat in listamaterias %}
@@ -19,5 +24,5 @@
 
             </ul>
         </div>
-   <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+   <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}

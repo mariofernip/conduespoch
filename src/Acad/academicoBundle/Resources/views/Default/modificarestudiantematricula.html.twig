@@ -9,14 +9,28 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
-<strong>DATOS DEL ESTUDIANTE</strong><br><br>
-<strong>Cédula:</strong>{{matricula.estudiante.cedula}}<br>
-<strong>Nombres:</strong>{{matricula.estudiante.nombre}}<br>
-<strong>Apellidos:</strong>{{matricula.estudiante.apellido}}<br><br>
+<p style="color: #0035C7; text-align: center"><strong>MODIFICAR MATRÍCULA DEL ESTUDIANTE</strong></p>
+<table class="display" id="itsthetable" style="width: 330px" align="left">
+    <thead>
+        <th colspan="2">DATOS DEL ESTUDIANTE</th>   
+    </thead>
+    <tbody>
+        <tr>
+          <td style="width: 250px"><strong>Cédula:&nbsp;&nbsp;</strong>{{matricula.estudiante.cedula}}</td>
+          <td  ROWSPAN=3 ALIGN="CENTER" style="vertical-align:middle; width: 80px; height: 80px"><img src="{{ asset('uploads/documents/'~ matricula.estudiante.path) }}" width="80" height="80" border="0" alt="{{matricula.estudiante.nombre}}{{matricula.estudiante.apellido}}"></td>
+        </tr>
+        <tr>
+            <td  class="odd"><strong>Nombre:&nbsp;&nbsp;</strong>{{matricula.estudiante.nombre}}</td>
+        </tr>
+        <tr>
+          <td ><strong>Apellido:&nbsp;&nbsp;</strong>{{matricula.estudiante.apellido}}</td>
+        </tr>
+    </tbody>
+</table>
+<br><br><br><br><br><br><br><br>
 {% set eidm= mid %}
-<strong><br>DATOS DE MATRICULA</strong><br><br>
-{#<strong>Cédula:</strong>{{eid ? eid.estudiante.cedula }}<br>#}
+<p style="color: #0035C7; text-align: left"><strong>DATOS DE MATRÍCULA</strong></p>
+
 <form action="{{ path('estudiante_matriculado_modificar',{'mid':eidm})}}" method="post" {{
         form_enctype(formulario) }}>
         {{ form_errors(formulario) }}
@@ -29,11 +43,16 @@
           </fieldset>   
          {{form_rest(formulario)}}                   
           <input class="boton" type="submit" value="Guardar" />
-          </form>
-
+</form>
+<br><br>
 
 {% endblock%}
 
 {% block aside %}
     {{ parent()}}
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}
+{% block stylesheets %}
+      {{ parent()}}                 
+        {% include 'academicoBundle:Default:tablecss.html.twig'%}
+{% endblock %}          

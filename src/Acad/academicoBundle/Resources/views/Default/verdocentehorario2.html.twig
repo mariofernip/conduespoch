@@ -1,0 +1,131 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} INICIO {% endblock%}
+{% block id 'portada' %}
+{% block article%}
+<section id="menu_docente">
+        {% include 'academicoBundle:Default:menu_docente.html.twig' with {'mesevac': mesevac, 'listamaterias': listamaterias}%}
+</section>
+        
+{#LISTA DE MATERIAS: #}
+
+<strong><p>Mi Horario</p></strong>
+<div id="dt_example">
+    <div id="demo">        
+        <table class="display" id="example">
+            <thead>   
+                <tr>
+                    <th colspan="6" ALIGN="CENTER">HORARIO DE CLASES</th>
+                </tr>
+                <tr>
+                    <th colspan="6" ALIGN="LEFT">CÉDULA: {{docente.cedula}}{{'    '}} NOMBRE: {{docente.nombre}}{{' '}}{{docente.apellido}}</th>
+                </tr>
+                 <tr >
+                    <th>{{ 'Hora' }}</th>                     
+                    <th>{{ 'Lunes' }}</th> 
+                    <th>{{ 'Martes' }}</th>
+                    <th>{{ 'Miercoles' }}</th>
+                    <th>{{ 'Jueves' }}</th>
+                    <th>{{ 'Viernes' }}</th>
+                 
+                 </tr>
+            </thead>                                        
+            <tbody>
+                {% for ma in horarioclase %}  
+                <tr>                        
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{ma.hora}}</td>        
+                    {# LUNES#}
+                    {% for mat in horarioclase %}
+                    
+                        {% if ma.hora == mat.hora%}                            
+                            {% if  (mat.dia | upper) == 'LUNES' %}                        
+                                <td ALIGN="CENTER" style="vertical-align:middle">                   
+                                    <strong>
+                                        {{mat.dictadomateria.materia.nombre}}
+                                    </strong>{{' '}}
+                                        {{mat.dictadomateria.nivel.curso}}{{' '}}
+                                        {{mat.dictadomateria.nivel.paralelo}}                                        
+                                </td> 
+                                
+                            {% endif %}
+                            {% if  (mat.dia | upper) == 'MARTES' %}                        
+                                <td ALIGN="CENTER" style="vertical-align:middle">                   
+                                    <strong>
+                                        {{mat.dictadomateria.materia.nombre}}
+                                    </strong>{{' '}}
+                                        {{mat.dictadomateria.nivel.curso}}{{' '}}
+                                        {{mat.dictadomateria.nivel.paralelo}}                                        
+                                </td> 
+                            {% endif %}
+                            {% if  (mat.dia | upper) == 'MIERCOLES' %}                        
+                                <td ALIGN="CENTER" style="vertical-align:middle">                   
+                                    <strong>
+                                        {{mat.dictadomateria.materia.nombre}}
+                                    </strong>{{' '}}
+                                        {{mat.dictadomateria.nivel.curso}}{{' '}}
+                                        {{mat.dictadomateria.nivel.paralelo}}                                        
+                                </td> 
+                                
+                            {% endif %}
+                                
+                            {% if  (mat.dia | upper) == 'JUEVES' %}                        
+                                <td ALIGN="CENTER" style="vertical-align:middle">                   
+                                    <strong>
+                                        {{mat.dictadomateria.materia.nombre}}
+                                    </strong>{{' '}}
+                                        {{mat.dictadomateria.nivel.curso}}{{' '}}
+                                        {{mat.dictadomateria.nivel.paralelo}}                                        
+                                </td> 
+                            {% endif %}
+                            {% if  (mat.dia | upper) == 'VIERNES' %}                        
+                                <td ALIGN="CENTER" style="vertical-align:middle">                   
+                                    <strong>
+                                        {{mat.dictadomateria.materia.nombre}}
+                                    </strong>{{' '}}
+                                        {{mat.dictadomateria.nivel.curso}}{{' '}}
+                                        {{mat.dictadomateria.nivel.paralelo}}                                        
+                                </td> 
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                    
+                </tr>    
+                {% endfor%}
+            </tbody>                                                       
+        </table>
+    
+    </div>
+</div>
+<br>
+
+{% endblock%}
+{% block aside %}
+{{parent()}}
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
+{% endblock%}
+
+          
+{% block javascripts %}
+    {{ parent() }}
+
+{% endblock%}
+
+
+{% block stylesheets %}
+{{ parent() }}
+         {% include 'academicoBundle:Default:tablecss.html.twig'%}
+
+<style>
+   
+  input[type="number"] {
+   width:50px;
+}
+</style>
+
+
+
+   {% endblock %}
+     
+
+    

@@ -10,7 +10,7 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
+<p style="color: #0035C7; text-align: center"><strong>MODIFICAR DATOS DEL ESTUDIANTE</strong></p>
 {% if  iactiva %}
 {% set cedu= cedula %}
 <form action="{{ path('estudiante_modificar_datos',{'cedula':cedu})}}" method="post" {{

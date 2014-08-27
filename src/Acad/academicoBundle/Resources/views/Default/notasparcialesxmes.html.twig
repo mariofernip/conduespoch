@@ -20,11 +20,11 @@
                     <tr>
                         {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Acción</th>#}
 
-                            <th>{{ knp_pagination_sortable(listaeva, 'Cedula', 'e.cedula') }}</th>
+                            <th>{{ knp_pagination_sortable(listaeva, 'Cédula', 'e.cedula') }}</th>
                             <th>{{ knp_pagination_sortable(listaeva, 'Nombre', 'e.nombre') }}</th>                            
                             <th>{{ knp_pagination_sortable(listaeva, 'Sección', 'm.seccion') }}</th>                            
-                            <th>{{ knp_pagination_sortable(listaeva, 'Trabajo en grupo', 'ev.notatb') }}</th>                            
-                            <th>{{ knp_pagination_sortable(listaeva, 'Estudio de casos', 'ev.notaec') }}</th>
+                            <th>{{ knp_pagination_sortable(listaeva, 'Trabajo grupo', 'ev.notatb') }}</th>                            
+                            <th>{{ knp_pagination_sortable(listaeva, 'Estudio casos', 'ev.notaec') }}</th>
                             <th>{{ knp_pagination_sortable(listaeva, 'Prueba práctica', 'ev.notapp') }}</th>
                             <th>{{ knp_pagination_sortable(listaeva, 'Prueba teórica', 'ev.notapt') }}</th>
 
@@ -34,13 +34,13 @@
                     <tbody>
                     {% for est in listaeva %}
                         <tr {% if loop.index is odd %}class="color"{% endif %}>
-                                <td>{{est.materiaasignada.matricula.estudiante.cedula}}</td>
-                                <td>{{est.materiaasignada.matricula.estudiante.nombre}}&nbsp;{{est.materiaasignada.matricula.estudiante.apellido}}</td>
-                                <td>{{est.materiaasignada.matricula.seccion}}</td>
-                                <td>{{est.notatb}}</td>
-                                <td>{{est.notaec}}</td>
-                                <td>{{est.notapp}}</td>
-                                <td>{{est.notapt}}</td>                                
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.materiaasignada.matricula.estudiante.cedula}}</td>
+                                <td style="vertical-align: middle">{{est.materiaasignada.matricula.estudiante.apellido | title }}&nbsp; {{est.materiaasignada.matricula.estudiante.nombre | title}}</td>
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.materiaasignada.matricula.seccion | title}}</td>
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notatb}}</td>
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notaec}}</td>
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notapp}}</td>
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notapt}}</td>                                
                          <tr>
                         </tbody>
                     {% endfor%}
@@ -56,11 +56,8 @@
 {% block aside%}
     {{parent()}}
     <p align="center">Materia actual</p>
-    <strong>{{nivel}}&nbsp;{{materia}}</strong>
-    <p></p>
-    <strong>
-        <p align="left">Curso / Materia</p>
-    </strong>
+   <p style="text-align: center ; color: #090 "><strong>{{nivel.curso.nombre | upper}}&nbsp;&nbsp;{{nivel.paralelo.nombre | upper }}&nbsp;:&nbsp;{{materia.nombre}}</strong></p>
+   <strong><p align="left">Curso / Materia</p></strong>
     <div id="relacionadas">
         <ul>
     {% for matdoc in materiasdoc %}
@@ -70,5 +67,5 @@
             </ul>
         </div>
 
-    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}

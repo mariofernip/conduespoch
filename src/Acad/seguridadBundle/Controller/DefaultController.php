@@ -74,10 +74,10 @@ class DefaultController extends Controller
             $em->persist($usuario);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('info', '¡Enhorabuena! Usuario registrado'
+            $this->get('session')->getFlashBag()->add('Info', '¡Enhorabuena! Usuario registrado'
             );
 
-            return $this->redirect($this->generateUrl('_portada'));
+            return $this->redirect($this->generateUrl('admin_portada'));
         }
 
         $periodo='';
@@ -88,81 +88,125 @@ class DefaultController extends Controller
     }
 
     public function portadaAction($role) {
-        
-        $em= $this->getDoctrine()->getEntityManager();
+
+        $em = $this->getDoctrine()->getEntityManager();
         $usuario = $this->get('security.context')->getToken()->getUser();
-        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
-        $mes= $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
-            'estado'=>true
-        ));
-        
-        $sesion= new Session();        
-        $sesion->set('periodo', $periodo);
-        if($role=='docente'){
-            $listameses= $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
-            $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
-            $x=1;
-            foreach ($materiasdocente as $matd) {
-                for ($index = 0; $index < $x; $index++) {
-                    $codn=$matd->getNivel();
-                    $nivel=$em->getRepository('administrativoBundle:Nivel')->find($codn);
-                    $codm=$matd->getMateria();
-                    $materia=$em->getRepository('administrativoBundle:Materia')->find($codm);
-                    $sesion->set('nivel',$matd->getNivel());
-                    $sesion->set('materia',$matd->getMateria());
+
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado' => true
+                ));
+        if ($usuario->getEstado() == true) {
+
+
+            $sesion = new Session();
+            $sesion->set('periodo', $periodo);
+            if ($role == 'docente') {
+                $listameses = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
+                $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
+                $x = 1;
+                foreach ($materiasdocente as $matd) {
+                    for ($index = 0; $index < $x; $index++) {
+                        $codn = $matd->getNivel();
+                        $nivel = $em->getRepository('administrativoBundle:Nivel')->find($codn);
+                        $codm = $matd->getMateria();
+                        $materia = $em->getRepository('administrativoBundle:Materia')->find($codm);
+                        $sesion->set('nivel', $matd->getNivel());
+                        $sesion->set('materia', $matd->getMateria());
+                    }
                 }
+
+                return $this->render('academicoBundle:Default:portada_' . $role . '.html.twig', array(
+                            'periodo' => $periodo,
+                            'listames' => $mes,
+                            'mesevac' => $listameses,
+                            'lmd' => $materiasdocente,
+                            'nivel' => $nivel,
+                            'materia' => $materia
+                        ));
             }
+            $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+            $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMaterias();
+            if ($role == 'secretaria') {
+                //inscritos
+                $estIA= $em->getRepository('academicoBundle:Inscripcion')->findBy(array(
+                    'periodo'=>$periodo,
+                    'estado'=>true
+                    ));
+                $estII= $em->getRepository('academicoBundle:Inscripcion')->findBy(array(
+                    'periodo'=>$periodo,
+                    'estado'=>false
+                    ));
+                $estIT=$em->getRepository('academicoBundle:Inscripcion')->findBy(array(
+                    'periodo'=>$periodo,                    
+                    ));
+                //matriculados
+                $estMA=$em->getRepository('academicoBundle:Matricula')->findBy(array(
+                    'periodo'=>$periodo,                    
+                    'estado'=>true
+                    ));
+                $estMI=$em->getRepository('academicoBundle:Matricula')->findBy(array(
+                    'periodo'=>$periodo,                    
+                    'estado'=>false
+                    ));
+                $estMT=$em->getRepository('academicoBundle:Matricula')->findBy(array(
+                    'periodo'=>$periodo,                    
+                    ));
+                $lista= $em->getRepository('administrativoBundle:Nivel')->findAll();
+                return $this->render('academicoBundle:Default:portada_' . $role . '.html.twig', array(
+                            'periodo' => $periodo,
+                            'estIA'=> $estIA,
+                            'estII'=> $estII,
+                            'estIT'=>$estIT,
+                            'estMA'=> $estMA,
+                            'estMI'=> $estMI,
+                            'estMT'=>$estMT,
+                            'lista'=>$lista
+                        ));
+            }
+
+            if ($role == 'inspector') {
+                $listadocentes = $em->getRepository('administrativoBundle:Docente')->findBy(array(
+                    'estado' => true
+                        ));
+                $listamateriasgrado = $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
+                    'estado' => true
+                        ));
+                $codmg = 0;
+                if ($listamateriasgrado) {
+                    $codmg = 1;
+                }
+                return $this->render('academicoBundle:Default:portada_' . $role . '.html.twig', array(
+                            'periodo' => $periodo,
+                            'niveles' => $niveles,
+                            'listamaterias' => $listamaterias,
+                            'docentes' => $listadocentes,
+                            'materiagrado' => $listamateriasgrado,
+                            'codmg' => $codmg
+                        ));
+            }
+
+
+
+            if ($role == 'amaterias') {
+
+                return $this->render('academicoBundle:Default:portada_' . $role . '.html.twig', array(
+                            'periodo' => $periodo
+                        ));
+            }
+            if ($role == 'admin') {
+
+                
+                return $this->redirect($this->generateUrl('admin_portada'));
+            }
+        } else {
+            $this->get('session')->getFlashBag()->add('Info', 'Usuario no activo'
+            );
+
+            return $this->redirect($this->generateUrl('usuario_logout'));
             
-            return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
-                'periodo'=>$periodo,
-                'listames'=>$mes,
-                'mesevac'=>$listameses,
-                'lmd'=>$materiasdocente,
-                'nivel'=>$nivel,
-                'materia'=>$materia
-            ));
         }
-        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
-        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMaterias();
-        if($role=='secretaria'){
-            
-            return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
-                'periodo'=>$periodo
-            ));
-        }
-        
-        if($role=='inspector'){
-           $listadocentes= $em->getRepository('administrativoBundle:Docente')->findBy(array(
-                'estado'=>true
-            ));
-           $listamateriasgrado= $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
-                'estado'=>true
-            ));
-           $codmg=0;
-           if($listamateriasgrado){
-               $codmg=1;
-           }
-            return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
-                'periodo'=>$periodo,
-                'niveles'=>$niveles,
-                'listamaterias'=>$listamaterias,
-                'docentes'=>$listadocentes,
-                'materiagrado'=>$listamateriasgrado,
-                'codmg'=>$codmg
-        
-            ));
-        }
-        
-        
-        
-        if($role=='amaterias'){
-            
-            return $this->render('academicoBundle:Default:portada_'.$role.'.html.twig',array(
-                'periodo'=>$periodo
-            ));
-        }
-        
-    }       
+    }
         
     
 }

@@ -6,7 +6,8 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
 </section>
-<strong><p>Lista de estudiantes inscritos: {{ pagination.getTotalItemCount }}</p></strong>
+<p style="color: #0035C7; text-align: center"><strong>ESTUDIANTES INSCRITOS</strong></p>
+ {#{{ pagination.getTotalItemCount }}#}
 <div id="dt_example">
     <div id="demo">
         <div class="count">
@@ -15,18 +16,14 @@
             <table class="display" id="example">
                 <thead>
                     <tr>
-                        {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Acción</th>#}
-
-                            <th>{{ knp_pagination_sortable(pagination, 'Cedula', 'e.cedula') }}</th>
-                            <th{% if pagination.isSorted('e.nombre') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Nombre', 'e.nombre') }}</th>                            
-                            <th{% if pagination.isSorted('e.email') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Correo', 'e.email') }}</th>
-                            <th {% if pagination.isSorted('i.estado') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Estado', 'i.estado') }}</th>
-
-
+                        <th>{{ knp_pagination_sortable(pagination, 'Cedula', 'e.cedula') }}</th>
+                        <th{% if pagination.isSorted('e.nombre') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Nombre', 'e.nombre') }}</th>                            
+                        <th{% if pagination.isSorted('e.email') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Correo', 'e.email') }}</th>
+                        <th {% if pagination.isSorted('i.estado') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Estado', 'i.estado') }}</th>
+                        <th>Acciones</th>
                         </tr>
-
                     </thead>
-    {% for est in pagination %}
+                   {% for est in pagination %}
                     <tbody>
                         <tr {% if loop.index is odd %}class="color"{% endif %}>
                     {% set estado=est.estado%}
@@ -51,8 +48,6 @@
 <br><br>
 {% endblock%}
 {% block aside %}
-    {%set secretaria='secretaria'%}
-                    <p align="center"><a class="boton" href="{{path('portada',{'role':secretaria})}}">PORTADA</a></p>
     {{parent()}}
-                    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}

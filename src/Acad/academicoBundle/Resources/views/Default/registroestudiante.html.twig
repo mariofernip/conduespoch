@@ -10,14 +10,17 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
+<p style="color: #0035C7; text-align: center"><strong>REGISTRO DE UN NUEVO ESTUDIANTE</strong></p>
+<li style="color: #0066ff">Los campos con fondo de de <label style="color: red">color</label> son obligatorios</li>
+<li style="color: #0066ff">Luego del registro deberá seleccionar los requisitos  </li>
+<br>
 {% if  iactiva %}
 
 <form action="{{ path('estudiante_registro')}}" method="post" {{
         form_enctype(formulario) }}>
         {{ form_errors(formulario) }}
           <fieldset>
-                  {{form_label(formulario.cedula,'Número de cédula:')}}{{form_errors(formulario.cedula)}}{{form_widget(formulario.cedula, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_label(formulario.cedula,'Número de cédula: ')}}{{form_errors(formulario.cedula)}}{{form_widget(formulario.cedula, { 'attr': {'autocomplete' : 'off' } }) }}
                   {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}{{form_errors(formulario.nombre)}}
                   {{form_row(formulario.apellido, { 'attr': {'autocomplete' : 'off' } }) }}{{form_errors(formulario.apellido)}}
                   {{form_label(formulario.telefonofijo,'Teléfono fijo')}}{{form_widget(formulario.telefonofijo, { 'attr': {'autocomplete' : 'off' } }) }}
@@ -49,4 +52,5 @@
 
 {% block aside %}
     {{ parent()}}
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}

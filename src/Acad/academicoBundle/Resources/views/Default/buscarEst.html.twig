@@ -6,24 +6,29 @@
 
 {% block article %}
 
-<h1>{{ block ('title')}}</h1>
+<p style="color: #0035C7; text-align: center"><strong>INSCRIPCIONES: &nbsp;BUSCAR ESTUDIANTE</strong></p>
 
+<p>Por favor digite la cédula del estudiante 'sin guión'</p>
 
 <form action="{{ path('estudiante_busqueda') }}" method="post" {{
         form_enctype(formulario) }} >
-          {{form_row(formulario.cedula)}}
+          {{form_label(formulario.cedula,'Número de cédula:')}}{{form_errors(formulario.cedula)}}{{form_widget(formulario.cedula, { 'attr': {'autocomplete' : 'off' } }) }}<br>
     {{form_rest(formulario)}}    
-          <input class="boton" type="submit" value="Buscar" />
+          <input class="boton" type="submit" value="Buscar" title="Buscar estudiante" />
 </form>
-
-
-
+<br>
+<p><strong>La consulta permitirá lo siguiente:</strong></p>
+<ul>
+    <li style="color: #08C">Mostrar formulario de inscripciones de estudiantes</li>
+    <li style="color: #08C">Ver si un estudiante ya fue previamente inscrito o no</li>
+    <li style="color: #08C">Ver que requitos el estudiante le falta cumplir</li>
+</ul>
 
 {% endblock%}
 
-{% block aside %}
+{% block aside %}    
     {%set secretaria='secretaria'%}
-      <p align="center"><a class="boton" href="{{path('portada',{'role':secretaria})}}">PORTADA</a></p>
+        <p align="center"><a title="Menú principal" class="boton" href="{{path('portada',{'role':secretaria})}}">PORTADA</a></p>
     {{ parent()}}
-      <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+        <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}

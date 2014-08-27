@@ -1,19 +1,22 @@
 {% extends '::frontend.html.twig'%}
 
-{% block title %} INICIO {% endblock%}
+{% block title %} ASISTENCIA {% endblock%}
 {% block id 'portada' %}
 {% block article%}
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
 </section>
+<p style="text-align: center ; color: #0035C7 "><strong>INGRESO DE ASISTENCIAS</strong></p>
+<p><strong>Detalles:</strong></p>
+<ul>
+    <li style="color: #0066ff">Para proceder al ingreso de asistencias por favor seleccione una materia</li>
+</ul>
 
-{#LISTA DE ESTUDIANTES: SECCION DIURNA#}
 {% endblock%}
-{% block aside %}
-    {%set inspector='inspector'%}
-        <p align="center"><a class="boton" href="{{path('portada',{'role':inspector})}}">PORTADA</a></p>
-    
-        <strong><p align="left"><h3><p align="center">{{curso}}</p><h3></p></strong>
+{% block aside %}        
+    <p style="text-align: center">Curso actual:</p>
+    <p style="text-align: left; color: #090"><strong>{{curso | upper}}</strong></p>
+    <strong><p align="center">Materias:</p></strong>
     <div id="relacionadas">
         <ul>
     {% for mat in listamaterias %}
@@ -22,4 +25,5 @@
 
             </ul>
         </div>
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}
