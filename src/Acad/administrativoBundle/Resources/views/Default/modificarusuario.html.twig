@@ -1,0 +1,32 @@
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'usuario' %}
+
+{% block title %}Modificar usuario{% endblock%}
+
+{% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<h1>{{ block ('title')}}</h1>
+
+<form action="{{ path('usuario_modificar_id',{'uid':id} )}}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_label(formulario.cedula,'Número de cédula:')}}{{form_errors(formulario.cedula)}}{{form_widget(formulario.cedula, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.apellidos, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_label(formulario.email,'Correo:')}}{{form_errors(formulario.email)}}{{form_widget(formulario.email, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                   </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}

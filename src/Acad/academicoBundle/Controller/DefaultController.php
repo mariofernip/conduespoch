@@ -23,6 +23,8 @@ use Acad\academicoBundle\Form\EstudianteType;
 use Acad\academicoBundle\Form\EvaluacionEstudianteType;
 use Acad\academicoBundle\Form\MatriculaAntiguosType;
 use Acad\academicoBundle\Form\MatriculaType;
+use Acad\seguridadBundle\Form\PerfilInspectorType;
+use Acad\administrativoBundle\Form\PerfilDocenteType;
 use Acad\academicoBundle\Form\RequisitoEstudianteType;
 use Acad\academicoBundle\Form\SuspensoEstudianteType;
 use Acad\administrativoBundle\Entity\AuxHorarioClase;
@@ -1703,5 +1705,187 @@ class DefaultController extends Controller {
                 ));
     }
     
+         public function modificarperfildocenteAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+
+        //obtengo el objeto autenticado: en este caso el docente
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $rol = strtoupper($usuario->getRol());
+        
+        $sesion = $this->getRequest()->getSession();
+        $docente =  new Docente();
+        //$usuario = new Usuario();        
+        $periodo = $sesion->get('periodo');
+        //obtengo cedula del docente autenticado
+        $cedula = $usuario->getCedula();
+        if ($rol == 'DOCENTE') {
+        $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula' => $cedula));        
+        $formulario = $this->createForm(new PerfilDocenteType(), $docente);
+        $passwordOriginal = $formulario->getData()->getPassword();
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            if (null == $docente->getPassword()) {
+                // El docente no cambia su contraseña, utilizar la original
+                $docente->setPassword($passwordOriginal);
+            } else {
+                $encoder = $this->get('security.encoder_factory')
+                        ->getEncoder($usuario);
+                $docente->setSalt(md5(time()));
+                $passwordCodificado = $encoder->encodePassword(
+                        $docente->getPassword(), $docente->getSalt()
+                );
+                $docente->setPassword($passwordCodificado);
+            }
+            
+            $nombre = $formulario->getData()->getNombre();
+            $apellidos = $formulario->getData()->getApellido();
+            $email = $formulario->getData()->getEmail();
+            $password = $docente->getPassword();
+            $salt = $docente->getSalt();
+            
+            $usuario = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
+            $usuario->setPassword($password);
+            $usuario->setNombre($nombre);
+            $usuario->setApellidos($apellidos);
+            $usuario->setEmail($email);
+            $usuario->setPassword($password);
+            $usuario->setSalt($salt);            
+            $em->persist($docente);
+            $em->persist($usuario);            
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Perfil Docente actualizado correctamente '
+            );
+             return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
+        }   
+        }
+        
+        if ($rol == 'INSPECTOR') {
+         $inspector = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
+
+        $formulario = $this->createForm(new PerfilInspectorType(), $inspector);
+        $passwordOriginal = $formulario->getData()->getPassword();
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            if (null == $inspector->getPassword()) {
+                // La inspector no cambia su contraseña, utilizar la original
+                $inspector->setPassword($passwordOriginal);
+            } else {
+                $encoder = $this->get('security.encoder_factory')
+                        ->getEncoder($usuario);
+                $usuario->setSalt(md5(time()));
+                $passwordCodificado = $encoder->encodePassword(
+                        $usuario->getPassword(), $usuario->getSalt()
+                );
+                $usuario->setPassword($passwordCodificado);
+            }
+            $em->persist($inspector);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Perfil Inspector actualizado correctamente '
+            );
+             return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
+        }   
+        }
+        
+    
+         if ($rol == 'SECRETARIA') {
+         $secretaria = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
+
+        $formulario = $this->createForm(new PerfilInspectorType(), $secretaria);
+        $passwordOriginal = $formulario->getData()->getPassword();
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            if (null == $secretaria->getPassword()) {
+                // La secretria no cambia su contraseña, utilizar la original
+                $secretaria->setPassword($passwordOriginal);
+            } else {
+                $encoder = $this->get('security.encoder_factory')
+                        ->getEncoder($usuario);
+                $usuario->setSalt(md5(time()));
+                $passwordCodificado = $encoder->encodePassword(
+                        $usuario->getPassword(), $usuario->getSalt()
+                );
+                $usuario->setPassword($passwordCodificado);
+            }
+            $em->persist($secretaria);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Perfil Secretaria actualizado correctamente '
+            );
+             return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));}   
+        }
+    
+        if ($rol == 'AMATERIAS') {
+         $amaterias = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
+
+        $formulario = $this->createForm(new PerfilInspectorType(), $amaterias);
+        $passwordOriginal = $formulario->getData()->getPassword();
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            if (null == $amaterias->getPassword()) {
+                // La secretria no cambia su contraseña, utilizar la original
+                $amaterias->setPassword($passwordOriginal);
+            } else {
+                $encoder = $this->get('security.encoder_factory')
+                        ->getEncoder($usuario);
+                $usuario->setSalt(md5(time()));
+                $passwordCodificado = $encoder->encodePassword(
+                        $usuario->getPassword(), $usuario->getSalt()
+                );
+                $usuario->setPassword($passwordCodificado);
+            }
+            $em->persist($amaterias);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Perfil Administrador actualizado correctamente '
+            );
+             return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));}   
+        }
+        
+        if ($rol == 'ADMIN') {
+         $admin = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
+
+        $formulario = $this->createForm(new PerfilInspectorType(), $admin);
+        $passwordOriginal = $formulario->getData()->getPassword();
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            if (null == $amaterias->getPassword()) {
+                // La secretria no cambia su contraseña, utilizar la original
+                $admin->setPassword($passwordOriginal);
+            } else {
+                $encoder = $this->get('security.encoder_factory')
+                        ->getEncoder($usuario);
+                $usuario->setSalt(md5(time()));
+                $passwordCodificado = $encoder->encodePassword(
+                        $usuario->getPassword(), $usuario->getSalt()
+                );
+                $usuario->setPassword($passwordCodificado);
+            }
+            $em->persist($admin);
+            $em->flush();
+
+            $this->get('session')->getFlashBag()->add('Info', 'Perfil Administrador actualizado correctamente '
+            );
+             return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));}   
+        }
+        
+        $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
+    
+        return $this->render('administrativoBundle:Default:perfildocente.html.twig', array(
+                    'periodo' => $periodo,
+                    'formulario' => $formulario->createView(),
+                    'mesevac' => $listamesesEv,
+                       
+                ));
+    }
+
     
 }

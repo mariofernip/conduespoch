@@ -130,6 +130,14 @@ materia_modificar_id:
 materia_modificar_todos:    
     pattern:  /admin/materias/modificar/todos
     defaults: { _controller: administrativoBundle:Default:materiaModificartodos}
+    
+usuario_modificar:    
+    pattern:  /admin/usuario/listar
+    defaults: { _controller: administrativoBundle:Default:listausuarioModificar}
+    
+usuario_modificar_id:    
+    pattern:  /admin/usuario/modificar/{uid}
+    defaults: { _controller: administrativoBundle:Default:usuarioModificar}      
 
 admin_paralelo_registro:
     pattern:  /admin/paralelo/registro
@@ -165,4 +173,13 @@ admin_materiagrado_modificar:
     
 admin_materiagrado_listar_todos:    
     pattern:  /admin/materia/grado/lista
-    defaults: { _controller: administrativoBundle:Default:materiagradolistatodos }                        
+    defaults: { _controller: administrativoBundle:Default:materiagradolistatodos }                
+     
+admin_configuracion_general:
+    pattern:  /admin/configuracion/general
+    defaults: { _controller: administrativoBundle:Default:configuraciongeneral}    
+        
+admin_configuracion_actual:
+    pattern:  /admin/configuracion/actual
+    defaults: { _controller: administrativoBundle:Default:configuracionactual}    
+                

@@ -47,7 +47,9 @@
             {% if periodo %}
                 <li><strong>PERIODO ACADEMICO: {{periodo}}</strong></li>            
             {% endif %}
-            <li>{{ app.user }}</li>              
+            {% if app.user%}
+                <li><a href="{{path('modificar_perfil', {'rol': app.user.rol})}}">{{ app.user }}</a></li>
+                {% endif%}             
         </ul>
     </nav>
 </header>

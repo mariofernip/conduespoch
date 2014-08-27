@@ -109,3 +109,7 @@ inspector_examengrado_registro_notas:
 secretaria_requisito_listar_todos:    
     pattern:  /secretaria/consulta/requisitos/lista
     defaults: { _controller: academicoBundle:default:listatodosrequisitos }            
+    
+modificar_perfil:
+    pattern:  /{rol}/modificar/perfil
+    defaults: { _controller: academicoBundle:default:modificarperfildocente}    

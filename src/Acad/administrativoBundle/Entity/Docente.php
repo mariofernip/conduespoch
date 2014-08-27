@@ -100,6 +100,19 @@ class Docente
     protected $estado;
 
 
+      /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $salt;
+    
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(min = 6)
+     */
+    protected $password;
+    
+   
+    
     /**
      * Get id
      *
@@ -361,6 +374,54 @@ class Docente
     public function getEstado()
     {
         return $this->estado;
+    }
+    
+    
+    
+    /**
+     * Set salt
+     *
+     * @param string $salt
+     * @return Docente
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+    
+        return $this;
+    }
+
+    /**
+     * Get salt
+     *
+     * @return string 
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return Docente
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string 
+     */
+    public function getPassword()
+    {
+        return $this->password;
     }
     
      public function __toString() {

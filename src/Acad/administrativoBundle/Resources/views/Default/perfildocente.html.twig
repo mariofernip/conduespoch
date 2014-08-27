@@ -1,0 +1,112 @@
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'docente' %}
+
+{% block title %}Modificar perfil {{app.user.rol}}{% endblock%}
+
+{% block article %}
+<h1>{{ block ('title')}}</h1>
+
+{%if app.user.rol == 'DOCENTE'%}
+<form action="{{ path('modificar_perfil', {'rol': app.user.rol}) }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.apellido, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_label(formulario.direccion,'Dirección')}}{{form_widget(formulario.direccion, { 'attr': {'autocomplete' : 'off' } }) }}                                    
+                  {{form_row(formulario.telefonofijo)}}{{form_widget(formulario.telefonofijo,{ 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.celular, { 'attr': {'autocomplete' : 'off' } }) }}{{form_errors(formulario.email)}}                  
+                  {{form_label(formulario.email,'Correo:')}}{{form_errors(formulario.email)}}{{form_widget(formulario.email, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  {{form_errors(formulario.password)}}{{form_widget(formulario.password, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+           <p><a href="javascript:history.go(-1)">Atrás </a></p> 
+</form>
+
+ {% endif %}
+
+{%if app.user.rol == 'SECRETARIA'%}
+<form action="{{ path('modificar_perfil', {'rol': app.user.rol}) }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.apellidos, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_label(formulario.email,'Correo:')}}{{form_errors(formulario.email)}}{{form_widget(formulario.email, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  {{form_errors(formulario.password)}}{{form_widget(formulario.password, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+          <p><a href="javascript:history.go(-1)">Atrás </a></p>  
+</form>
+
+ {% endif %}
+
+{%if app.user.rol == 'INSPECTOR'%}
+<form action="{{ path('modificar_perfil', {'rol': app.user.rol}) }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.apellidos, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_label(formulario.email,'Correo:')}}{{form_errors(formulario.email)}}{{form_widget(formulario.email, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  {{form_widget(formulario.password, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+          <p><a href="javascript:history.go(-1)">Atrás </a></p> 
+
+</form>
+
+ {% endif %}
+
+
+{%if app.user.rol == 'AMATERIAS'%}
+<form action="{{ path('modificar_perfil', {'rol': app.user.rol}) }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.apellidos, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_label(formulario.email,'Correo:')}}{{form_errors(formulario.email)}}{{form_widget(formulario.email, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  {{form_errors(formulario.password)}}{{form_widget(formulario.password, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+          <p><a href="javascript:history.go(-1)">Atrás </a></p>  
+</form>
+
+ {% endif %}
+
+
+{%if app.user.rol == 'ADMIN'%}
+<form action="{{ path('modificar_perfil', {'rol': app.user.rol}) }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                  {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_row(formulario.apellidos, { 'attr': {'autocomplete' : 'off' } }) }}
+                  {{form_label(formulario.email,'Correo:')}}{{form_errors(formulario.email)}}{{form_widget(formulario.email, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  {{form_errors(formulario.password)}}{{form_widget(formulario.password, { 'attr': {'autocomplete' : 'off' } }) }}                  
+                  
+              </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+          <p><a href="javascript:history.go(-1)">Atrás </a></p>  
+</form>
+
+ {% endif %}
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+<a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+{% endblock%}

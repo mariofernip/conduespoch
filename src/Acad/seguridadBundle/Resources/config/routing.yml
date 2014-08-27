@@ -14,5 +14,5 @@ usuario_logout:
     path: /
     
 usuario_registro:
-    path:     /usuario/registro
+    path:     /admin/usuario/registro
     defaults: { _controller: seguridadBundle:default:registro}

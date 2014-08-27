@@ -1,0 +1,17 @@
+{% extends '::frontend.html.twig'%}
+
+{% block title %} Perfil de docente {% endblock%}
+{% block id 'portada' %}
+
+{% block article%}
+<p style="text-align: center ; color: #0035C7 "><strong>AVISO: Para desplegar todas las opciones disponibles contacte al administrador del sitio</strong></p><br>
+<br>
+<br>
+<p align="center"><img title="Gracias por su comprension"   src="{{ asset('uploads/iconos/comprension.jpg') }}" >
+
+{% endblock%}
+{% block aside%}
+    {{parent()}}
+    
+    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+{% endblock%}

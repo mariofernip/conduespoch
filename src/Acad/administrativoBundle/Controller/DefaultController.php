@@ -35,6 +35,7 @@ use Acad\administrativoBundle\Form\NivelType;
 use Acad\administrativoBundle\Form\ParaleloType;
 use Acad\administrativoBundle\Form\PeriodoType;
 use Acad\administrativoBundle\Form\RequisitoType;
+use Acad\seguridadBundle\Form\ModificarUsuarioType;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -256,43 +257,8 @@ class DefaultController extends Controller
     public function portadaAction() {
         $periodo='';
         
-        $em = $this->getDoctrine()->getEntityManager();
-
-        
-
-        $listaareas = $em->getRepository('administrativoBundle:Area')->findAll();
-        
-        $listamaterias = $em->getRepository('administrativoBundle:Materia')->findAll();
-        
-        $listacursos = $em->getRepository('administrativoBundle:Curso')->findAll();
-        
-        $listaparalelos = $em->getRepository('administrativoBundle:Paralelo')->findAll();
-        
-        $listaniveles = $em->getRepository('administrativoBundle:Nivel')->findAll();
-        
-        $listarequisitos = $em->getRepository('administrativoBundle:Requisito')->findAll();
-        
-        $listadias = $em->getRepository('administrativoBundle:Dia')->findAll();
-        
-        $listameses = $em->getRepository('administrativoBundle:Mes')->findAll();
-        
-        $listahoras = $em->getRepository('administrativoBundle:Hora')->findAll();
-        
-        $listadocentes = $em->getRepository('administrativoBundle:Docente')->findAll();
-        
-
         return $this->render('administrativoBundle:Default:portada_admin.html.twig',array(
-            'periodo'=>$periodo,
-            'listaareas'=>$listaareas,            
-            'listamaterias'=>$listamaterias,
-            'listacursos'=>$listacursos,
-            'listaparalelos'=>$listaparalelos,            
-            'listaniveles'=>$listaniveles,
-            'listarequisitos'=>$listarequisitos,
-            'listadias'=>$listadias, 
-            'listameses'=>$listameses,
-            'listahoras'=>$listahoras,
-            'listadocentes'=>$listadocentes, 
+            'periodo'=>$periodo,             
         
         ));
         
@@ -1276,5 +1242,178 @@ class DefaultController extends Controller
                     'lista' => $listamateriagrado,
                 ));
     }
+    
+    
+    public function configuraciongeneralAction() {
+        $periodo='';
+        
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $listaareas = $em->getRepository('administrativoBundle:Area')->findAll();
+        
+        $listamaterias = $em->getRepository('administrativoBundle:Materia')->findAll();
+        
+        $listacursos = $em->getRepository('administrativoBundle:Curso')->findAll();
+        
+        $listaparalelos = $em->getRepository('administrativoBundle:Paralelo')->findAll();
+        
+        $listaniveles = $em->getRepository('administrativoBundle:Nivel')->findAll();
+        
+        $listarequisitos = $em->getRepository('administrativoBundle:Requisito')->findAll();
+        
+        $listadias = $em->getRepository('administrativoBundle:Dia')->findAll();
+        
+        $listameses = $em->getRepository('administrativoBundle:Mes')->findAll();
+        
+        $listahoras = $em->getRepository('administrativoBundle:Hora')->findAll();
+        
+        $listadocentes = $em->getRepository('administrativoBundle:Docente')->findAll();
+        
+
+        return $this->render('administrativoBundle:Default:configuracion_general.html.twig',array(
+            'periodo'=>$periodo,
+            'listaareas'=>$listaareas,            
+            'listamaterias'=>$listamaterias,
+            'listacursos'=>$listacursos,
+            'listaparalelos'=>$listaparalelos,            
+            'listaniveles'=>$listaniveles,
+            'listarequisitos'=>$listarequisitos,
+            'listadias'=>$listadias, 
+            'listameses'=>$listameses,
+            'listahoras'=>$listahoras,
+            'listadocentes'=>$listadocentes, 
+        
+        ));
+        
+        
+    }
+    
+    
+    public function configuracionactualAction() {
+        $periodo='';
+        
+        $em = $this->getDoctrine()->getEntityManager();
+        
+        $listamaterias = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado'=>1));
+                
+        $listarequisitos = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado'=>1));
+        
+        $listameses = $em->getRepository('administrativoBundle:Mes')->findBy(array('estado'=>1));
+                
+        $listadocentes = $em->getRepository('administrativoBundle:Docente')->findBy(array('estado'=>1));
+        
+
+        return $this->render('administrativoBundle:Default:configuracion_actual.html.twig',array(
+            'periodo'=>$periodo,
+            'listamaterias'=>$listamaterias,
+            'listarequisitos'=>$listarequisitos,
+            'listameses'=>$listameses,
+            'listadocentes'=>$listadocentes, 
+        
+        ));
+        
+        
+    }
+    
+    //METODO: lista los datos de los usuarios
+    public function listausuarioModificarAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $periodo='';
+
+        $listausuarios = $em->getRepository('seguridadBundle:Usuario')->findAll();
+        
+        if($listausuarios){
+            $sd=1;
+        }
+        return $this->render('administrativoBundle:default:listausuarios.html.twig', array(                   
+                    
+                    'periodo' => $periodo,
+                    'listausuarios'=>$listausuarios,
+                    'sd'=>$sd
+                ));
+    }
+    
+    
+     //METODO: modifica los datos de los usuarios
+    public function usuarioModificarAction($uid) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $peticion = $this->getRequest();
+       // $usuariom =  new Usuario();
+        $periodo='';
+        $usuario = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array(
+            'id' => $uid
+                ));
+        $userdoc = $em->getRepository('administrativoBundle:Docente')->findOneBy(array(
+            'cedula' => $usuario->getCedula()
+                ));
+        
+        $formulario = $this->createForm(new ModificarUsuarioType(), $usuario);
+        $passwordOriginal = $formulario->getData()->getPassword();
+        $formulario->handleRequest($peticion);
+        if ($formulario->isValid()) {
+             if (null == $usuario->getPassword()) {
+                // El docente no cambia su contraseña, utilizar la original
+                $usuario->setPassword($passwordOriginal);
+            } else {
+                $encoder = $this->get('security.encoder_factory')
+                        ->getEncoder($usuario);
+                $usuario->setSalt(md5(time()));
+                $passwordCodificado = $encoder->encodePassword($usuario->getPassword(), $docente->getSalt()
+                );
+                $usuario->setPassword($passwordCodificado);
+            }
+            $rol = $formulario->getData()->getRol();
+
+            $nombre = $formulario->getData()->getNombre();
+            $apellidos = $formulario->getData()->getApellidos();
+            $email = $formulario->getData()->getEmail();
+            $cedula = $formulario->getData()->getCedula();
+            $estado = $formulario->getData()->getEstado();
+            $direccion = 'Dir. pendiente';
+
+            $em->persist($usuario);
+            $em->flush();
+
+            if ($userdoc && $formulario->getData()->getRol()=='DOCENTE') {
+                $this->get('session')->getFlashBag()->add('Info', 'Datos estan ya registrados como Docente');
+
+                return $this->redirect($this->generateUrl('admin_portada'));
+            }
+            
+            if ($rol == 'DOCENTE') {
+                $docente = new Docente();
+                $encoder = $this->get('security.encoder_factory')->getEncoder($usuario);
+                $docente->setSalt($usuario->getSalt());
+                $docente->setPassword($usuario->getPassword());
+                $docente->setNombre($nombre);
+                $docente->setApellido($apellidos);
+                $docente->setEmail($email);
+                $docente->setDireccion($direccion);
+                $docente->setCedula($cedula);
+                $docente->setFechaingreso(new \DateTime('now'));
+                $docente->setEstado($estado);
+                $em->persist($docente);
+                $em->flush();
+            }
+            
+            
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Datos actualizados');
+
+
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+
+        
+        return $this->render('administrativoBundle:default:modificarusuario.html.twig', array(                   
+                    'id' => $uid,
+                    'periodo' => $periodo,                    
+                    'formulario' => $formulario->createView()
+                ));
+    }
+     
     
 }
