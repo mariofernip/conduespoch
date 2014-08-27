@@ -40,12 +40,12 @@
 
 {% block body %}
 <header>
-    <strong><h1>CONDUESPOCH EP.</h1></strong>
+    <strong><h1><img src="{{ asset('uploads/iconos/logo.jpg')}}" width="55" height="55">&nbsp;&nbsp;CONDUESPOCH EP.</h1></strong>
     <nav>
         <ul>            
-            <li>&nbsp;</li>            
+            <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>            
             {% if periodo %}
-                <li><strong>PERIODO ACADÉMICO: {{periodo}}</strong></li>            
+                <li><strong>PERIODO ACADEMICO: {{periodo}}</strong></li>            
             {% endif %}
             <li>{{ app.user }}</li>              
         </ul>
