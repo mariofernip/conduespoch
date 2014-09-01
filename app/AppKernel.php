@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new Acad\administrativoBundle\administrativoBundle(),
             new Acad\seguridadBundle\seguridadBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new Ps\PdfBundle\PsPdfBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {            

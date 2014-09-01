@@ -113,3 +113,12 @@ secretaria_requisito_listar_todos:
 modificar_perfil:
     pattern:  /{rol}/modificar/perfil
     defaults: { _controller: academicoBundle:default:modificarperfildocente}    
+    
+    
+acta_general_calificaciones_reporte:
+    pattern:  /docente/acta/general/reporte
+    defaults: { _controller: academicoBundle:default:reporteactageneralcalificacionesestudiantes, _format: pdf}    
+    requirements:
+        _format: html|pdf
+       
+    

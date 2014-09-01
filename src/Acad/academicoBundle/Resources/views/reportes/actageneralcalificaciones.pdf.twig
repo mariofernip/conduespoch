@@ -1,0 +1,159 @@
+<pdf>
+    
+    <dynamic-page> 
+          
+       <placeholders>
+               <header>
+                    <div height="80px" width="100%">
+                        <div style="text-align: center; vertical-align: middle; font-size: 15;">ESCUELA DE FORMACIÓN Y CAPACITACIÓN DE CONDUCTORES PROFESIONALES ESPOCH CONDUESPOCH E.P.</div>
+                        <div style="text-align: center; vertical-align: middle;  "><p>Periodo: {{periodo}}</p></div>
+
+                    </div>
+                </header>
+                <footer>
+                    <div height="50px" width="100%">
+                        Riobamba
+                    </div>
+                </footer>
+            </placeholders>
+
+
+<p style="text-align: center; vertical-align: middle;"><b>Acta General de Calificaciones</b></p>
+                        
+<p><b>Curso: </b>{{nivel.curso.nombre | title}}{{'  '}}{{nivel.paralelo.nombre | title}}{{' '}}</p>
+
+<div> <p><b>Docente: </b>{{docente.nombre}}{{' '}}{{docente.apellido}}</p></div>
+<div><p><b>Materia: </b>{{materia.nombre}}</p></div>
+<div>
+    {%if sd == 1%}
+    <p style="text-align: right;">Seccion: Diurna</p>
+    <div style="text-align: center; vertical-align: middle;">
+        <table>            
+                <tr >
+                    <td>{{'Nombre Completo'}}</td>                    
+                    <td>{{'Prom. Tra. Gru'}}</td>
+                    <td>{{'Prom. Est. Cas'}}</td>
+                    <td>{{'Prom. Pra.'}}</td>
+                    <td>{{'Prom. Teo.'}}</td>
+                    <td>{{'Prom. Tot.'}}</td>                    
+                    <td>{{'Sus.'}}</td>                                       
+                    <td>{{'Equi.'}}</td>
+                   
+                 </tr>
+                            
+        {% for est in estudiantes %}
+    <tr>            
+        <td>{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
+        <td>{{'%.2f'|format((est.notatb/mesconteo))}}</td>
+        <td>{{'%.2f'|format((est.notaec/mesconteo))}}</td>
+        <td>{{'%.2f'|format((est.notapp/mesconteo))}}</td>
+        <td>{{'%.2f'|format((est.notapt/mesconteo))}}</td>
+        <td>{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
+        <td>{#{{est.promedio}}#}</td>
+        <td>
+        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 14 %}
+            <strong>Reprobado</strong>
+        {% endif %}
+        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 > 14 %}
+            <strong>Aprobado</strong>
+        {% endif %}</td>
+        
+    </tr>                  
+    {% endfor%}
+     
+                        
+        </table>
+    </div>
+    {%endif %}
+    {%if sv == 1%}
+    <p style="text-align: right;">Seccion: Vespertina</p>
+    
+    <div style="text-align: center; vertical-align: middle;">
+        <table>            
+                <tr >
+                    <td>{{'Nombre Completo'}}</td>                    
+                    <td>{{'Prom. Tra. Gru'}}</td>
+                    <td>{{'Prom. Est. Cas'}}</td>
+                    <td>{{'Prom. Pra.'}}</td>
+                    <td>{{'Prom. Teo.'}}</td>
+                    <td>{{'Prom. Tot.'}}</td>                    
+                    <td>{{'Sus.'}}</td>                                       
+                    <td>{{'Equi.'}}</td>
+                   
+                 </tr>
+                            
+        {% for est in estudiantesv %}
+    <tr>            
+        <td>{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
+        <td>{{'%.2f'|format((est.notatb/mesconteo))}}</td>
+        <td>{{'%.2f'|format((est.notaec/mesconteo))}}</td>
+        <td>{{'%.2f'|format((est.notapp/mesconteo))}}</td>
+        <td>{{'%.2f'|format((est.notapt/mesconteo))}}</td>
+        <td>{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
+        <td>{#{{est.promedio}}#}</td>
+        <td>
+        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 14 %}
+            <strong>Reprobado</strong>
+        {% endif %}
+        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 > 14 %}
+            <strong>Aprobado</strong>
+        {% endif %}</td>
+        
+    </tr>                  
+    {% endfor%}
+     
+                        
+        </table>
+    </div>
+    
+    {%endif%}
+    {%if sn == 1%}
+    <p style="text-align: right;">Seccion: Nocturna</p>
+    
+    <div style="text-align: center; vertical-align: middle;">
+        <table>            
+                <tr >
+                    <td>{{'Nombre Completo'}}</td>                    
+                    <td>{{'Prom. Tra. Gru'}}</td>
+                    <td>{{'Prom. Est. Cas'}}</td>
+                    <td>{{'Prom. Pra.'}}</td>
+                    <td>{{'Prom. Teo.'}}</td>
+                    <td>{{'Prom. Tot.'}}</td>                    
+                    <td>{{'Sus.'}}</td>                                       
+                    <td>{{'Equi.'}}</td>
+                   
+                 </tr>
+                            
+        {% for est in estudiantesn %}
+    <tr>            
+        <td>{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
+        <td>{{'%.2f'|format((est.notatb/mesconteo))}}</td>
+        <td>{{'%.2f'|format((est.notaec/mesconteo))}}</td>
+        <td>{{'%.2f'|format((est.notapp/mesconteo))}}</td>
+        <td>{{'%.2f'|format((est.notapt/mesconteo))}}</td>
+        <td>{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
+        <td>{#{{est.promedio}}#}</td>
+        <td>
+        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 14 %}
+            <strong>Reprobado</strong>
+        {% endif %}
+        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 > 14 %}
+            <strong>Aprobado</strong>
+        {% endif %}</td>
+        
+    </tr>                  
+    {% endfor%}
+     
+                        
+        </table>
+    </div>
+    {%endif %}
+    
+</div>
+
+
+</dynamic-page>
+</pdf>
+     
+
+    

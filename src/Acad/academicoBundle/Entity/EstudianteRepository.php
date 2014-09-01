@@ -312,6 +312,81 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
     }
     
     
+     public function findEstudiantexActaGeneral_secciond($materias, $nivel) {
+        
+        $em = $this->getEntityManager();
+        $seccion='Diurna';
+        $dql =  'SELECT sum(a.notatb) as notatb, sum(a.notaec) as notaec, sum(a.notapp) as notapp, sum(a.notapt) as notapt, e.cedula, e.apellido, e.nombre FROM academicoBundle:Evaluacion a
+                join a.materiaasignada ma
+                join ma.matricula m
+                join m.estudiante e
+                join m.nivel n
+                WHERE m.estado = 1 
+                AND n.id =:nid 
+                AND ma.materia = :mid
+                AND m.seccion = :sec
+                GROUP BY e.cedula, e.apellido, e.nombre
+                ';   
+        
+        
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('mid', $materias);
+        $estudiante->setParameter('sec', $seccion);
+        $estudiante->setParameter('nid', $nivel);
+        return $estudiante->getResult();        
+    }
+
+    
+    public function findEstudiantexActaGeneral_seccionv($materias, $nivel) {
+        
+        $em = $this->getEntityManager();
+        $seccion='Vespertina';
+        $dql =  'SELECT sum(a.notatb) as notatb, sum(a.notaec) as notaec, sum(a.notapp) as notapp, sum(a.notapt) as notapt, e.cedula, e.apellido, e.nombre FROM academicoBundle:Evaluacion a
+                join a.materiaasignada ma
+                join ma.matricula m
+                join m.estudiante e
+                join m.nivel n
+                WHERE m.estado = 1 
+                AND n.id =:nid 
+                AND ma.materia = :mid
+                AND m.seccion = :sec
+                GROUP BY e.cedula, e.apellido, e.nombre
+                ';   
+        
+        
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('mid', $materias);
+        $estudiante->setParameter('sec', $seccion);
+        $estudiante->setParameter('nid', $nivel);
+        return $estudiante->getResult();        
+    }
+
+    
+    public function findEstudiantexActaGeneral_seccionn($materias, $nivel) {
+        
+        $em = $this->getEntityManager();
+        $seccion='Nocturna';
+        $dql =  'SELECT sum(a.notatb) as notatb, sum(a.notaec) as notaec, sum(a.notapp) as notapp, sum(a.notapt) as notapt, e.cedula, e.apellido, e.nombre FROM academicoBundle:Evaluacion a
+                join a.materiaasignada ma
+                join ma.matricula m
+                join m.estudiante e
+                join m.nivel n
+                WHERE m.estado = 1 
+                AND n.id =:nid 
+                AND ma.materia = :mid
+                AND m.seccion = :sec
+                GROUP BY e.cedula, e.apellido, e.nombre
+                ';   
+        
+        
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('mid', $materias);
+        $estudiante->setParameter('sec', $seccion);
+        $estudiante->setParameter('nid', $nivel);
+        return $estudiante->getResult();        
+    }
+
+    
 }
 
 ?>

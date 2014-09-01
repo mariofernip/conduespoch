@@ -34,6 +34,8 @@ use Acad\administrativoBundle\Form\AuxHorarioClaseType;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
+use PHPPdf\Core\FacadeBuilder;
+use Ps\PdfBundle\Annotation\Pdf;
 
 class DefaultController extends Controller {
 
@@ -1887,5 +1889,116 @@ class DefaultController extends Controller {
                 ));
     }
 
+    
+    
+        /**
+        * @Pdf()
+        */
+        public function reporteactageneralcalificacionesestudiantesAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //obtengo el objeto autenticado: en este caso el docente
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        //consulto periodo actual
+        $sesion = $this->getRequest()->getSession();
+        $periodo = $sesion->get('periodo'); //$em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
+        //'estado' => 1
+        //  ));
+
+        $materia = $sesion->get('materia');
+        $nivel = $sesion->get('nivel');
+        //obtengo cedula del docente autenticado
+        $cedula = $usuario->getCedula();
+        //obtiene las materias del docente autenticado
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
+        $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula'=>$cedula));
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        //obtiene lista de todos los niveles
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'estado' => true
+                ));
+        $estudiantes = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_secciond($materia, $nivel);
+        $estudiantesv = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_seccionv($materia, $nivel);
+        $estudiantesn = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_seccionn($materia, $nivel);
+       
+        $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
+
+        //estudiantes
+        $paginatorSS = $this->get('knp_paginator');
+        $paginationSS = $paginatorSS->paginate(
+                $estudiantes, $this->getRequest()->query->get('page', 1), 10
+        );
+
+        
+        //estudiantesv
+        $paginatorSSv = $this->get('knp_paginator');
+        $paginationSSv = $paginatorSSv->paginate(
+                $estudiantesv, $this->getRequest()->query->get('page', 1), 10
+        );
+
+        
+        //estudiantesn
+        $paginatorSSn = $this->get('knp_paginator');
+        $paginationSSn = $paginatorSSn->paginate(
+                $estudiantesn, $this->getRequest()->query->get('page', 1), 10
+        );
+
+        $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
+
+
+        $sd = 0;
+
+        if ($estudiantes) {
+            $sd = 1;
+        }
+
+        $sv = 0;
+
+        if ($estudiantesv) {
+            $sv = 1;
+        }
+
+        $sn = 0;
+
+        if ($estudiantesn) {
+            $sn = 1;
+        }
+
+        $format = $this->get('request')->get('_format');
+        
+        $content = $this->render(sprintf('academicoBundle:reportes:actageneralcalificaciones.%s.twig', $format), array(
+                    'periodo' => $periodo,
+                    'niveles' => $niveles,
+                    'nivel' => $nivel,
+                    'materia' => $materia,
+                    'listamaterias' => $materiasdocente,
+                    'listames' => $mes,
+                    'estudiantes' => $paginationSS,
+                    'estudiantesv' => $paginationSSv,
+                    'estudiantesn' => $paginationSSn,
+                    'materia' => $materia,
+                    'sd' => $sd,
+                    'sv' => $sv,
+                    'sn' => $sn,
+                    
+                    'mesconteo' => $mesconteo,
+                    'mesevac' => $listamesesEv,
+                    'docente' => $docente,            
+                ));
+        
+        
+            return $content;
+    }
     
 }

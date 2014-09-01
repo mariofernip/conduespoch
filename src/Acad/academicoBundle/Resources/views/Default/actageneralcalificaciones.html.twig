@@ -6,10 +6,13 @@
 <section id="menu_docente">
         {% include 'academicoBundle:Default:menu_docente.html.twig' with {'mesevac': mesevac, 'listamaterias': listamaterias}%}
 </section>
+<h3><p align="center"></p></h3>
+        
+{#LISTA DE ESTUDIANTES: SECCIONES#}
 
-<p style="text-align: center ; color: #0035C7; "><strong>ACTA GENERAL DE CALIFICACIONES POR MATERIA</strong></p>        
-<li style="color: #08C">Se lista los estudiantes por secciones, cédula y su nombre</li>
-<li style="color: #08C">Se presenta el promedio por notas, de todo el ciclo</li>
+<strong><p>Acta General de Calificaciones</p></strong>
+
+<div>{{nivel.curso.nombre | title}}&nbsp;&nbsp;{{nivel.paralelo.nombre | title}}&nbsp;&nbsp;{{materia.nombre}}</div>
 
 <div id="dt_example">
     
@@ -19,11 +22,11 @@
             <thead>
                 <tr >
                     <th>{{'Seccion- Cedula- Nombre Completo'}}</th>
-                    <th>{{'Prom. Tranajo Grupo'}}</th>
-                    <th>{{'Prom. Est. Casos'}}</th>
-                    <th>{{'Prom. Práct.'}}</th>
-                    <th>{{'Prom. Teór.'}}</th>
-                    <th>{{'Prom. Total.'}}</th>                    
+                    <th>{{'Prom. Tra. Gru'}}</th>
+                    <th>{{'Prom. Est. Cas'}}</th>
+                    <th>{{'Prom. Pra.'}}</th>
+                    <th>{{'Prom. Teo.'}}</th>
+                    <th>{{'Prom. Tot.'}}</th>                    
                     <th>{{'Sus.'}}</th>                                       
                     <th>{{'Equi.'}}</th>
                    
@@ -33,14 +36,14 @@
         {% for est in estudiantes %}
 <tbody>
     <tr>            
-        <td>{{est.seccion | title}}{{' - '}}{{est.cedula}}{{' - '}}{{est.apellido | title}} &nbsp;{{'  '}}{{est.nombre | title}}</td>                
-        <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.2f'|format((est.notatb/mesconteo))}}</td>
-        <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.2f'|format((est.notaec/mesconteo))}}</td>
-        <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.2f'|format((est.notapp/mesconteo))}}</td>
-        <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.2f'|format((est.notapt/mesconteo))}}</td>
-        <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
-        <td style="text-align: center; width: 30px; vertical-align: middle">{#{{est.promedio}}#}</td>
-        <td  style="text-align: center; width: 30px; vertical-align: middle">
+        <td>{{est.seccion}}{{' - '}}{{est.cedula}}{{' - '}}{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
+        <td ALIGN="CENTER" style="vertical-align:middle">{{'%.2f'|format((est.notatb/mesconteo))}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{'%.2f'|format((est.notaec/mesconteo))}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{'%.2f'|format((est.notapp/mesconteo))}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{'%.2f'|format((est.notapt/mesconteo))}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">{#{{est.promedio}}#}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle">
         {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 14 %}
             <strong>Reprobado</strong>
         {% endif %}
@@ -54,6 +57,8 @@
      
                         
         </table>
+<a class="boton" href="{{path('acta_general_calificaciones_reporte')}}">REPORTE</a>
+            
     {%else%}
         <h1>No hay estudiantes</h1>
     {% endif%}
@@ -65,9 +70,9 @@
 {% endblock%}
 {% block aside %}
 {{parent()}}
-    <p align="center">Materia actual</p>
-   <p style="text-align: center ; color: #090 "><strong>{{nivel.curso.nombre | upper}}&nbsp;&nbsp;{{nivel.paralelo.nombre | upper }}&nbsp;:&nbsp;{{materia.nombre}}</strong></p>
-   <strong><p align="left">Curso / Materia</p></strong>
+    {%set docente='docente'%}
+        <p align="center"><a class="boton" href="{{path('portada',{'role':docente})}}">PORTADA</a></p>
+          <strong><p align="left">Materias</p></strong>
     <div id="relacionadas">
         <ul>
        {% for mat in listamaterias %}
@@ -76,7 +81,7 @@
             </ul>
         </div>
           
-    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
+    <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
 {% endblock%}
 
           
