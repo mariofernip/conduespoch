@@ -18,14 +18,7 @@ class MateriasType extends AbstractType
     {
         $builder                                    
              ->add('nombre')   
-            ->add('area', 'entity', array(
-                    'class' => 'Acad\administrativoBundle\Entity\Area',
-                    'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('a')
-                                ->select('a')                                
-                        ;
-                    }
-                ))   
+            ->add('numerohoras')   
             ->add('numerocreditos')   
             ->add('descripcion')   
             ->add('estado','checkbox',array('required'  => false,))       

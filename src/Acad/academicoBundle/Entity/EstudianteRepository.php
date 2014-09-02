@@ -134,14 +134,15 @@ class EstudianteRepository extends EntityRepository {
         
         $em = $this->getEntityManager();
         $seccion='Nocturna';
-        $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
+        $dql =  'SELECT ma, m, e, a, mp FROM academicoBundle:Asistencia a
                 join a.materiaasignada ma
                 join ma.matricula m
+                Join ma.materiaperiodo mp
                 join m.estudiante e
                 join m.nivel n
                 WHERE m.estado = 1 
                 AND n.id =:nid 
-                AND ma.materia = :mid 
+                AND mp.materia = :mid 
                 AND m.seccion = :sec';   
                 
         $estudiante = $em->createQuery($dql);
@@ -156,14 +157,15 @@ class EstudianteRepository extends EntityRepository {
         
         $em = $this->getEntityManager();
         $seccion='Diurna';
-        $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
+        $dql =  'SELECT ma, m, e, a,mp FROM academicoBundle:Asistencia a
                 join a.materiaasignada ma
                 join ma.matricula m
                 join m.estudiante e
                 join m.nivel n
+                Join ma.materiaperiodo mp
                 WHERE m.estado = 1 
                 AND n.id =:nid 
-                AND ma.materia = :mid 
+                AND mp.materia = :mid 
                 AND m.seccion = :sec';   
                 
         $estudiante = $em->createQuery($dql);
@@ -178,14 +180,15 @@ class EstudianteRepository extends EntityRepository {
         
         $em = $this->getEntityManager();
         $seccion='Vespertina';
-        $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
+        $dql =  'SELECT ma, m, e, a,mp FROM academicoBundle:Asistencia a
                 join a.materiaasignada ma
                 join ma.matricula m
                 join m.estudiante e
                 join m.nivel n
+                Join ma.materiaperiodo mp
                 WHERE m.estado = 1 
                 AND n.id =:nid 
-                AND ma.materia = :mid 
+                AND mp.materia = :mid 
                 AND m.seccion = :sec';   
                 
         $estudiante = $em->createQuery($dql);
@@ -200,15 +203,15 @@ class EstudianteRepository extends EntityRepository {
      public function findEstudiantexMateriaxSecciones($materias, $nivel) {
         
         $em = $this->getEntityManager();
-        $dql =  'SELECT ma, m, e, a FROM academicoBundle:Asistencia a
+        $dql =  'SELECT ma, m, e, a, mp FROM academicoBundle:Asistencia a
                 join a.materiaasignada ma
                 join ma.matricula m
                 join m.estudiante e
                 join m.nivel n
-                
+                Join ma.materiaperiodo mp
                 WHERE m.estado = 1 
                 AND n.id =:nid 
-                AND ma.materia = :mid 
+                AND mp.materia = :mid 
                 ORDER BY m.seccion
                 ';   
                 
@@ -223,8 +226,9 @@ class EstudianteRepository extends EntityRepository {
         
         $em = $this->getEntityManager();
 
-        $dql = 'select dm, ma  FROM academicoBundle:Dictadomateria dm   
-                join dm.materia ma
+        $dql = 'select dm, ma,mp  FROM academicoBundle:Dictadomateria dm   
+                Join dm.materiaperiodo mp
+                join mp.materia ma
                 where ma.estado = 1';
         
         $consulta = $em->createQuery($dql);
@@ -237,7 +241,8 @@ class EstudianteRepository extends EntityRepository {
         $em = $this->getEntityManager();
 
         $dql = 'select dm, ma  FROM academicoBundle:Dictadomateria dm   
-                join dm.materia ma
+                Join dm.materiaperiodo mp
+                join mp.materia ma
                 where ma.estado = 1
                 and dm.nivel = :nid ';
         
@@ -256,9 +261,10 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
                 join ma.matricula m
                 join m.estudiante e
                 join m.nivel n
+                Join ma.materiaperiodo mp
                 WHERE m.estado = 1 
                 AND n.id =:nid 
-                AND ma.materia = :mid
+                AND mp.materia = :mid
                 GROUP BY e.cedula, e.apellido, e.nombre, m.seccion
                 ';   
         
@@ -291,10 +297,11 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
         
         $em = $this->getEntityManager();
 
-        $dql = 'select dm,p,hc,m
+        $dql = 'select dm,p,hc,m,mp
                 FROM administrativoBundle:HorarioClase hc
                 join hc.dictadomateria dm
-                join dm.materia m
+                Join dm.materiaperiodo mp
+                join mp.materia m
                 join dm.periodo p
                 join dm.docente d
                 where p.id = :pid
@@ -321,9 +328,10 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
                 join ma.matricula m
                 join m.estudiante e
                 join m.nivel n
+                Join ma.materiaperiodo mp
                 WHERE m.estado = 1 
                 AND n.id =:nid 
-                AND ma.materia = :mid
+                AND mp.materia = :mid
                 AND m.seccion = :sec
                 GROUP BY e.cedula, e.apellido, e.nombre
                 ';   
@@ -346,9 +354,10 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
                 join ma.matricula m
                 join m.estudiante e
                 join m.nivel n
+                Join ma.materiaperiodo mp
                 WHERE m.estado = 1 
                 AND n.id =:nid 
-                AND ma.materia = :mid
+                AND mp.materia = :mid
                 AND m.seccion = :sec
                 GROUP BY e.cedula, e.apellido, e.nombre
                 ';   
@@ -371,9 +380,10 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
                 join ma.matricula m
                 join m.estudiante e
                 join m.nivel n
+                Join ma.materiaperiodo mp
                 WHERE m.estado = 1 
                 AND n.id =:nid 
-                AND ma.materia = :mid
+                AND mp.materia = :mid
                 AND m.seccion = :sec
                 GROUP BY e.cedula, e.apellido, e.nombre
                 ';   

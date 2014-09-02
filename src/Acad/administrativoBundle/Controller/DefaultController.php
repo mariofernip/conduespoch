@@ -894,11 +894,10 @@ class DefaultController extends Controller
         foreach ($materias as $mat) {
             $cr = new Materia(); //creo un objeto nuevo: asistencia
             $cr->setId($mat->getId());
-            $cr->setArea($mat->getArea());
             $cr->setNombre($mat->getNombre());
             $cr->setEstado($mat->getEstado());
             $cr->setNumerocreditos($mat->getNumerocreditos());
-            
+            $cr->setNumerohoras($mat->getNumerohoras());
             
             //lleno el objto tarea con varios objetos asistencia
             $itemmaterias->getMateriaAdmin()->add($cr);
@@ -912,12 +911,12 @@ class DefaultController extends Controller
             
                 foreach ($itemmaterias->getMateriaAdmin() as $item) {
                     $cod= $item->getId();
-                    $fj=$item->getArea();
                     $fi=$item->getNombre();
                     $a=$item->getEstado();
                     $ob=$item->getNumerocreditos();
+                    $nh=$item->getNumerohoras();
                     $cr= $em->getRepository('administrativoBundle:Materia')->find($cod);                    
-                    $cr->setArea($fj);
+                    $cr->setNumerohoras($nh);                    
                     $cr->setNombre($fi);
                     $cr->setEstado($a);
                     $cr->setNumerocreditos($ob);                    
@@ -1249,8 +1248,6 @@ class DefaultController extends Controller
         
         $em = $this->getDoctrine()->getEntityManager();
 
-        $listaareas = $em->getRepository('administrativoBundle:Area')->findAll();
-        
         $listamaterias = $em->getRepository('administrativoBundle:Materia')->findAll();
         
         $listacursos = $em->getRepository('administrativoBundle:Curso')->findAll();
@@ -1272,7 +1269,6 @@ class DefaultController extends Controller
 
         return $this->render('administrativoBundle:Default:configuracion_general.html.twig',array(
             'periodo'=>$periodo,
-            'listaareas'=>$listaareas,            
             'listamaterias'=>$listamaterias,
             'listacursos'=>$listacursos,
             'listaparalelos'=>$listaparalelos,            

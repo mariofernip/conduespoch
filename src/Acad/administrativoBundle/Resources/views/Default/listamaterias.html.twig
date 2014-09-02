@@ -15,8 +15,8 @@
             <thead>
                 <tr >
                     <th>{{'Nombre' }}</th>
-                    <th>{{'Area' }}</th>
                     <th>{{'Numero Horas'}}</th> 
+                    <th>{{'Numero Creditos'}}</th> 
                     <th>{{'Descripcion'}}</th> 
                     <th>{{'Estado'}}</th>                                         
                     <th>Accion</th>
@@ -26,7 +26,7 @@
             <tbody>{% for mat in listamaterias %}
                 <tr>
                         <td ALIGN="CENTER" style="vertical-align:middle">{{mat.nombre}}</td>
-                        <td ALIGN="CENTER" style="vertical-align:middle">{{mat.area}}</td>                        
+                        <td ALIGN="CENTER" style="vertical-align:middle">{{mat.numerohoras}}</td>                        
                         <td ALIGN="CENTER" style="vertical-align:middle">{{mat.numerocreditos}}</td>
                         <td ALIGN="CENTER" style="vertical-align:middle">{{mat.descripcion}}</td>                        
                         <td ALIGN="CENTER" style="vertical-align:middle">{% if (mat.estado) ==1 %}
@@ -35,7 +35,7 @@
         {% if (mat.estado) ==0 %}
             <strong>No activo</strong>
         {% endif %}</td>
-                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('materia_modificar_id',{'mid':mat.id})}}"><img title="Editar datos"   src="{{ asset('uploads/iconos/edit.gif') }}" ></a></td>
+                        <td ALIGN="CENTER" style="vertical-align:middle"><a href="{{path('materia_modificar_id',{'mid':mat.id})}}"><img title="Editar materia"   src="{{ asset('uploads/iconos/edit.gif') }}" ></a></td>
                 <tr>{% endfor%}
             </tbody>
 

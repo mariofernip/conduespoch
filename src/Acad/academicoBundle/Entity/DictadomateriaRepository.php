@@ -12,12 +12,13 @@ class DictadomateriaRepository extends EntityRepository {
         
         $em = $this->getEntityManager();
 
-        $dql = 'select dm,d,n,p,m
+        $dql = 'select dm,d,n,p,m,mp
                 FROM academicoBundle:Dictadomateria dm
                 Join dm.docente d
                 Join dm.nivel n
                 Join dm.periodo p
-                Join dm.materia m
+                Join dm.materiaperiodo mp
+                Join mp.materia m
                 WHERE d.cedula = :cedu and
                           p.id = :pid
                           
@@ -33,13 +34,14 @@ class DictadomateriaRepository extends EntityRepository {
     public function getEstudiantesxMateriaSD($mid,$pid,$nid) {
         $seccion='Diurna';
         $em = $this->getEntityManager();
-        $dql = 'select ma,m,p,n,e
+        $dql = 'select ma,m,p,n,e,mp
                 FROM academicoBundle:MateriaAsignada ma
                 Join ma.matricula m
                 Join m.periodo p  
                 Join m.estudiante e
                 Join m.nivel n
-                WHERE ma.materia = :mid and
+                Join ma.materiaperiodo mp
+                WHERE mp.materia = :mid and
                           p.id = :pid and
                           m.estado = 1 and
                          m.nivel= :nid  and
@@ -58,13 +60,14 @@ class DictadomateriaRepository extends EntityRepository {
     public function getEstudiantesxMateriaSV($mid,$pid,$nid) {
         $seccion='Vespertina';
         $em = $this->getEntityManager();
-        $dql = 'select ma,m,p,n,e
+        $dql = 'select ma,m,p,n,e,mp
                 FROM academicoBundle:MateriaAsignada ma
                 Join ma.matricula m
                 Join m.periodo p  
                 Join m.estudiante e
                 Join m.nivel n
-                WHERE ma.materia = :mid and
+                Join ma.materiaperiodo mp
+                WHERE mp.materia = :mid and
                           p.id = :pid and
                           m.estado = 1 and
                          m.nivel= :nid  and
@@ -83,13 +86,14 @@ class DictadomateriaRepository extends EntityRepository {
     public function getEstudiantesxMateriaSN($mid,$pid,$nid) {
         $seccion='Nocturna';
         $em = $this->getEntityManager();
-        $dql = 'select ma,m,p,n,e
+        $dql = 'select ma,m,p,n,e,mp
                 FROM academicoBundle:MateriaAsignada ma
                 Join ma.matricula m
                 Join m.periodo p  
                 Join m.estudiante e
                 Join m.nivel n
-                WHERE ma.materia = :mid and
+                Join ma.materiaperiodo mp
+                WHERE mp.materia = :mid and
                           p.id = :pid and
                           m.estado = 1 and
                          m.nivel= :nid  and
@@ -109,17 +113,17 @@ class DictadomateriaRepository extends EntityRepository {
         
         $em = $this->getEntityManager();
 
-        $dql = 'select ev, ma,me,m,p
+        $dql = 'select ev, ma,me,m,p,mp
                 FROM academicoBundle:Evaluacion ev
                 Join ev.materiaasignada ma
                 Join ma.matricula m
                 Join m.periodo p
                 Join m.nivel n
-                
+                Join ma.materiaperiodo mp
                 
                 
                 Join ev.mesevaluacion me
-                WHERE ma.materia = :mid and                          
+                WHERE mp.materia = :mid and                          
                           me.id = :mesid and
                           p.id= :pid and
                           n.id = :nid
@@ -164,10 +168,11 @@ class DictadomateriaRepository extends EntityRepository {
         
         $em = $this->getEntityManager();
 
-        $dql = 'select ma,m,mat,p,n
+        $dql = 'select ma,m,mat,p,n,mp
                 FROM academicoBundle:MateriaAsignada ma
                 Join ma.matricula m
-                Join ma.materia mat
+                Join ma.matriaperiodo mp
+                Join mp.materia mat
                 Join m.periodo p
                 Join m.nivel n
                 WHERE mat.id = :mid and                                                    
@@ -215,7 +220,8 @@ class DictadomateriaRepository extends EntityRepository {
         $dql = 'select ma,m,mat,p,n
                 FROM academicoBundle:MateriaAsignada ma
                 Join ma.matricula m
-                Join ma.materia mat
+                Join ma.materiaperiodo mp
+                Join mp.materia mat
                 Join m.periodo p
                 Join m.nivel n
                 WHERE mat.id = :mid and                                                    

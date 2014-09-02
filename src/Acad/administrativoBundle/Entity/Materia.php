@@ -22,7 +22,7 @@ class Materia {
      */
     protected $id;
         
-     /** @ORM\Column(type="string", length=32, unique=true, nullable=false) 
+     /** @ORM\Column(type="string", length=128, unique=true, nullable=false) 
       *  @Assert\NotBlank(message="Por favor ingrese el nombre de la Materia")
       */
     protected $nombre;

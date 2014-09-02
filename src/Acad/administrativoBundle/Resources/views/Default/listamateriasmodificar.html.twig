@@ -19,8 +19,8 @@
             <thead>
                 <tr >
                     <th>{{ 'Nombre'}}</th>
-                    <th>{{ 'Area' }}</th>
-                    <th>{{ 'Numero Horas' }}</th>
+                    <th>{{ 'Horas' }}</th>
+                    <th>{{ 'Créditos' }}</th>
                     <th>{{ 'Descripcion' }}</th>
                     <th>{{ 'Estado' }}</th>                 
                  </tr>
@@ -30,11 +30,11 @@
         {% for mat in formmaterias.materiaadmin %}
 <tbody>
     <tr>            
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(mat.nombre) }}</td>                
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(mat.area ) }} </td>
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(mat.numerocreditos)}}</td>
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(mat.descripcion) }}</td>
-        <td ALIGN="CENTER" style="vertical-align:middle">{{ form_widget(mat.estado) }}</td>        
+        <td style="vertical-align:middle; width: 230px">{{ form_widget(mat.nombre) }}</td>                
+        <td style="vertical-align:middle; width: 30px">{{ form_widget(mat.numerohoras ) }} </td>
+        <td style="vertical-align:middle; width: 30px">{{ form_widget(mat.numerocreditos)}}</td>
+        <td style="vertical-align:middle; width: 30px">{{ form_widget(mat.descripcion) }}</td>
+        <td ALIGN="CENTER" style="vertical-align:middle; width: 35px">{{ form_widget(mat.estado) }}</td>        
     </tr>
 </tbody>                       
     {% endfor%}

@@ -11,38 +11,6 @@
 </section>
 
 <p style="text-align: center ; color: #0035C7 "><strong>INFORMACION GENERAL DEL SISTEMA</strong></p><br>
-
-
-<strong>    
-    <h2>Areas</h2>
-    <br>
-</strong>
-<div id="areas">
-    <div id="areas_table">
-        <table class="display" id="a_table">
-            <thead>
-                <tr >
-                    <th>{{'Nombre' }}</th>
-                    <th>{{'Descripcion'}}</th>                   
-
-                </tr>
-            </thead>
-
-            <tbody>{% for are in listaareas %}
-                <tr>
-                    <td ALIGN="CENTER" style="vertical-align:middle">{{are.nombre}}</td>
-                    <td ALIGN="CENTER" style="vertical-align:middle">{{are.descripcion}}</td>                        
-                </tr>{% endfor%}
-            </tbody>
-
-
-        </table>
-                <p  class="big" align="right"><a href="{{path('area_ingresar')}}"><img title="Agregar nuevo"   src="{{ asset('uploads/iconos/add.gif') }}" ></a></p>
-        
-    </div>
-</div>
-
-<hr>
 <strong>    
     <h2>Materias</h2>
     <br>
@@ -53,8 +21,8 @@
             <thead>
                 <tr>
                     <th>{{'Nombre' }}</th>
-                    <th>{{'Area' }}</th>
-                    <th>{{'Numero Horas'}}</th> 
+                    <th>{{'Numero de horas' }}</th>
+                    <th>{{'Numero Créditos'}}</th> 
                     <th>{{'Descripcion'}}</th> 
                     <th>{{'Estado'}}</th>                                         
                 </tr>
@@ -63,7 +31,7 @@
             <tbody>{% for mat in listamaterias %}
                 <tr>
                     <td ALIGN="CENTER" style="vertical-align:middle">{{mat.nombre}}</td>
-                    <td ALIGN="CENTER" style="vertical-align:middle">{{mat.area}}</td>                        
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{mat.numerohoras}}</td>                        
                     <td ALIGN="CENTER" style="vertical-align:middle">{{mat.numerocreditos}}</td>
                     <td ALIGN="CENTER" style="vertical-align:middle">{{mat.descripcion}}</td>                        
                     <td ALIGN="CENTER" style="vertical-align:middle">{% if (mat.estado) ==1 %}

@@ -22,8 +22,8 @@
             <thead>
                 <tr>
                     <th>{{'Nombre' }}</th>
-                    <th>{{'Area' }}</th>
-                    <th>{{'Numero Horas'}}</th> 
+                    <th>{{'Número de horas' }}</th>
+                    <th>{{'Numero de créditos'}}</th> 
                     <th>{{'Descripcion'}}</th> 
                     <th>{{'Estado'}}</th>                                         
                 </tr>
@@ -32,7 +32,7 @@
             <tbody>{% for mat in listamaterias %}
                 <tr>
                     <td ALIGN="CENTER" style="vertical-align:middle">{{mat.nombre}}</td>
-                    <td ALIGN="CENTER" style="vertical-align:middle">{{mat.area}}</td>                        
+                    <td ALIGN="CENTER" style="vertical-align:middle">{{mat.numerohoras}}</td>                        
                     <td ALIGN="CENTER" style="vertical-align:middle">{{mat.numerocreditos}}</td>
                     <td ALIGN="CENTER" style="vertical-align:middle">{{mat.descripcion}}</td>                        
                     <td ALIGN="CENTER" style="vertical-align:middle">{% if (mat.estado) ==1 %}
