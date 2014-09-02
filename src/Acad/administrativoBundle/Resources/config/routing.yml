@@ -183,3 +183,26 @@ admin_configuracion_actual:
     pattern:  /admin/configuracion/actual
     defaults: { _controller: administrativoBundle:Default:configuracionactual}    
                 
+admin_subperiodo_registro:                
+    pattern:  /admin/subperiodo/registro
+    defaults: { _controller: administrativoBundle:Default:subperiodoregistro}    
+    
+admin_subperiodo_modificar:                
+    pattern:  /admin/subperiodo/modificar/{sid}
+    defaults: { _controller: administrativoBundle:Default:subperiodomodificar}        
+    
+admin_subperiodo_listar_todos:                
+    pattern:  /admin/subperiodo/lista
+    defaults: { _controller: administrativoBundle:Default:subperiodolistartodos}            
+                
+admin_materiaperiodo_registro:                
+    pattern:  /admin/materia-periodo/registro
+    defaults: { _controller: administrativoBundle:Default:materiaperiodoregistro}    
+    
+admin_materiaperiodo_modificar:                
+    pattern:  /admin/materia-periodo/modificar/{mpid}
+    defaults: { _controller: administrativoBundle:Default:materiaperiodomodificar}        
+    
+admin_materiaperiodo_listar_todos:                
+    pattern:  /admin/materia-periodo/lista
+    defaults: { _controller: administrativoBundle:Default:materiaperiodolistartodos}                            

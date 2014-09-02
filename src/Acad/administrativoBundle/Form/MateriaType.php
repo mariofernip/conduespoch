@@ -15,9 +15,12 @@ class MateriaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre')
-            ->add('numerohoras')
-            ->add('numerocreditos')
+            ->add('nombre', 'text', array(
+             'attr' => array('style' => 'width: 250px; text-align: left'),'required'=>true))   
+            ->add('numerohoras', 'integer', array(
+             'attr' => array('style' => 'width: 50px; text-align: center'),'required'=>true))   
+            ->add('numerocreditos', 'integer', array(
+             'attr' => array('style' => 'width: 50px; text-align: center'),'required'=>false))   
             ->add('descripcion')
             ->add('estado','checkbox',array('required'=>false))
         ;

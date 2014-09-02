@@ -1,0 +1,32 @@
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'materia' %}
+
+{% block title %}Modificar un subperiodo{% endblock%}
+
+{% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<p style="text-align: center ; color: #0035C7 "><strong>MODIFICAR UN SUBPERIODO</strong></p>
+
+<form action="{{ path('admin_subperiodo_modificar',{'sid': sid}) }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                                  
+                  {{form_label(formulario.periodo,'Periodo:')}}{{form_errors(formulario.periodo)}}{{form_widget(formulario.periodo) }}<br>                  
+                  {{form_label(formulario.tipo,'Tipo:')}}{{form_errors(formulario.tipo)}}{{form_widget(formulario.tipo) }}<br>                  
+                  {{form_label(formulario.estado,'Estado:')}}{{form_errors(formulario.estado)}}{{form_widget(formulario.estado) }}<br>                  
+           </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}

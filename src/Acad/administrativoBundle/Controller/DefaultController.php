@@ -2,6 +2,8 @@
 
 namespace Acad\administrativoBundle\Controller;
 
+use Acad\academicoBundle\Entity\MateriaPeriodo;
+use Acad\academicoBundle\Form\MateriaPeriodoType;
 use Acad\administrativoBundle\Entity\Area;
 use Acad\administrativoBundle\Entity\AuxMes;
 use Acad\administrativoBundle\Entity\AuxRequisito;
@@ -19,6 +21,7 @@ use Acad\administrativoBundle\Entity\Nivel;
 use Acad\administrativoBundle\Entity\Paralelo;
 use Acad\administrativoBundle\Entity\Periodo;
 use Acad\administrativoBundle\Entity\Requisito;
+use Acad\administrativoBundle\Entity\SubPeriodo;
 use Acad\administrativoBundle\Form\AdministradorMateriaType;
 use Acad\administrativoBundle\Form\AreaType;
 use Acad\administrativoBundle\Form\AuxMesType;
@@ -35,6 +38,7 @@ use Acad\administrativoBundle\Form\NivelType;
 use Acad\administrativoBundle\Form\ParaleloType;
 use Acad\administrativoBundle\Form\PeriodoType;
 use Acad\administrativoBundle\Form\RequisitoType;
+use Acad\administrativoBundle\Form\SubPeriodoType;
 use Acad\seguridadBundle\Form\ModificarUsuarioType;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -1410,6 +1414,210 @@ class DefaultController extends Controller
                     'formulario' => $formulario->createView()
                 ));
     }
-     
+
+    
+    //metodo: inserta un nuevo subperiodo    
+    public function subperiodoregistroAction() {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $peticion = $this->getRequest();
+        
+
+        $subperiodo = new SubPeriodo();
+
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listasubperiodo= $em->getRepository('administrativoBundle:SubPeriodo')->findBy(array(
+            'periodo'=>$periodo
+        ));
+        $sd=0;
+        if($listasubperiodo){
+           $sd=1;
+            
+        }
+        $formulario = $this->createForm(new SubPeriodoType(), $subperiodo);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->persist($subperiodo);
+            $em->flush();
+
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Subperiodo ingresado'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:subperiodo_registro.html.twig', array(
+                    'periodo' => $periodo,
+                    'sd'=>$sd,
+                    'lista'=>$listasubperiodo,
+                    'formulario' => $formulario->createView())
+        );
+        
+        
+    }
+    
+    
+      //metodo: modificar un  subperiodo    
+    public function subperiodomodificarAction($sid) {
+        
+        $em = $this->getDoctrine()->getManager();
+        $periodo='';
+        $subperiodo= $em->getRepository('administrativoBundle:SubPeriodo')->find($sid);
+        $peticion = $this->getRequest();
+        
+
+        $formulario = $this->createForm(new SubPeriodoType(), $subperiodo);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->flush();
+
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Subperiodo actualizado'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:subperiodo_modificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'sid'=>$sid,
+                    'formulario' => $formulario->createView())
+        );
+        
+        
+    }
+    
+      //metodo: listar los subperiodos de periodo actual    
+    public function subperiodolistartodosAction() {
+        
+        $em = $this->getDoctrine()->getManager();
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listasubperiodo= $em->getRepository('administrativoBundle:SubPeriodo')->findBy(array(
+            'periodo'=>$periodo
+        ));
+        $sd=0;
+        if($listasubperiodo){
+           $sd=1;
+            
+        }
+        
+        return $this->render('administrativoBundle:Default:subperiodo_listatodos.html.twig', array(
+                    'periodo' => $periodo,
+                     'lista'=>$listasubperiodo,
+                     'sd'=>$sd
+                    
+        ));
+    }
+    
+    //metodo: inserta las matreias en un determinado subperiodo    
+    public function materiaperiodoregistroAction() {
+        
+        
+        
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listamatperiodo= $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo->getId());
+        $sd=0;
+        if($listamatperiodo){
+           $sd=1;
+            
+        }
+        
+        $materiaperiodo = new MateriaPeriodo();
+
+        $formulario = $this->createForm(new MateriaPeriodoType(), $materiaperiodo);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->persist($materiaperiodo);
+            $em->flush();
+
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia ingresada'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:materiaperiodo_registro.html.twig', array(
+                    'periodo' => $periodo,
+                    'sd'=>$sd,
+                    'lista'=>$listamatperiodo,
+                    'formulario' => $formulario->createView())
+        );
+        
+        
+    }
+    
+    //metodo: inserta las matreias en un determinado subperiodo    
+    public function materiaperiodomodificarAction($mpid) {
+        
+        $periodo=''; 
+        
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $materiaperiodo = $em->getRepository('academicoBundle:MateriaPeriodo')->find($mpid);
+
+        $formulario = $this->createForm(new MateriaPeriodoType(), $materiaperiodo);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->flush();
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia actualizada'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:materiaperiodo_modificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'mpid'=>$mpid,
+                    'formulario' => $formulario->createView())
+        );
+        
+        
+    }
+    
+
+    //metodo: listar las materias en subperiodos: de un periodo actual
+    public function materiaperiodolistartodosAction() {
+        
+        $em = $this->getDoctrine()->getManager();
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listamatperiodo= $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo->getId());
+        $sd=0;
+        if($listamatperiodo){
+           $sd=1;
+            
+        }
+        
+        return $this->render('administrativoBundle:Default:materiaperiodo_listatodos.html.twig', array(
+                    'periodo' => $periodo,
+                     'lista'=>$listamatperiodo,
+                     'sd'=>$sd
+                    
+        ));
+    }
+    
     
 }
