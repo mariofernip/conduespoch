@@ -99,4 +99,9 @@ class MateriaPeriodo {
     {
         return $this->subperiodo;
     }
+    
+    public function __toString() {
+        return $this->materia->getNombre();
+    ;
+    }
 }

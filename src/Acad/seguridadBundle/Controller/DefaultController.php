@@ -139,10 +139,10 @@ class DefaultController extends Controller {
                         for ($index = 0; $index < $x; $index++) {
                             $codn = $matd->getNivel();
                             $nivel = $em->getRepository('administrativoBundle:Nivel')->find($codn);
-                            $codm = $matd->getMateria();
+                            $codm = $matd->getMateriaPeriodo()->getMateria();
                             $materia = $em->getRepository('administrativoBundle:Materia')->find($codm);
                             $sesion->set('nivel', $matd->getNivel());
-                            $sesion->set('materia', $matd->getMateria());
+                            $sesion->set('materia', $matd->getMateriaPeriodo()->getMateria());
                         }
                     }
                 }

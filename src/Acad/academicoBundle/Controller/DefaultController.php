@@ -385,7 +385,7 @@ class DefaultController extends Controller {
 
                 return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
             }
-            if ($formulario->getData()->getMateria() == null) {
+            if ($formulario->getData()->getMateriaPeriodo()->getMateria() == null) {
 
                 $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione una materia');
 

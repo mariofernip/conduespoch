@@ -18,7 +18,7 @@
     <div id="relacionadas">
         <ul>
     {% for matdoc in materiasdoc %}
-                <li><a class="boton" href="{{path('docente_listaest_x_materia',{'materia': matdoc.materia.id, 'nivel': matdoc.nivel.id, 'mesid': codmes.id})}}">{{matdoc.nivel | title}}&nbsp;&nbsp;{{matdoc.materia.nombre | title}}</a></li>
+                <li><a class="boton" href="{{path('docente_listaest_x_materia',{'materia': matdoc.materiaperiodo.materia.id, 'nivel': matdoc.nivel.id, 'mesid': codmes.id})}}">{{matdoc.nivel | title}}&nbsp;&nbsp;{{matdoc.materiaperiodo.materia.nombre | title}}</a></li>
     {% endfor%}
 
             </ul>

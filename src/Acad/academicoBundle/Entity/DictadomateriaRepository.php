@@ -171,7 +171,7 @@ class DictadomateriaRepository extends EntityRepository {
         $dql = 'select ma,m,mat,p,n,mp
                 FROM academicoBundle:MateriaAsignada ma
                 Join ma.matricula m
-                Join ma.matriaperiodo mp
+                Join ma.materiaperiodo mp
                 Join mp.materia mat
                 Join m.periodo p
                 Join m.nivel n

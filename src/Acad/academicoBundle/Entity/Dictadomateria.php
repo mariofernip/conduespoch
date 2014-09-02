@@ -65,7 +65,7 @@ class Dictadomateria
    
     
     public function __toString() {
-        return $this->materia->getNombre();
+        return $this->materiaperiodo->getMateria()->getNombre();
     }
 
 

@@ -240,7 +240,7 @@ class EstudianteRepository extends EntityRepository {
         
         $em = $this->getEntityManager();
 
-        $dql = 'select dm, ma  FROM academicoBundle:Dictadomateria dm   
+        $dql = 'select dm, ma, mp  FROM academicoBundle:Dictadomateria dm   
                 Join dm.materiaperiodo mp
                 join mp.materia ma
                 where ma.estado = 1

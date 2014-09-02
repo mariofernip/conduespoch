@@ -76,7 +76,7 @@
     <div id="relacionadas">
         <ul>
        {% for mat in listamaterias %}
-                <li><a href="{{path('docente_variable_sesion', {'niv': mat.nivel.id, 'mat': mat.materia.id})}}" class="boton">{{mat.nivel | title}}&nbsp;&nbsp;{{mat.materia.nombre | title}}</a></li>
+                <li><a href="{{path('docente_variable_sesion', {'niv': mat.nivel.id, 'mat': mat.materiaperiodo.materia.id})}}" class="boton">{{mat.nivel | title}}&nbsp;&nbsp;{{mat.materiaperiodo.materia.nombre | title}}</a></li>
        {% endfor%}
             </ul>
         </div>

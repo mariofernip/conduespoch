@@ -20,7 +20,7 @@
     <div id="relacionadas">
         <ul>
     {% for mat in listamaterias %}
-                 <li ><a href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materia.id, 'nivel': mat.nivel.id})}}" class="boton">{{mat.materia.nombre | title}}</a></li>
+                 <li ><a href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materiaperiodo.materia.id, 'nivel': mat.nivel.id})}}" class="boton">{{mat.materiaperiodo.materia.nombre | title}}</a></li>
     {% endfor%}
 
             </ul>
