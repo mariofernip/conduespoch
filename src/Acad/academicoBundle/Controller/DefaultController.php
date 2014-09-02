@@ -2000,5 +2000,34 @@ class DefaultController extends Controller {
         
             return $content;
     }
+ 
+    /**
+    * @Pdf()
+    */
+    public function reportenotassuspensoAction($nid,$mid) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $sesion = $this->getRequest()->getSession();
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        
+        $nivel=$em->getRepository('administrativoBundle:Nivel')->find($nid);
+        $materia=$em->getRepository('administrativoBundle:Materia')->find($mid);
+        
+        $periodo = $sesion->get('periodo');
+                
+        $listaEstSupletorios = $em->getRepository('academicoBundle:Dictadomateria')->getSuspensoEstudiantesxMateriaRPT($mid, $periodo->getId(), $nid);
+        
+        $format = $this->get('request')->get('_format');
+        
+        $content = $this->render(sprintf('academicoBundle:reportes:docente_notassuspenso.%s.twig', $format), array(
+            'periodo'=>$periodo,
+            'lista'=>$listaEstSupletorios,
+            'nivel'=>$nivel,
+            'materia'=>$materia,
+            'docente'=>$usuario
+
+        ));
+
+            return $content;
+    }
     
 }

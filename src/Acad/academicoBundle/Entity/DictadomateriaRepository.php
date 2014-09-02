@@ -206,6 +206,33 @@ class DictadomateriaRepository extends EntityRepository {
         
     }
     
+
+    // obtiene lista de estudiantes en suspenso, 
+    public function getSuspensoEstudiantesxMateriaRPT($mid,$pid,$nid) {
+        
+        $em = $this->getEntityManager();
+        $nbase=14;
+        $dql = 'select ma,m,mat,p,n
+                FROM academicoBundle:MateriaAsignada ma
+                Join ma.matricula m
+                Join ma.materia mat
+                Join m.periodo p
+                Join m.nivel n
+                WHERE mat.id = :mid and                                                    
+                          p.id= :pid and
+                          n.id = :nid and
+                          ma.promediofinal <= :nb
+                       
+                ';
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('mid', $mid);                
+        $consulta->setParameter('pid', $pid);                        
+        $consulta->setParameter('nid', $nid);            
+        $consulta->setParameter('nb', $nbase);   
+        
+        return $consulta->getResult();
+        
+    }
     
 }
 

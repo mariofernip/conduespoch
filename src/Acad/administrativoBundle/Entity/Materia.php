@@ -27,16 +27,16 @@ class Materia {
       */
     protected $nombre;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Area") 
-     * @ORM\JoinColumn(name="area_id", referencedColumnName="id")
-     */
-    protected $area;
     
     /**
      *
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Blank()
+     */
+    protected $numerohoras;
+    
+    /**
+     *
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $numerocreditos;
 
@@ -154,30 +154,6 @@ class Materia {
         return $this->estado;
     }
 
-    /**
-     * Set area
-     *
-     * @param \Acad\administrativoBundle\Entity\Area $area
-     * @return Materia
-     */
-    public function setArea(\Acad\administrativoBundle\Entity\Area $area = null)
-    {
-        $this->area = $area;
-    
-        return $this;
-    }
-
-    /**
-     * Get area
-     *
-     * @return \Acad\administrativoBundle\Entity\Area 
-     */
-    public function getArea()
-    {
-        return $this->area;
-    }
-    
-    
     public function setId($id)
     {
         $this->id = $id;
@@ -187,5 +163,28 @@ class Materia {
     
      public function __toString() {
         return $this->getNombre();
+    }
+
+    /**
+     * Set numerohoras
+     *
+     * @param integer $numerohoras
+     * @return Materia
+     */
+    public function setNumerohoras($numerohoras)
+    {
+        $this->numerohoras = $numerohoras;
+    
+        return $this;
+    }
+
+    /**
+     * Get numerohoras
+     *
+     * @return integer 
+     */
+    public function getNumerohoras()
+    {
+        return $this->numerohoras;
     }
 }

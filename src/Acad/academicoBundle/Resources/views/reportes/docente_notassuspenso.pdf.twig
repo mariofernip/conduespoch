@@ -1,0 +1,60 @@
+<pdf Title="Notas de supletorios: {{nivel | title}}" Author="{{docente}}">
+    <dynamic-page>
+        <placeholders>
+            <header>
+                <div height="170px" width="100%">
+                    <div font-style="bold" margin=" 60px 150px 60px 10px" color="black"  font-size="18px" height="30px" text-align="center">
+                        <table>
+                            <tr>
+                                <td><br/><br/>ESCUELA DE CONDUCCIÓN PROFESIONAL CONDUESPOCH E.P</td><td width="55" height="45" ><img src="uploads/iconos/logo.jpg"  width="55" height="45" /></td>
+                            </tr>
+                            <tr>
+                                <td font-size="10" colspan="2">PERIODO ACADÉMICO: {{periodo}}</td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <div font-style="bold" margin=" 10px 10px 10px 10px" color="black"  font-size="14px"  text-align="center">
+                                
+                        </div>
+                        <div  font-style="bold"  color="black"   font-size="14px" height="10px" text-align="left">
+                            CURSO:{{nivel}} <br/>
+                            MATERIA: {{materia.nombre}}<br/>
+                            DOCENTE: {{docente}}<br/>
+                            <p text-align="center" font-style="bold">NOTAS DE SUPLETORIOS</p><br/>
+                        </div>
+                    </div>                    
+                </div>
+            </header>
+            <footer>
+                <div height="20px" width="80%"  text-align="center" font-size="10px" font-style="italic">
+                    Dirección: Panamericana Sur km 1 1/2, Riobamba - Ecuador <br/>
+                    (c)Sistema conduespoch
+                    <div margin="6px 10px"  text-align="right" font-size="10px" font-style="bold">
+                        <page-info format="%s / %s" />
+                    </div>    
+                </div>
+            </footer>
+        </placeholders>
+        <br/><br/>
+        <table margin=" 60px 10px 60px 10px"  >
+            <tr text-align="center" font-style="bold">
+                <td height="13">CÉDULA</td>
+                <td>ESTUDIANTE</td>
+                <td>SECCIÓN</td>
+                <td>NOTA SUSP.</td>                
+                <td>PROM. FINAL</td>                
+                <td>EQUIVALENCIA</td> 
+            </tr>
+            {% for ma in lista %}
+            <tr >
+                <td width="70" height="13" text-align="left">{{ma.matricula.estudiante.cedula}}</td>
+                <td>{{ma.matricula.estudiante.apellido | title}}{{' '}}{{ma.matricula.estudiante.nombre | title}}</td>
+                <td width="60" text-align="center"  >{{ma.matricula.seccion | title}}</td>
+                <td width="40" text-align="center">{{ma.notasuspenso}}</td>
+                <td width="40" text-align="center">{{ma.promediofinal}}</td>
+                <td width="80" text-align="center">{{ma.equivalencia | title }}</td>
+            </tr>
+            {% endfor%}
+        </table>
+    </dynamic-page>
+</pdf>

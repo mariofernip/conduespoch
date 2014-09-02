@@ -1,19 +1,18 @@
 {% extends '::frontend.html.twig'%}
 
-{% block title %} NOTAS {% endblock%}
+{% block title %} NOTAS SUPLETORIOS{% endblock%}
 
 {% block id 'portada' %}
 {% block article%}
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_docente.html.twig'%}
 </section>    
-<p style="text-align: center ; color: #0035C7; -webkit-animation-play-state: "><strong>INGRESO NOTAS DE SUPLETORIOS</strong></p>
+<div style="text-align: center" >
+    <strong style="color: #0063DC">INGRESO NOTAS DE SUPLETORIOS</strong>
+</div>
+
     {% if cod==1%}
-    <p><strong>Detalles:</strong></p>
-    <ul>
-        <li style="color: #08C">Se presenta todos estudiantes ordenados por secciones, número de cédula y su nombre</li>
-        <li style="color: #08C">Tome en cuenta la materia seleccionada de color verde</li>
-            </ul>
+    <p style="text-align: right"><a  target="_blank" href="{{path('docente_reporte_notas_supletorios',{'nid': nivel.id, 'mid':materia.id})}}" title="Imprimir reporte" ><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></p>
     <form action="{{ path('docente_notas_suspenso',{'materia': mat.id, 'nivel': niv.id}) }}" method="post" {{
         form_enctype(form) }} >
         {{ form_start(form) }}

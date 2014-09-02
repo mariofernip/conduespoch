@@ -13,10 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="dictadomateria", 
  * uniqueConstraints={
- * @ORM\UniqueConstraint(name="unique_dictadomateria", columns={"nivel_id", "docente_id", "periodo_id","materia_id"})
+ * @ORM\UniqueConstraint(name="unique_dictadomateria", columns={"nivel_id", "docente_id", "periodo_id","materiaperiodo_id"})
  *  })
- * @UniqueEntity(fields={"nivel", "docente", "periodo","materia"}, message="El registro a insertar ya existe")
- * @UniqueEntity(fields={"nivel","periodo","materia"}, message="La materia selecciona ya fue designada a otro docente")
+ * @UniqueEntity(fields={"nivel", "docente", "periodo","materiaperiodo"}, message="El registro a insertar ya existe")
+ * @UniqueEntity(fields={"nivel","periodo","materiaperiodo"}, message="La materia selecciona ya fue designada a otro docente")
  * @ORM\Entity(repositoryClass="Acad\academicoBundle\Entity\DictadomateriaRepository")
  */
 
@@ -54,13 +54,21 @@ class Dictadomateria
 
     /**
      * 
-     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Materia") 
-     * @ORM\JoinColumn(name="materia_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Acad\academicoBundle\Entity\MateriaPeriodo") 
+     * @ORM\JoinColumn(name="materiaperiodo_id", referencedColumnName="id")
      */
-    protected $materia;
+    protected $materiaperiodo;
 
     
    
+
+   
+    
+    public function __toString() {
+        return $this->materia->getNombre();
+    }
+
+
 
     /**
      * Get id
@@ -142,29 +150,25 @@ class Dictadomateria
     }
 
     /**
-     * Set materia
+     * Set materiaperiodo
      *
-     * @param \Acad\administrativoBundle\Entity\Materia $materia
+     * @param \Acad\academicoBundle\Entity\MateriaPeriodo $materiaperiodo
      * @return Dictadomateria
      */
-    public function setMateria(\Acad\administrativoBundle\Entity\Materia $materia = null)
+    public function setMateriaperiodo(\Acad\academicoBundle\Entity\MateriaPeriodo $materiaperiodo = null)
     {
-        $this->materia = $materia;
+        $this->materiaperiodo = $materiaperiodo;
     
         return $this;
     }
 
     /**
-     * Get materia
+     * Get materiaperiodo
      *
-     * @return \Acad\administrativoBundle\Entity\Materia 
+     * @return \Acad\academicoBundle\Entity\MateriaPeriodo 
      */
-    public function getMateria()
+    public function getMateriaperiodo()
     {
-        return $this->materia;
-    }
-    
-    public function __toString() {
-        return $this->materia->getNombre();
+        return $this->materiaperiodo;
     }
 }
