@@ -30,22 +30,22 @@ class SubPeriodo {
     
     /**
      *
-     * @ORM\Column(type="integer", nullable=false)
-     * @ORM\GeneratedValue
+     * @ORM\Column(type="string", length=2, nullable=false)
+     * @Assert\Choice(choices = {"1", "2","3"})
      */
     protected $tipo;    
         
     
     /**
      *
-     * @ORM\Column(type="date", nullable=false)     
+     * @ORM\Column(type="date", nullable=true)     
      * @Assert\Date()
      */
     protected $finicio;
 
     /**
      *
-     * @ORM\Column(type="date", nullable=false)    
+     * @ORM\Column(type="date", nullable=true)    
      * @Assert\Date()
      */
     protected $ffin;
@@ -181,5 +181,9 @@ class SubPeriodo {
     public function getPeriodo()
     {
         return $this->periodo;
+    }
+    
+    public function __toString() {
+        return  $this->tipo;
     }
 }

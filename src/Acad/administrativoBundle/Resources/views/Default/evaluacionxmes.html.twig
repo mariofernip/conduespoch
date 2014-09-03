@@ -25,7 +25,8 @@
     <ul>
         {# iterate over each existing tag and render its only field: name #}
         {% for req in form.evames %}
-            {{ form_widget(req.estado) }} &nbsp;<strong>{{ form_widget(req.mes, { 'attr': {'disabled' : 'true' } }) }} </strong>
+            {{ form_widget(req.estado) }} &nbsp;
+            <strong>{{ form_widget(req.nota, { 'attr': {'disabled' : 'true' } }) }} </strong>
             <li>{{ form_label(req.finiciomes,('Fecha Inicio:')) }}{{ form_widget(req.finiciomes) }}</li>
             <li>{{ form_label(req.finiciomes,('Fecha Fin:')) }}{{ form_widget(req.ffinmes) }}</li>
             <br><br>

@@ -18,7 +18,7 @@ class MesEvaluacionType extends AbstractType
             ->add('finiciomes','date')
             ->add('ffinmes','date')
             ->add('estado','checkbox')
-            ->add('mes')            
+            ->add('nota')            
         ;
     }
     

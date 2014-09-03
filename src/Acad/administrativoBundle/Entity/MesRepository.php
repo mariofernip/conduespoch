@@ -13,7 +13,7 @@ class MesRepository extends EntityRepository {
         $em = $this->getEntityManager();
 
         $dql = 'select m
-                FROM administrativoBundle:Mes                                                
+                FROM administrativoBundle:Nota                                                
                 WHERE m.estado= true
                 ';
 

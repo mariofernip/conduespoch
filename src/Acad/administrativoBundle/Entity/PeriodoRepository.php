@@ -23,7 +23,45 @@ class PeriodoRepository extends EntityRepository{
         
         
     }
+
+    public function getMateriasSubperiodo($pid) {
+        
+        
+        $em= $this->getEntityManager();
+        
+        $dql = 'select mp,sp,p
+                FROM academicoBundle:MateriaPeriodo mp
+                Join mp.subperiodo sp
+                Join sp.periodo p
+                WHERE p.id = :pid
+                order by sp.tipo asc
+                ';
+        $consulta = $em->createQuery($dql);   
+        $consulta->setParameter('pid', $pid);
+        
+        return $consulta->getResult();
+        
+        
+    }
     
+    public function getprimerSubperiodo($pid) {
+        
+        
+        $em= $this->getEntityManager();
+        
+        $dql = 'select sp,p
+                FROM administrativoBundle:SubPeriodo sp
+                Join sp.periodo p
+                WHERE p.id = :pid
+                order by sp.tipo asc
+                ';
+        $consulta = $em->createQuery($dql);   
+        $consulta->setParameter('pid', $pid);
+        
+        return $consulta->getResult();
+        
+        
+    }
     
 }
 

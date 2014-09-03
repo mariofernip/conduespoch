@@ -509,6 +509,8 @@ class DefaultController extends Controller {
 
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array('estado' => 1));
         $mat = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado' => 1));
+        $matper = $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo);
+        
         if (!$mat) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
@@ -546,7 +548,7 @@ class DefaultController extends Controller {
                     ));
 
         if (!$listamesevaluacion) {
-            $this->get('session')->getFlashBag()->add('Info', 'Error! No hay mese asignados para este periodo');
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No hay meses asignados para este periodo');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
         
@@ -575,9 +577,9 @@ class DefaultController extends Controller {
             
             
             //LENAR LA TABLA: MATERIAASIGNADA
-            foreach ($mat as $mat1) {
+            foreach ($matper as $mat1) {
                 $materiaasignada = new MateriaAsignada();
-                $materiaasignada->setMateria($mat1);
+                $materiaasignada->setMateriaperiodo($mat1);
                 $materiaasignada->setMatricula($matricula);
                 $em->persist($materiaasignada);
                 $em->flush();
@@ -1371,7 +1373,7 @@ class DefaultController extends Controller {
         $pagination = $paginator->paginate(
                 $evaluacion, $this->getRequest()->query->get('page', 1), 10
         );
-        $mesactual=$em->getRepository('administrativoBundle:Mes')->find($codmes);
+        $mesactual=$em->getRepository('administrativoBundle:Nota')->find($codmes);
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
         return $this->render('academicoBundle:default:notasparcialesxmes.html.twig',array(
             'periodo'=>$periodo,

@@ -11,9 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="mesevaluacion", 
  * uniqueConstraints={
- * @ORM\UniqueConstraint(name="unique_evaluacionmes", columns={"mes_id","periodo_id"})
+ * @ORM\UniqueConstraint(name="unique_evaluacionnota", columns={"nota_id","periodo_id"})
  *  })
- * @UniqueEntity(fields={"mes", "periodo"}, message="Registro ya existe")
+ * @UniqueEntity(fields={"nota", "periodo"}, message="Registro ya existe")
  * @ORM\Entity
  */
 
@@ -29,11 +29,11 @@ class MesEvaluacion {
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Mes") 
-     * @ORM\JoinColumn(name="mes_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Acad\administrativoBundle\Entity\Nota") 
+     * @ORM\JoinColumn(name="nota_id", referencedColumnName="id")
      * @Assert\NotBlank(message="Por favor seleccione un periodo")   
      */
-    protected $mes;
+    protected $nota;
     
     
     /**
@@ -153,28 +153,6 @@ class MesEvaluacion {
         return $this->estado;
     }
 
-    /**
-     * Set mes
-     *
-     * @param \Acad\administrativoBundle\Entity\Mes $mes
-     * @return MesEvaluacion
-     */
-    public function setMes(\Acad\administrativoBundle\Entity\Mes $mes = null)
-    {
-        $this->mes = $mes;
-    
-        return $this;
-    }
-
-    /**
-     * Get mes
-     *
-     * @return \Acad\administrativoBundle\Entity\Mes 
-     */
-    public function getMes()
-    {
-        return $this->mes;
-    }
 
     /**
      * Set periodo
@@ -200,6 +178,29 @@ class MesEvaluacion {
     }
     
     public function __toString() {
-        return $this->mes->getNombre();
+        return $this->nota->getNombre();
+    }
+
+    /**
+     * Set nota
+     *
+     * @param \Acad\administrativoBundle\Entity\Nota $nota
+     * @return MesEvaluacion
+     */
+    public function setNota(\Acad\administrativoBundle\Entity\Nota $nota = null)
+    {
+        $this->nota = $nota;
+    
+        return $this;
+    }
+
+    /**
+     * Get nota
+     *
+     * @return \Acad\administrativoBundle\Entity\Nota 
+     */
+    public function getNota()
+    {
+        return $this->nota;
     }
 }

@@ -1,0 +1,31 @@
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'materia' %}
+
+{% block title %}Registro de una nueva materia{% endblock%}
+
+{% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<p style="text-align: center ; color: #0035C7 "><strong>MODIFICAR MATERIAS</strong></p>
+<br>
+<form action="{{ path('admin_materiaperiodo_modificar',{'mpid': mpid}) }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                                  
+                  {{form_label(formulario.subperiodo,'Subperido:')}}{{form_errors(formulario.subperiodo)}}{{form_widget(formulario.subperiodo) }}<br>                  
+                  {{form_label(formulario.materia,'Materia:')}}{{form_errors(formulario.materia)}}{{form_widget(formulario.materia) }}<br>                  
+           </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+{% endblock%}

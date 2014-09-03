@@ -2,6 +2,8 @@
 
 namespace Acad\administrativoBundle\Controller;
 
+use Acad\academicoBundle\Entity\MateriaPeriodo;
+use Acad\academicoBundle\Form\MateriaPeriodoType;
 use Acad\administrativoBundle\Entity\Area;
 use Acad\administrativoBundle\Entity\AuxMes;
 use Acad\administrativoBundle\Entity\AuxRequisito;
@@ -13,12 +15,13 @@ use Acad\administrativoBundle\Entity\Hora;
 use Acad\administrativoBundle\Entity\Materia;
 use Acad\administrativoBundle\Entity\MateriaAdministrador;
 use Acad\administrativoBundle\Entity\MateriaGrado;
-use Acad\administrativoBundle\Entity\Mes;
+use Acad\administrativoBundle\Entity\Nota;
 use Acad\administrativoBundle\Entity\MesEvaluacion;
 use Acad\administrativoBundle\Entity\Nivel;
 use Acad\administrativoBundle\Entity\Paralelo;
 use Acad\administrativoBundle\Entity\Periodo;
 use Acad\administrativoBundle\Entity\Requisito;
+use Acad\administrativoBundle\Entity\SubPeriodo;
 use Acad\administrativoBundle\Form\AdministradorMateriaType;
 use Acad\administrativoBundle\Form\AreaType;
 use Acad\administrativoBundle\Form\AuxMesType;
@@ -35,6 +38,7 @@ use Acad\administrativoBundle\Form\NivelType;
 use Acad\administrativoBundle\Form\ParaleloType;
 use Acad\administrativoBundle\Form\PeriodoType;
 use Acad\administrativoBundle\Form\RequisitoType;
+use Acad\administrativoBundle\Form\SubPeriodoType;
 use Acad\seguridadBundle\Form\ModificarUsuarioType;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -209,7 +213,7 @@ class DefaultController extends Controller
         $evaluacionxmes= new EvaluacionxMes();
 
         //consulto los objetos mesevaluacion con su estado activo, de un determinado periodo 
-        $mesevaluacion = $em->getRepository('administrativoBundle:Mes')->getMesEvaluacionxPeriodo($periodo->getId());
+        $mesevaluacion = $em->getRepository('administrativoBundle:Nota')->getMesEvaluacionxPeriodo($periodo->getId());
 
         //recorro lista de objetos: cumplerequisito
         foreach ($mesevaluacion as $req) {
@@ -221,7 +225,7 @@ class DefaultController extends Controller
             $cr->setEstado($req->getEstado());
             $cr->setFiniciomes($req->getFiniciomes());
             $cr->setFfinmes($req->getFfinmes());
-            $cr->setMes($req->getMes());
+            $cr->setNota($req->getNota());
             //lleno el objto tarea con varios objetos cumplerequisito
             $evaluacionxmes->getEvaMes()->add($cr);
         }
@@ -627,7 +631,7 @@ class DefaultController extends Controller
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
 
-        $mes = new Mes();
+        $mes = new Nota();
         $formulario = $this->createForm(new MesType(), $mes);
         $formulario->handleRequest($peticion);
 
@@ -635,11 +639,11 @@ class DefaultController extends Controller
             $em->persist($mes);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('Info', 'Mes ingresado correctamente..!');
+            $this->get('session')->getFlashBag()->add('Info', 'Nota ingresado correctamente..!');
             return $this->redirect($this->generateUrl('admin_portada'));
         }
         $periodo = '';
-        $listameses = $em->getRepository('administrativoBundle:Mes')->findAll();
+        $listameses = $em->getRepository('administrativoBundle:Nota')->findAll();
         return $this->render('administrativoBundle:Default:mes_registro.html.twig', array(
                     'periodo' => $periodo,
                     'listam' => $listameses,
@@ -653,7 +657,7 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $periodo = '';
-        $listameses = $em->getRepository('administrativoBundle:Mes')->findAll();
+        $listameses = $em->getRepository('administrativoBundle:Nota')->findAll();
         return $this->render('administrativoBundle:Default:mes_listatodos.html.twig', array(
                     'periodo' => $periodo,
                     'listam' => $listameses,
@@ -666,7 +670,7 @@ class DefaultController extends Controller
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
 
-        $mes = $em->getRepository('administrativoBundle:Mes')->find($codmes);
+        $mes = $em->getRepository('administrativoBundle:Nota')->find($codmes);
         $formulario = $this->createForm(new MesType(), $mes);
         $formulario->handleRequest($peticion);
 
@@ -674,11 +678,11 @@ class DefaultController extends Controller
 
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('Info', 'Mes actualizado');
+            $this->get('session')->getFlashBag()->add('Info', 'Nota actualizado');
             return $this->redirect($this->generateUrl('admin_mes_listar_todos'));
         }
         $periodo = '';
-        $listameses = $em->getRepository('administrativoBundle:Mes')->findAll();
+        $listameses = $em->getRepository('administrativoBundle:Nota')->findAll();
         return $this->render('administrativoBundle:Default:mes_modificar.html.twig', array(
                     'periodo' => $periodo,
                     'listam' => $listameses,
@@ -981,12 +985,12 @@ class DefaultController extends Controller
 
 
         //consulto los requisitos con su esstado, de un determinado estudiante que fue previamente inscrito              
-        $estadomesess = $em->getRepository('administrativoBundle:Mes')->findAll();
+        $estadomesess = $em->getRepository('administrativoBundle:Nota')->findAll();
 
         //recorro lista de objetos: cumplerequisito
         foreach ($estadomesess as $req) {
             //obtendo el id de la inscripcion            
-            $cr = new Mes();
+            $cr = new Nota();
             //obtengo los datos de cada objeto cumplerequisito
             $cr->setId($req->getId());
             $cr->setEstado($req->getEstado());
@@ -1005,7 +1009,7 @@ class DefaultController extends Controller
                 $cod = $req->getId(); // ontengo el id de cada objeto
                 $est = $req->getEstado(); // obtengo el estado de cada objto
                 $ne = $req->getNombre();
-                $cr = $em->getRepository('administrativoBundle:Mes')->find($cod); //consulto el objeto cumplerequisito
+                $cr = $em->getRepository('administrativoBundle:Nota')->find($cod); //consulto el objeto cumplerequisito
                 $cr->setEstado($est); //actualizo el estado del objeto previamente encontrado
                 $cr->setNombre($ne);
 
@@ -1260,7 +1264,7 @@ class DefaultController extends Controller
         
         $listadias = $em->getRepository('administrativoBundle:Dia')->findAll();
         
-        $listameses = $em->getRepository('administrativoBundle:Mes')->findAll();
+        $listameses = $em->getRepository('administrativoBundle:Nota')->findAll();
         
         $listahoras = $em->getRepository('administrativoBundle:Hora')->findAll();
         
@@ -1294,7 +1298,7 @@ class DefaultController extends Controller
                 
         $listarequisitos = $em->getRepository('administrativoBundle:Requisito')->findBy(array('estado'=>1));
         
-        $listameses = $em->getRepository('administrativoBundle:Mes')->findBy(array('estado'=>1));
+        $listameses = $em->getRepository('administrativoBundle:Nota')->findBy(array('estado'=>1));
                 
         $listadocentes = $em->getRepository('administrativoBundle:Docente')->findBy(array('estado'=>1));
         
@@ -1410,6 +1414,234 @@ class DefaultController extends Controller
                     'formulario' => $formulario->createView()
                 ));
     }
-     
+
+    
+    //metodo: inserta un nuevo subperiodo    
+    public function subperiodoregistroAction() {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $peticion = $this->getRequest();
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+       
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        
+        $rol = strtolower($usuario->getRol());
+        
+        $mat = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado' => 1));
+        if (!$mat) {
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+        
+
+        $subperiodo = new SubPeriodo();
+
+        $listasubperiodo= $em->getRepository('administrativoBundle:SubPeriodo')->findBy(array(
+            'periodo'=>$periodo
+        ));
+        
+        $materiaperiodos= $em->getRepository('administrativoBundle:Periodo')->getprimerSubperiodo($periodo);
+        $sd=0;
+        if($listasubperiodo){
+           $sd=1;         
+        
+        }
+        $formulario = $this->createForm(new SubPeriodoType(), $subperiodo);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->persist($subperiodo);
+            $em->flush();
+
+            if($materiaperiodos==null){
+            //LENAR LA TABLA: MATERIAPERIODO
+            foreach ($mat as $mat1) {
+                $materiaperiodo = new MateriaPeriodo();
+                $materiaperiodo->setMateria($mat1);
+                $materiaperiodo->setSubperiodo($subperiodo);
+                $em->persist($materiaperiodo);
+                $em->flush();
+            }            
+            }
+
+            
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Subperiodo ingresado'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:subperiodo_registro.html.twig', array(
+                    'periodo' => $periodo,
+                    'sd'=>$sd,
+                    'lista'=>$listasubperiodo,
+                    'formulario' => $formulario->createView())
+        );
+        
+        
+    }
+    
+    
+      //metodo: modificar un  subperiodo    
+    public function subperiodomodificarAction($sid) {
+        
+        $em = $this->getDoctrine()->getManager();
+        $periodo='';
+        $subperiodo= $em->getRepository('administrativoBundle:SubPeriodo')->find($sid);
+        $peticion = $this->getRequest();
+        
+
+        $formulario = $this->createForm(new SubPeriodoType(), $subperiodo);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->flush();
+
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Subperiodo actualizado'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:subperiodo_modificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'sid'=>$sid,
+                    'formulario' => $formulario->createView())
+        );
+        
+        
+    }
+    
+      //metodo: listar los subperiodos de periodo actual    
+    public function subperiodolistartodosAction() {
+        
+        $em = $this->getDoctrine()->getManager();
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listasubperiodo= $em->getRepository('administrativoBundle:SubPeriodo')->findBy(array(
+            'periodo'=>$periodo
+        ));
+        $sd=0;
+        if($listasubperiodo){
+           $sd=1;
+            
+        }
+        
+        return $this->render('administrativoBundle:Default:subperiodo_listatodos.html.twig', array(
+                    'periodo' => $periodo,
+                     'lista'=>$listasubperiodo,
+                     'sd'=>$sd
+                    
+        ));
+    }
+    
+    //metodo: inserta las matreias en un determinado subperiodo    
+    public function materiaperiodoregistroAction() {
+        
+        
+        
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listamatperiodo= $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo->getId());
+        $sd=0;
+        if($listamatperiodo){
+           $sd=1;
+            
+        }
+        
+        $materiaperiodo = new MateriaPeriodo();
+
+        $formulario = $this->createForm(new MateriaPeriodoType(), $materiaperiodo);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->persist($materiaperiodo);
+            $em->flush();
+
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia ingresada'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:materiaperiodo_registro.html.twig', array(
+                    'periodo' => $periodo,
+                    'sd'=>$sd,
+                    'lista'=>$listamatperiodo,
+                    'formulario' => $formulario->createView())
+        );
+        
+        
+    }
+    
+    //metodo: inserta las matreias en un determinado subperiodo    
+    public function materiaperiodomodificarAction($mpid) {
+        
+        $periodo=''; 
+        
+        $peticion = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $materiaperiodo = $em->getRepository('academicoBundle:MateriaPeriodo')->find($mpid);
+
+        $formulario = $this->createForm(new MateriaPeriodoType(), $materiaperiodo);
+
+        $formulario->handleRequest($peticion);
+        
+        if ($formulario->isValid()) {
+
+            //inserta nueva area               
+            $em->flush();
+            
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia actualizada'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
+        return $this->render('administrativoBundle:Default:materiaperiodo_modificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'mpid'=>$mpid,
+                    'formulario' => $formulario->createView())
+        );
+        
+        
+    }
+    
+
+    //metodo: listar las materias en subperiodos: de un periodo actual
+    public function materiaperiodolistartodosAction() {
+        
+        $em = $this->getDoctrine()->getManager();
+        $periodo= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $listamatperiodo= $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo->getId());
+        $sd=0;
+        if($listamatperiodo){
+           $sd=1;
+            
+        }
+        
+        return $this->render('administrativoBundle:Default:materiaperiodo_listatodos.html.twig', array(
+                    'periodo' => $periodo,
+                     'lista'=>$listamatperiodo,
+                     'sd'=>$sd
+                    
+        ));
+    }
+    
     
 }

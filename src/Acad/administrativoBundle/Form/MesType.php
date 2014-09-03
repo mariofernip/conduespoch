@@ -26,7 +26,7 @@ class MesType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Acad\administrativoBundle\Entity\Mes'
+            'data_class' => 'Acad\administrativoBundle\Entity\Nota'
         ));
     }
 
@@ -35,6 +35,6 @@ class MesType extends AbstractType
      */
     public function getName()
     {
-        return 'acad_administrativobundle_mes';
+        return 'acad_administrativobundle_nota';
     }
 }
