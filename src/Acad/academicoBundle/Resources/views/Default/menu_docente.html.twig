@@ -9,7 +9,7 @@
                 <a  class="fly">Parciales</a>
                 <ul>
                     {% for m in listames %}
-                        <li><a  href="{{path('docente_notas_x_materia',{'mesid': m.id})}}">{{m.mes}}</a></li>                        
+                        <li><a  href="{{path('docente_notas_x_materia',{'mesid': m.id})}}">{{m.nota}}</a></li>                        
                     {% endfor%}
                     
                 </ul>
@@ -26,8 +26,8 @@
         <ul class="sub">
             <li><a href="">Notas parciales</a>
                 <ul>
-                    {% for me in mesevac%}
-                        <li><a href="{{path('docente_notas_parciales_x_mes',{'codmes': me.id})}}">{{me.mes}}</a></li>                    
+                    {% for me in mesevac %}
+                        <li><a href="{{path('docente_notas_parciales_x_mes',{'codmes': me.id})}}">{{me.nota}}</a></li>                    
                     {% endfor%}
                 </ul>
             </li>

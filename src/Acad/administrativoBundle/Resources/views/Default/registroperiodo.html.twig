@@ -2,7 +2,7 @@
 {% extends '::frontend.html.twig' %}
 
 
-{% block id 'periodo' %}
+{% block id 'portada' %}
 
 {% block title %}Registro de un nuevo periodo{% endblock%}
 
@@ -10,8 +10,34 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
+<p style="text-align: left ; color: #008000 "><strong>NOTAS PARA ESTE PERIODO</strong></p>
+<label style="font-size: smaller; font-size: small">Antes de agregar un nuevo periodo tenga en cuenta el número de notas a ser evaluadas:</label><a style="font-size: small" href="{{path('admin_mes_registro')}}" title="Agregar nueva nota"> Añadir</a>&nbsp;&nbsp;<a title="Ver lista de notas" style="font-size: small" href="{{path('admin_mes_listar_todos')}}">Ver todos</a><br>
+<table style="width: 600px">
+        <thead>
+        <th style="font-size: small; width: 30px"># NOTAS</th>
+        {% for n in lista %}
+            <th style="font-size: small; width: 30px; text-align: center">{{n.nombre}}</th>
+        {% endfor%}
+        </thead>
+        <tbody>
+            <tr>
+                <td style="font-size: small; width: 30px">ESTADO</td>
+                {% for n in lista %}
+                    {% set esta= n.estado %}
+                    {% if esta == 0 %}
+                        {% set estado= 'Activo'%}
+                    {% endif%}
+                    {% if esta == 1 %}
+                        {% set estado= 'Activo'%}
+                    {% endif%}
+                    <td style="font-size: small; width: 30px; text-align: center">{{estado}}</td>
+                {% endfor%}
+            </tr>
+        </tbody>
+</table>
 <br><br>
+<p style="text-align: center ; color: #0035C7 "><strong>REGISTRO DE UN NUEVO PERIODO ACADÉMICO</strong></p>
+
 <form action="{{ path('periodo_registro') }}" method="post" {{
         form_enctype(formulario) }}>
         {{ form_errors(formulario) }}
@@ -44,4 +70,9 @@
 
 {% block aside %}
     {{ parent()}}
+{% endblock%}
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% include 'academicoBundle:Default:tablecss.html.twig'%}
 {% endblock%}

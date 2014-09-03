@@ -75,8 +75,8 @@
           <strong><p align="left">Materias</p></strong>
     <div id="relacionadas">
         <ul>
-       {% for mat in listamaterias %}
-                <li><a href="{{path('docente_variable_sesion', {'niv': mat.nivel.id, 'mat': mat.materiaperiodo.materia.id})}}" class="boton">{{mat.nivel | title}}&nbsp;&nbsp;{{mat.materiaperiodo.materia.nombre | title}}</a></li>
+       {% for matdoc in listamaterias %}
+                <li><a title="{{matdoc.materiaperiodo.materia.nombre | upper }}" class="boton" href="{{path('docente_variable_sesion',{'niv': matdoc.nivel.id, 'mat': matdoc.materiaperiodo.materia.id})}}">{{matdoc.nivel.descripcion | upper }}&nbsp;&nbsp;{{matdoc.materiaperiodo.materia.nombre | title | truncate(10,true)}}</a></li>
        {% endfor%}
             </ul>
         </div>

@@ -162,6 +162,21 @@ class DefaultController extends Controller
 
             return $this->redirect($this->generateUrl('periodo_modificar'));
         }
+        $listanotas= $em->getRepository('administrativoBundle:Nota')->findAll();
+        if(!$listanotas){
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No existe notas agregadas'
+            );
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        $listanotasA= $em->getRepository('administrativoBundle:Nota')->findBy(array(
+            'estado'=>true
+        ));
+        if(!$listanotasA){
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No existe notas activas. Agregarles por favor'
+            );
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        
         $periodo = new Periodo();
 
         $formulario = $this->createForm(new PeriodoType(), $periodo);
@@ -178,18 +193,31 @@ class DefaultController extends Controller
             $sesion= new Session();
             $sesion->set('periodoA', $periodo);
             
+            foreach ($listanotasA as $nota) {
+                $mesevaluacion= new MesEvaluacion();
+                $mesevaluacion->setEstado(0);
+                $mesevaluacion->setFfinmes(new \DateTime('now'));
+                $mesevaluacion->setFiniciomes(new \DateTime('now'));
+                $mesevaluacion->setNota($nota);
+                $mesevaluacion->setPeriodo($periodo);
+                
+                $em->persist($mesevaluacion);
+                $em->flush();
+            }
 
             $this->get('session')->getFlashBag()->add('Info', 'Periodo agregado correctamente'
             );
-            $this->get('session')->getFlashBag()->add('Info', 'Active los meses del nuevo periodo'
+            $this->get('session')->getFlashBag()->add('Info', 'Modifique las fechas de evaluación'
             );
-            return $this->redirect($this->generateUrl('admin_mes_modificar_todos'));
+            $periodoA= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+            return $this->redirect($this->generateUrl('mes_evaluacion',array('pid'=>$periodoA->getId())));
             //return $this->redirect($this->generateUrl('mes_evaluacion', array('pid' => $periodo->getId())));
         }
 
 
         return $this->render('administrativoBundle:default:registroperiodo.html.twig', array(
-                    'periodo' => $periodo,
+                    'periodo' => '',
+                    'lista'=>$listanotas,
                     'formulario' => $formulario->createView()
                 ));
     }
@@ -197,13 +225,13 @@ class DefaultController extends Controller
     //metodo para poner los rangos de fechas de la tabla MesEvaluacion
     
     
-    public function mesevaluacionAction() {
+    public function mesevaluacionAction($pid) {
 
         $em = $this->getDoctrine()->getEntityManager();
 
         $peticion = $this->getRequest();
 
-        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->find($pid);
         
         if(!$periodo){
             $this->get('session')->getFlashBag()->add('Info', 'No existe un periodo activo');
@@ -254,6 +282,7 @@ class DefaultController extends Controller
                     'codigo'=>$periodo->getId(),
                     'requisitos' => $mesevaluacion,
                      'periodo'=>$periodo,
+                     'pid'=>$pid,
                     'form' => $form->createView()
                 ));
     }

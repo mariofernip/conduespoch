@@ -15,7 +15,7 @@
 
 
 
-<form action="{{ path('mes_evaluacion',{'pid': codigo}) }}" method="post" {{
+<form action="{{ path('mes_evaluacion',{'pid': pid}) }}" method="post" {{
         form_enctype(form) }} >
     {{ form_start(form) }}
         {# render the task's only field: description #}

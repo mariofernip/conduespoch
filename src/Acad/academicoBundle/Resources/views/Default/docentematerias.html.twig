@@ -75,4 +75,9 @@
         }
     </script>
     
-{% endblock%}
+{% endblock%}    
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'academicoBundle:Default:tablecss.html.twig'%}
+{% endblock %}
+     
