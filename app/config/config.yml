@@ -79,6 +79,18 @@ knp_paginator:
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig
         
 
+services:
+    
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }        
+            
+    twig.extension.text:
+        class: Twig_Extensions_Extension_Text
+        tags:
+            - { name: twig.extension }        
+
 #reportes         
 ps_pdf:
     nodes_file: ~
