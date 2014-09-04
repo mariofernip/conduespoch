@@ -7,10 +7,12 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_docente.html.twig'%}
 </section>    
+{% set  pactivofin=  'now' | date('Ymd') <= periodo.ffinperiodo | date('Ymd')      %}
+{% set  pactivoinicio=  'now' | date('Ymd') >= periodo.finicioperiodo | date('Ymd')      %}
 <div style="text-align: center" >
     <strong style="color: #0063DC">INGRESO NOTAS DE SUPLETORIOS</strong>
 </div>
-
+{% if pactivoinicio and pactivofin %}
     {% if cod==1%}
     <p style="text-align: right"><a  target="_blank" href="{{path('docente_reporte_notas_supletorios',{'nid': nivel.id, 'mid':materia.id})}}" title="Imprimir reporte" ><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></p>
     <form action="{{ path('docente_notas_suspenso',{'materia': mat.id, 'nivel': niv.id}) }}" method="post" {{
@@ -51,10 +53,22 @@
         <input type="submit" value="guardar" class="boton" >
         {{ form_end(form) }}
     </form>
-    {% else%}
+    {% else %}
     <strong>No hay registros de estudiantes</strong>
     {% endif%}
-    
+{% else %}    
+    <ul>
+     {% if not pactivoinicio %}
+            <li style="text-align: left; color: brown">El plazo para ingresar la la nota de suspenso aún no inicia</li>
+            <li style="text-align: left; color: #08C">Inicia el: {{periodo.finicioperiodo | date('d-m-Y')}}</li>
+        {% endif%}
+        {% if not pactivofin %}
+            <li style="text-align: left; color: brown">El plazo para ingresar la nota de suspenso ha vencido</li>
+            <li style="text-align: left; color: #08C">Venció el: {{periodo.ffinperiodo | date('d-m-Y')}}</li>
+        {% endif%}
+            <li style="text-align: left; color: #08C">Para mayor información por favor contáctese con el administrador del sistema</li>
+      </ul>
+{% endif%}
  
 {% endblock%}
 

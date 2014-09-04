@@ -275,7 +275,7 @@ class DefaultController extends Controller
                 $em->flush(); // envio a guardar/actualizar el estado de cada objeto
             }
                 $this->get('session')->getFlashBag()->add('Info', 'Fechas actualizadas');
-                return $this->redirect($this->generateUrl('mes_evaluacion'));
+                return $this->redirect($this->generateUrl('mes_evaluacion',array('pid'=>$pid)));
         }
         
         return $this->render('administrativoBundle:Default:evaluacionxmes.html.twig', array(

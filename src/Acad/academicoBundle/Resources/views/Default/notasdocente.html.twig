@@ -7,7 +7,11 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_docente.html.twig'%}
 </section>    
-<p style="text-align: center ; color: #0035C7; -webkit-animation-play-state: "><strong>INGRESO DE EVALUACIONES PARCIALES DE: &nbsp;&nbsp; {{codmes | upper}}</strong></p>
+{% set  pactivofin=  'now' | date('Y-m-d') <= codmes.ffinmes | date('Y-m-d')      %}
+{% set  pactivoinicio=  'now' | date('Y-m-d') >= codmes.finiciomes | date('Y-m-d')      %}
+<p style="text-align: center ; color: #0035C7"><strong>INGRESO DE EVALUACIONES PARCIALES DE: &nbsp;&nbsp; {{codmes | upper}}</strong></p>
+{% if  pactivoinicio and pactivofin %}
+    
     {% if cod==1%}
     <p><strong>Detalles:</strong></p>
     <ul>
@@ -55,7 +59,20 @@
         <h1>No hay estudiantes</h1>
     {% endif%}
     
- 
+{% else%}
+ <ul>
+        {% if not pactivoinicio %}
+            <li style="text-align: left; color: brown">El plazo para ingresar la la nota aún no inicia</li>
+            <li style="text-align: left; color: #08C">Inicia el: {{codmes.finiciomes | date('d-m-Y')}}</li>
+        {% endif%}
+        {% if not pactivofin %}
+            <li style="text-align: left; color: brown">El plazo para ingresar la nota ha vencido</li>
+            <li style="text-align: left; color: #08C">Venció el: {{codmes.ffinmes | date('d-m-Y')}}</li>
+        {% endif%}
+            <li style="text-align: left; color: #08C">Para mayor información por favor contáctese con el administrador del sistema</li>
+ </ul>    
+{% endif %}
+        
 {% endblock%}
 
 {% block aside%}

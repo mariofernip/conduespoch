@@ -1219,7 +1219,7 @@ class DefaultController extends Controller {
         foreach ($suspensoestudiantesxmateria as $req) {
 
             $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
-            if (($asistencia->getPromediofinal() < 70) && ($req->getPromediofinal() < 14)) {
+            if (($asistencia->getPromediofinal() < 80) && ($req->getPromediofinal() <16)) {
                 $eqbd = 'Reprobado';
             } else {
                 $eqbd = 'Aprobado';
@@ -1228,7 +1228,7 @@ class DefaultController extends Controller {
             $ma = new MateriaAsignada(); //creo un objeto nuevo: materiaasignada                                    
             $ma->setId($req->getId());
             $ma->setEquivalencia($req->getEquivalencia());
-            $ma->setMateria($req->getMateria());
+            $ma->setMateriaperiodo($req->getMateriaPeriodo());
             $ma->setMatricula($req->getMatricula());
             $ma->setNotasuspenso($req->getNotasuspenso());
             $ma->setPromediofinal($req->getPromediofinal());
@@ -1247,7 +1247,7 @@ class DefaultController extends Controller {
         if ($form->isValid()) {
 
             foreach ($suspensoestudiante->getEvaEst() as $req) {// recorro lista de objetos: MA
-                if ($req->getPromediofinal() < 14) {
+                if ($req->getPromediofinal() < 16) {
                     $cod = $req->getId(); // ontengo el id de cada objeto
                     $suspenso = $req->getNotasuspenso();
                     $pf = $req->getPromediofinal();
@@ -1255,7 +1255,7 @@ class DefaultController extends Controller {
                     if ($suspenso >= $examens) {
                         $npf = round(($suspenso + $pf) / 2);
                         $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
-                        if ($asistencia->getPromediofinal() < 70) {
+                        if ($asistencia->getPromediofinal() < 80) {
                             $eq = 'Reprobado';
                         } else {
                             $eq = 'Aprobado';
@@ -1275,7 +1275,7 @@ class DefaultController extends Controller {
                     $cod = $req->getId(); // ontengo el id de cada objeto                    
                     $pf = $req->getPromediofinal();
                     $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
-                    if (($asistencia->getPromediofinal() < 70)) {
+                    if (($asistencia->getPromediofinal() < 80)) {
                         $eq = 'Reprobado';
                     } else {
                         $eq = 'Aprobado';
