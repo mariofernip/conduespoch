@@ -9,10 +9,10 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
-<strong><p align="center">LISTA PARALELOS</p></strong>
+<p style="text-align: center ; color: #0035C7 "><strong>LISTA DE PARALELOS</strong></p>
 <div id="dt_example">
     <div id="demo">
-            <table class="display" id="example" >
+            <table class="display" id="example" style="width: 200px" >
                     <thead>
                         <tr>
                             <th colspan="4">PREVIAMENTE REGISTRADOS</th>                                                 
@@ -25,7 +25,7 @@
                     {% for m in lista %}
                         
                         <tr >
-                            <td>{{m.nombre }}</td><td><a href="{{path('admin_paralelo_modificar', {'codpar': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Editar paralelo"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
+                            <td style="text-align: center; width: 160px; vertical-align: middle" >{{m.nombre }}</td><td style="text-align: center; width: 30px; vertical-align: middle"><a href="{{path('admin_paralelo_modificar', {'codpar': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Editar paralelo"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
                             
                         <tr>
                     <tbody>
@@ -38,13 +38,14 @@
 
 {% block aside %}
     {{ parent()}}
+    <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
 {% endblock%}
 {% block javascripts %}
     {{ parent() }}
 {% endblock%}
 {% block stylesheets %}
 {{ parent() }}
-    
+        {% include 'academicoBundle:Default:tablecss.html.twig'%}
  {% endblock %}
 
         

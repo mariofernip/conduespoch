@@ -9,7 +9,7 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
+<p style="text-align: center ; color: #0035C7 "><strong>MODIFICAR UNA HORA</strong></p>
 
 <form action="{{ path('hora_modificar_id',{'hid':id} )}}" method="post" {{
         form_enctype(formulario) }}>
@@ -28,4 +28,5 @@
 
 {% block aside %}
     {{ parent()}}
+    <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
 {% endblock%}

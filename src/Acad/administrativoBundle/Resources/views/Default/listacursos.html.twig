@@ -6,7 +6,7 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
-<h3><p align="center">Niveles </p><h3>
+<p style="text-align: center ; color: #0035C7 "><strong>LISTA DE TODOS LOS NIVELES</strong></p>
 {#LISTA DE CURSOS#}
 {% if sd== 1 %}
 <div id="dt_example">
@@ -40,7 +40,7 @@
     
     {{parent()}}
      
-        <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+    <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
 {% endblock%}
                     
 {% block stylesheets %}

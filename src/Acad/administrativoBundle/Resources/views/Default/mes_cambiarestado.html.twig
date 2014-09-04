@@ -10,36 +10,42 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
-
-
-
-
+<p style="text-align: center ; color: #0035C7 "><strong>MODIFICAR TODOS LOS PARCIALES</strong></p>
+<div style="text-align: center">
 <form action="{{ path('admin_mes_modificar_todos') }}" method="post" {{
         form_enctype(form) }} >
     {{ form_start(form) }}
-        {# render the task's only field: description #}
-    
-    <br>
-    
-    <ul>
-        {# iterate over each existing tag and render its only field: name #}
+          
+    <table class="display" id="example" style="width:120px">
+        <thead>
+            <th>Estado</th>
+            <th>Nombre del parcial</th>
+        </thead>
         {% for req in form.estmes %}
+        <tbody>
+            <tr>
             
-            <li>{{ form_widget(req.estado) }}&nbsp;&nbsp;{{ form_widget(req.nombre) }}</li>
-            
-        {% endfor %}
-    </ul>
-
+                <td style="text-align: center; vertical-align: middle; width: 30px ">{{ form_widget(req.estado) }}</td><td style="text-align: center; vertical-align: middle; width: 90px ">{{ form_widget(req.nombre) }}</td>
+            {% endfor %}
+             <tr>
+        </tbody>
+    
+    </table>
     
     <input type="submit" value="guardar" class="boton" >
     {{ form_end(form) }}
     </form>
-
+    </div>
 
 
 {% endblock%}
 
 {% block aside %}
     {{ parent()}}
+    <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
 {% endblock%}
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'academicoBundle:Default:tablecss.html.twig'%}
+{% endblock %}
+    

@@ -9,19 +9,17 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
+<p style="text-align: center ; color: #0035C7 "><strong>LISTA DE  MATERIAS DE GRADO</strong></p>
 {% if mg==1%}
-<hr>
-<strong><p align="center">LISTA MATERIAS DE GRADO</p></strong>
 <div id="dt_example">
     <div id="demo">
-            <table class="display" id="example" >
+        <table class="display" id="example" style="width: 600px" >
                     <thead>
                         <tr>
                             <th colspan="4">PREVIAMENTE REGISTRADAS</th>                                                 
                         <tr>
                             <th>Nombre</th>                                        
-                            <th>Estado</th>     
+                            <th>Estado</th>  
                             <th>Periodo</th>
                             <th>Accion</th>
                         </tr>
@@ -36,7 +34,7 @@
                             {% set esta='Inactivo'%}                                                    
                         {% endif%}
                         <tr >
-                            <td>{{m.materia.nombre }}</td><td>{{esta}}</td><td>{{m.periodo}}</td><td><a href="{{path('admin_materiagrado_modificar', {'codmg': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Editar materia de grado"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
+                            <td style="text-align: left; width: 200px; vertical-align: middle" >{{m.materia.nombre }}</td><td style="text-align: center; width: 30px; vertical-align: middle">{{esta}}</td><td style="text-align: left; width: 160px; vertical-align: middle">{{m.periodo}}</td><td style="text-align: center; width: 30px; vertical-align: middle"><a href="{{path('admin_materiagrado_modificar', {'codmg': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Editar materia de grado"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
                             
                         <tr>
                     <tbody>
@@ -50,13 +48,14 @@
 
 {% block aside %}
     {{ parent()}}
+    <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
 {% endblock%}
 {% block javascripts %}
     {{ parent() }}
 {% endblock%}
 {% block stylesheets %}
 {{ parent() }}
-    
+        {% include 'academicoBundle:Default:tablecss.html.twig'%}
  {% endblock %}
 
         

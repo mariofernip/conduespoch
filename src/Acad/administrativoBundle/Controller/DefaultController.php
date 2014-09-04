@@ -231,7 +231,8 @@ class DefaultController extends Controller
 
         $peticion = $this->getRequest();
 
-        $periodo = $em->getRepository('administrativoBundle:Periodo')->find($pid);
+        $sesion= new Session();
+        $periodo= $sesion->get('periodo');
         
         if(!$periodo){
             $this->get('session')->getFlashBag()->add('Info', 'No existe un periodo activo');
@@ -275,14 +276,14 @@ class DefaultController extends Controller
                 $em->flush(); // envio a guardar/actualizar el estado de cada objeto
             }
                 $this->get('session')->getFlashBag()->add('Info', 'Fechas actualizadas');
-                return $this->redirect($this->generateUrl('mes_evaluacion',array('pid'=>$pid)));
+                return $this->redirect($this->generateUrl('mes_evaluacion',array('pid'=>$periodo->getId())));
         }
         
         return $this->render('administrativoBundle:Default:evaluacionxmes.html.twig', array(
                     'codigo'=>$periodo->getId(),
                     'requisitos' => $mesevaluacion,
                      'periodo'=>$periodo,
-                     'pid'=>$pid,
+                     'pid'=>$periodo->getId(),
                     'form' => $form->createView()
                 ));
     }

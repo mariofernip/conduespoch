@@ -9,11 +9,11 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
-<strong><p align="center">LISTA NOTAS</p></strong>
+
+<p style="text-align: center ; color: #0035C7 "><strong>LISTA DE PARCIALES</strong></p>
 <div id="dt_example">
     <div id="demo">
-            <table class="display" id="example" >
+            <table class="display" id="example" style="width: 300px">
                     <thead>
                         <tr>
                             <th colspan="3">PREVIAMENTE REGISTRADOS</th>                                                 
@@ -33,7 +33,7 @@
                             {% set esta='Inactivo'%}                                                    
                         {% endif%}
                         <tr >
-                            <td>{{m.nombre }}</td> <td>{{ esta }}</td> <td><a href="{{path('admin_mes_modificar', {'codmes': m.id})}}">&nbsp;&nbsp;&nbsp;<img title="Modificar mes"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
+                            <td style="text-align: left; width: 70px; vertical-align: middle">{{m.nombre }}</td> <td style="text-align: center; width: 30px; vertical-align: middle">{{ esta }}</td> <td style="text-align: center; width: 30px; vertical-align: middle"><a href="{{path('admin_mes_modificar', {'codmes': m.id})}}"><img title="Editar parcial"   src="{{ asset('uploads/iconos/edit.gif') }}" ></a></td>                        
                             
                         <tr>
                     <tbody>
@@ -41,17 +41,19 @@
                 </table>
         </div>
     </div>
+
 {% endblock%}
 
 {% block aside %}
     {{ parent()}}
+    <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
 {% endblock%}
 {% block javascripts %}
     {{ parent() }}
 {% endblock%}
 {% block stylesheets %}
-{{ parent() }}
-    
- {% endblock %}
+    {{ parent() }}
+    {% include 'academicoBundle:Default:tablecss.html.twig'%}
+{% endblock %}
 
         

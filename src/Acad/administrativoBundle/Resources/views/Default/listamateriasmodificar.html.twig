@@ -9,7 +9,7 @@
         
 {#LISTA DE MATERIAS: #}
 
-<strong><p>Listado de materias</p></strong>
+<p style="text-align: center ; color: #0035C7 "><strong>LISTA DE MATERIAS A MODIFICAR</strong></p>
 <div id="dt_example">
     <div id="demo">
     {% if sd== 1 %}
@@ -55,8 +55,8 @@
 
 {% endblock%}
 {% block aside %}
-{{parent()}}
-    
+    {{parent()}}
+    <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
 {% endblock%}
 
           

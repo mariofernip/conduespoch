@@ -6,34 +6,26 @@
     <li class="top"><a id="products" class="top_link">PERIODO</a>        
         <ul class="sub">
             <li>
-                <a  href="{{path('periodo_registro')}}" class="fly"><img src="{{ asset('uploads/iconos/add.gif') }}">&nbsp;Nuevo</a>                              
+                <a  href="{{path('periodo_registro')}}" class="fly">Nuevo</a>                              
             </li>                
-            <li><a href="" class="fly">Modificar actual</a></li>
-            <li><a  class="fly">Ver</a>
+            <li><a href="{{path('periodo_modificar')}}" class="fly">Modificar actual</a></li>
+            <li><a  class="fly"><strong>Notas parciales</strong></a>
                 <ul>
                     <li>
-                        <a  href="" class="fly">Actual</a>                        
+                        <a  href="{{path('admin_mes_registro')}}" class="fly">Nueva</a>                        
                     </li>
                     <li>
-                        <a  href="" class="fly">Todos</a>                        
+                        <a  href="{{path('admin_mes_listar_todos')}}" class="fly">Ver todas</a>                        
+                    </li>
+                    <li>
+                        <a  href="{{path('admin_mes_modificar_todos')}}" class="fly">Modificar todas</a>                    
+                    </li>
+                    <li>
+                        <a  href="{{path('mes_evaluacion',{'pid': 2})}}" class="fly"><strong>Cambiar fechas</strong></a>                    
                     </li>
                 </ul>
             </li>
-
-            <li><strong><a  class="fly">Notas</a></strong>
-                <ul>
-                    <li>
-                        <a  href="{{path('admin_mes_registro')}}" class="fly">Nuevo</a>                        
-                    </li>
-                    <li>
-                        <a  href="{{path('admin_mes_listar_todos')}}" class="fly">Ver todos</a>                        
-                    </li>
-                    <li>
-                        <a  href="{{path('admin_mes_modificar_todos')}}" class="fly">Modificar todos</a>                    
-                    </li>
-                </ul>
-            </li>
-            <li><strong><a  class="fly">Días</a><strong>
+            <li><a  class="fly"><strong>Días</strong></a>
                 <ul>
                     <li>
                         <a  href="{{path('admin_dia_registro')}}" class="fly">Nuevo</a>                        
@@ -43,7 +35,7 @@
                     </li>
                 </ul>
             </li>
-            <li><strong><a  class="fly">Horas</a></strong>
+            <li><a  class="fly"><strong>Horas</strong></a>
                 <ul>
                     <li>
                         <a  href="{{path('hora_ingresar')}}" class="fly">Nueva</a>                        
@@ -53,7 +45,7 @@
                     </li>
                 </ul>
             </li>
-            <li><strong><a  class="fly">Subperiodo</a></strong>
+            <li><a  class="fly"><strong>Subperiodos</strong></a>
                 <ul>
                     <li>
                         <a  href="{{path('admin_subperiodo_registro')}}" class="fly">Nuevo</a>                        
@@ -86,7 +78,7 @@
                     </li>
                 </ul>
             </li>#}
-            <li><strong><a  class="fly">Materias grado</a></strong>
+            <li><a  class="fly"><strong>Materias grado</strong></a>
                 <ul>
                     <li>
                         <a  href="{{path('admin_materiagrado_registro')}}" class="fly">Nueva</a>                        
@@ -96,7 +88,7 @@
                     </li>
                 </ul>
             </li>
-            <li><strong><a  class="fly">Materias Periodo</a></strong>
+            <li><a  class="fly"><strong>Materias Periodo</strong></a>
                 <ul>
                     <li>
                         <a  href="{{path('admin_materiaperiodo_registro')}}" class="fly">Nueva</a>                        
@@ -112,7 +104,7 @@
 
     <li class="top"><a id="products" class="top_link">CURSOS</a>        
         <ul class="sub">
-            <li><strong><a  class="fly">Paralelo</a></strong>
+            <li><a  class="fly"><strong>Paralelo</strong></a>
                 <ul>
                     <li>
                         <a  href="{{path('admin_paralelo_registro')}}" class="fly">Nuevo</a>                        
@@ -124,7 +116,7 @@
                 </ul>
             </li>            
 
-            <li><strong><a  class="fly">Curso</a></strong>
+            <li><a  class="fly"><strong>Curso</strong></a>
                 <ul>
                     <li>
                         <a  href="{{path('admin_nivel_registro')}}" class="fly">Nuevo</a>                        
@@ -136,7 +128,7 @@
                 </ul>
             </li>            
 
-            <li><strong> <a  class="fly">Nivel</a></strong>
+            <li><a  class="fly"><strong>Nivel</strong></a>
                 <ul>
                     <li>
                         <a  href="{{path('curso_ingresar')}}" class="fly">Nuevo</a>                        

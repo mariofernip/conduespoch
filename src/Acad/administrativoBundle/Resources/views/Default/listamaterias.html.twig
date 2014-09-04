@@ -6,7 +6,7 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
-<h3><p align="center">Materias </p><h3>
+<p style="text-align: center ; color: #0035C7 "><strong>LISTA DE MATERIAS</strong></p>
 {#LISTA DE MATERIAS#}
 {% if sd== 1 %}
 <div id="dt_example">
@@ -15,20 +15,20 @@
             <thead>
                 <tr >
                     <th>{{'Nombre' }}</th>
-                    <th>{{'Numero Horas'}}</th> 
-                    <th>{{'Numero Creditos'}}</th> 
-                    <th>{{'Descripcion'}}</th> 
+                    <th>{{'Número Horas'}}</th> 
+                    <th>{{'Número Creditos'}}</th> 
+                    <th>{{'Descripción'}}</th> 
                     <th>{{'Estado'}}</th>                                         
-                    <th>Accion</th>
+                    <th>Acción</th>
                 </tr>
             </thead>
     
             <tbody>{% for mat in listamaterias %}
                 <tr>
-                        <td ALIGN="CENTER" style="vertical-align:middle">{{mat.nombre}}</td>
+                        <td ALIGN="LEFT" style="vertical-align:middle">{{mat.nombre | title}}</td>
                         <td ALIGN="CENTER" style="vertical-align:middle">{{mat.numerohoras}}</td>                        
                         <td ALIGN="CENTER" style="vertical-align:middle">{{mat.numerocreditos}}</td>
-                        <td ALIGN="CENTER" style="vertical-align:middle">{{mat.descripcion}}</td>                        
+                        <td ALIGN="CENTER" style="vertical-align:middle">{{mat.descripcion | title}}</td>                        
                         <td ALIGN="CENTER" style="vertical-align:middle">{% if (mat.estado) ==1 %}
             <strong>Activo</strong>
         {% endif %}
@@ -53,7 +53,7 @@
     
     {{parent()}}
      
-        <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+        <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
 {% endblock%}
                     
 {% block stylesheets %}

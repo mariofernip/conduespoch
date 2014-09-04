@@ -6,8 +6,7 @@
 {% block title %}Asignar materia a los docentes{% endblock%}
 
 {% block article %}
-
-<h1>{{ block ('title')}}</h1>
+<p style="text-align: center ; color: #0035C7 "><strong>ASIGNACIÓN DE MATERIAS A LOS DOCENTES EN ESTE PERIODO</strong></p>
 <br>
 <form action="{{ path('amaterias_dictadomateria') }}" method="post" {{
         form_enctype(formulario) }}>
