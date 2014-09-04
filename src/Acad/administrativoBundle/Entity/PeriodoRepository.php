@@ -62,7 +62,33 @@ class PeriodoRepository extends EntityRepository{
         
         
     }
+
+    
+    public function getnumeroMateriasSubperiodo($pid) {
+        
+        
+        $em= $this->getEntityManager();
+        $std = 0;
+        $dql = 'select count(sp.id) 
+                FROM administrativoBundle:SubPeriodo sp
+                Join sp.periodo p
+                WHERE p.id = :pid and
+                sp.estado != :std
+                ';
+        $consulta = $em->createQuery($dql);   
+        $consulta->setParameter('pid', $pid);
+        $consulta->setParameter('std', $std);
+        
+        $count = $consulta->getSingleScalarResult();
+        return $count;
+        
+        
+    }
     
 }
+
+
+
+
 
 ?>

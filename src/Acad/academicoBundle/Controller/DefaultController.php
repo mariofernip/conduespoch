@@ -676,7 +676,7 @@ class DefaultController extends Controller {
         //obtengo cedula del docente autenticado
         $cedula = $usuario->getCedula();
         //obtiene las materias del docente autenticado
-        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocenteSubPeriodo($cedula, $periodo->getId());
         //obtiene lista de estudiantes
         $evaluacionestudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia, $periodo->getId(), $nivel, $mesid);
 
@@ -1047,7 +1047,7 @@ class DefaultController extends Controller {
         }
 
         $cedula = $usuario->getCedula();
-        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocenteSubPeriodo($cedula, $periodo->getId());
 
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
@@ -1236,7 +1236,7 @@ class DefaultController extends Controller {
         //obtengo cedula del docente autenticado
         $cedula = $usuario->getCedula();
         //obtiene las materias del docente autenticado
-        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocenteSubPeriodo($cedula, $periodo->getId());
         //obtiene lista de estudiantes
         $suspensoestudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getSuspensoEstudiantesxMateria($materia, $periodo->getId(), $nivel);
 
@@ -1384,7 +1384,7 @@ class DefaultController extends Controller {
                 ));
 
         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
-        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocenteSubPeriodo($usuario->getCedula(), $periodo->getId());
         return $this->render('academicoBundle:Default:portada_docente2.html.twig', array(
                     'periodo' => $periodo,
                     'mesevac' => $listamesesEv,

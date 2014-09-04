@@ -131,12 +131,20 @@ class DefaultController extends Controller {
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
                 ));
+        $subperiodo = $em->getRepository('administrativoBundle:Periodo')->getnumeroMateriasSubperiodo($periodo);
+        
+        
         if ($usuario->getEstado() == true) {
 
 
             $sesion = new Session();
             $sesion->set('periodo', $periodo);
             if ($role == 'docente') {
+                if ($subperiodo < 2 or $subperiodo >2) {
+                    $this->get('session')->getFlashBag()->add('Info', 'URGENTE!!! Contacte al administrador Sub Periodos no corresponden');
+                    return $this->render('academicoBundle:Default:portada_docente_sinmaterias.html.twig', array(
+                                'periodo' => $periodo,));
+                }
                 $listameses = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
                 $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
                 $x = 1;

@@ -31,6 +31,32 @@ class DictadomateriaRepository extends EntityRepository {
         return $consulta->getResult();
     }
 
+    public function getMateriasDocenteSubPeriodo($cedula,$pid) {
+        
+        $em = $this->getEntityManager();
+        $std = 0;
+        $dql = 'select dm,d,n,p,m,mp,sp
+                FROM academicoBundle:Dictadomateria dm
+                Join dm.docente d
+                Join dm.nivel n
+                Join dm.periodo p
+                Join dm.materiaperiodo mp
+                Join mp.subperiodo sp
+                Join mp.materia m
+                WHERE d.cedula = :cedu and
+                          p.id = :pid  and
+                          sp.estado != :std                          
+                
+                ';
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('cedu', $cedula);                
+        $consulta->setParameter('pid', $pid);                        
+        $consulta->setParameter('std', $std);                        
+
+        return $consulta->getResult();
+    }
+
+    
     public function getEstudiantesxMateriaSD($mid,$pid,$nid) {
         $seccion='Diurna';
         $em = $this->getEntityManager();
