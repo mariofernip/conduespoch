@@ -62,44 +62,53 @@ class DefaultController extends Controller {
         $formulario->handleRequest($peticion);
 
         if ($formulario->isValid()) {
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
 
-            $rol = $formulario->getData()->getRol();
+                $rol = $formulario->getData()->getRol();
 
-            $nombre = $formulario->getData()->getNombre();
-            $apellidos = $formulario->getData()->getApellidos();
-            $email = $formulario->getData()->getEmail();
-            $cedula = $formulario->getData()->getCedula();
-            $estado = $formulario->getData()->getEstado();
-            $direccion = 'Dir. pendiente';
+                $nombre = $formulario->getData()->getNombre();
+                $apellidos = $formulario->getData()->getApellidos();
+                $email = $formulario->getData()->getEmail();
+                $cedula = $formulario->getData()->getCedula();
+                $estado = $formulario->getData()->getEstado();
+                $direccion = 'Dir. pendiente';
 
-            $encoder = $this->get('security.encoder_factory')
-                    ->getEncoder($usuario);
-            $usuario->setSalt(md5(time()));
-            $passwordCodificado = $encoder->encodePassword(
-                    $usuario->getPassword(), $usuario->getSalt()
-            );
-            $usuario->setPassword($passwordCodificado);
+                $encoder = $this->get('security.encoder_factory')
+                        ->getEncoder($usuario);
+                $usuario->setSalt(md5(time()));
+                $passwordCodificado = $encoder->encodePassword(
+                        $usuario->getPassword(), $usuario->getSalt()
+                );
+                $usuario->setPassword($passwordCodificado);
 
-            $usuario->setFechaAlta(new \DateTime('now'));
-            $em->persist($usuario);
-            $em->flush();
-
-            if ($rol == 'DOCENTE') {
-                $docente = new Docente();
-                $encoder = $this->get('security.encoder_factory')->getEncoder($usuario);
-                $docente->setSalt($usuario->getSalt());
-                // $passwordCodificado = $encoder->encodePassword($usuario->getPassword(), $usuario->getSalt());
-                $docente->setPassword($passwordCodificado);
-                $docente->setNombre($nombre);
-                $docente->setApellido($apellidos);
-                $docente->setEmail($email);
-                $docente->setDireccion($direccion);
-                $docente->setCedula($cedula);
-                $docente->setFechaingreso(new \DateTime('now'));
-                $docente->setEstado($estado);
-                $em->persist($docente);
+                $usuario->setFechaAlta(new \DateTime('now'));
+                $em->persist($usuario);
                 $em->flush();
+
+                if ($rol == 'DOCENTE') {
+                    $docente = new Docente();
+                    $encoder = $this->get('security.encoder_factory')->getEncoder($usuario);
+                    $docente->setSalt($usuario->getSalt());
+                    // $passwordCodificado = $encoder->encodePassword($usuario->getPassword(), $usuario->getSalt());
+                    $docente->setPassword($passwordCodificado);
+                    $docente->setNombre($nombre);
+                    $docente->setApellido($apellidos);
+                    $docente->setEmail($email);
+                    $docente->setDireccion($direccion);
+                    $docente->setCedula($cedula);
+                    $docente->setFechaingreso(new \DateTime('now'));
+                    $docente->setEstado($estado);
+                    $em->persist($docente);
+                    $em->flush();
+                }
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
+
             $this->get('session')->getFlashBag()->add('info', '¡Enhorabuena! Usuario registrado'
             );
 

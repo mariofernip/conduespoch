@@ -45,18 +45,18 @@ class DefaultController extends Controller {
 
     public function portadaAction() {
 
-        $periodo= '';
-        
-        return $this->render('academicoBundle:Default:portada.html.twig',array(
-            'periodo'=>$periodo
-        ));
+        $periodo = '';
+
+        return $this->render('academicoBundle:Default:portada.html.twig', array(
+                    'periodo' => $periodo
+                ));
     }
 
     //METODO INSERTAR ESTUDIANTE
     //permite ingresar un nuevo estudiante al sistema y lo inscribe en el periodo actual
     public function registroEstudianteAction() {
 
-        
+
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getManager();
 
@@ -84,34 +84,41 @@ class DefaultController extends Controller {
 
 
         if ($formulario->isValid()) {
-
-            //inserto el nuevo estudiante       
-            //$estudiante->upload();
-            $estudiante->setEstado(1);
-            $em->persist($estudiante);
-            $em->flush();
-
-
-            $inscripcion = new Inscripcion();
-
-            $inscripcion->setEstudiante($estudiante);
-            $inscripcion->setEstado(0);
-            $inscripcion->setPeriodo($periodo);
-
-            //le iscribo en el periodo actual al estudiante
-            $em->persist($inscripcion);
-            $em->flush();
-
-
-            //lleno la tabla cumplerequisito
-            foreach ($req as $req1) {
-                $cumplerequisito = new CumpleRequisito();
-                $cumplerequisito->setEstado(0);
-                $cumplerequisito->setInscripcion($inscripcion);
-                $cumplerequisito->setRequisito($req1);
-
-                $em->persist($cumplerequisito);
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
+                //inserto el nuevo estudiante       
+                //$estudiante->upload();
+                $estudiante->setEstado(1);
+                $em->persist($estudiante);
                 $em->flush();
+
+
+                $inscripcion = new Inscripcion();
+
+                $inscripcion->setEstudiante($estudiante);
+                $inscripcion->setEstado(0);
+                $inscripcion->setPeriodo($periodo);
+
+                //le iscribo en el periodo actual al estudiante
+                $em->persist($inscripcion);
+                $em->flush();
+
+
+                //lleno la tabla cumplerequisito
+                foreach ($req as $req1) {
+                    $cumplerequisito = new CumpleRequisito();
+                    $cumplerequisito->setEstado(0);
+                    $cumplerequisito->setInscripcion($inscripcion);
+                    $cumplerequisito->setRequisito($req1);
+
+                    $em->persist($cumplerequisito);
+                    $em->flush();
+                }
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Estudiante inscrito'
@@ -125,10 +132,9 @@ class DefaultController extends Controller {
                     'periodo' => $periodo,
                     'formulario' => $formulario->createView())
         );
-
     }
 
-     public function requisitoEstudianteAction($cedula) {
+    public function requisitoEstudianteAction($cedula) {
 
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -176,30 +182,38 @@ class DefaultController extends Controller {
 
         $form->handleRequest($peticion);
         if ($form->isValid()) {
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
 
-            foreach ($requisitoestudiante->getReqEst() as $req) {// recorro lista de objetos: cumplerequisito
-                $cod = $req->getId(); // ontengo el id de cada objeto
-                $est = $req->getEstado(); // obtengo el estado de cada objto
-                $cr = $em->getRepository('academicoBundle:CumpleRequisito')->find($cod); //consulto el objeto cumplerequisito
-                $cr->setEstado($est); //actualizo el estado del objeto previamente encontrado
+                foreach ($requisitoestudiante->getReqEst() as $req) {// recorro lista de objetos: cumplerequisito
+                    $cod = $req->getId(); // ontengo el id de cada objeto
+                    $est = $req->getEstado(); // obtengo el estado de cada objto
+                    $cr = $em->getRepository('academicoBundle:CumpleRequisito')->find($cod); //consulto el objeto cumplerequisito
+                    $cr->setEstado($est); //actualizo el estado del objeto previamente encontrado
 
-                $em->flush(); // envio a guardar/actualizar el estado de cada objeto
-            }
-            //consulto el numero de requisitos activos x estudiante 
-            $numreqxest = $em->getRepository('academicoBundle:CumpleRequisito')->getNumeroRequisitosActivoxEstudiante($cedula, $periodo->getId());
-            //consulto el numero de requisitos activos x periodo
-            $numreqxper = $em->getRepository('academicoBundle:CumpleRequisito')->getNumeroRequisitosActivosxPeriodo();
-            //comparo
-            if ($numreqxest == $numreqxper) {
-                $inscripcion = $em->getRepository('academicoBundle:Inscripcion')->find($codinsc);
-                $inscripcion->setEstado(1);
-                $em->flush();
-                $this->get('session')->getFlashBag()->add('Info', 'Estudiante apto para matricularse');
-            } else {
-                $inscripcion = $em->getRepository('academicoBundle:Inscripcion')->find($codinsc);               
-                $inscripcion-> setEstado(0);
-                $em->flush();
-                $this->get('session')->getFlashBag()->add('Info', 'requisitos ingresados');
+                    $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+                }
+                //consulto el numero de requisitos activos x estudiante 
+                $numreqxest = $em->getRepository('academicoBundle:CumpleRequisito')->getNumeroRequisitosActivoxEstudiante($cedula, $periodo->getId());
+                //consulto el numero de requisitos activos x periodo
+                $numreqxper = $em->getRepository('academicoBundle:CumpleRequisito')->getNumeroRequisitosActivosxPeriodo();
+                //comparo
+                if ($numreqxest == $numreqxper) {
+                    $inscripcion = $em->getRepository('academicoBundle:Inscripcion')->find($codinsc);
+                    $inscripcion->setEstado(1);
+                    $em->flush();
+                    $this->get('session')->getFlashBag()->add('Info', 'Estudiante apto para matricularse');
+                } else {
+                    $inscripcion = $em->getRepository('academicoBundle:Inscripcion')->find($codinsc);
+                    $inscripcion->setEstado(0);
+                    $em->flush();
+                    $this->get('session')->getFlashBag()->add('Info', 'requisitos ingresados');
+                }
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
 
             $usuario = $this->get('security.context')->getToken()->getUser();
@@ -215,7 +229,7 @@ class DefaultController extends Controller {
                     'form' => $form->createView()
                 ));
     }
-    
+
     public function buscarEstAction() {
 
         $peticion = $this->getRequest();
@@ -272,7 +286,7 @@ class DefaultController extends Controller {
             }
         }
         return $this->render('academicoBundle:Default:buscarEst.html.twig', array(
-                    'periodo'=>$periodo,
+                    'periodo' => $periodo,
                     'formulario' => $formulario->createView()
                 ));
     }
@@ -312,26 +326,32 @@ class DefaultController extends Controller {
 
         if ($formulario->isValid()) {
 
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
+                $inscripcion = new Inscripcion();
 
+                $inscripcion->setEstudiante($estudiante);
+                $inscripcion->setEstado(0);
+                $inscripcion->setPeriodo($periodo);
 
-            $inscripcion = new Inscripcion();
-
-            $inscripcion->setEstudiante($estudiante);
-            $inscripcion->setEstado(0);
-            $inscripcion->setPeriodo($periodo);
-
-            $em->persist($inscripcion);
-            $em->flush();
-
-            //recorro lista de requisitos para insertar en la tabla cumplerequisito
-            foreach ($req as $req1) {
-                $cumplerequisito = new CumpleRequisito();
-                $cumplerequisito->setEstado(0);
-                $cumplerequisito->setInscripcion($inscripcion);
-                $cumplerequisito->setRequisito($req1);
-
-                $em->persist($cumplerequisito);
+                $em->persist($inscripcion);
                 $em->flush();
+
+                //recorro lista de requisitos para insertar en la tabla cumplerequisito
+                foreach ($req as $req1) {
+                    $cumplerequisito = new CumpleRequisito();
+                    $cumplerequisito->setEstado(0);
+                    $cumplerequisito->setInscripcion($inscripcion);
+                    $cumplerequisito->setRequisito($req1);
+
+                    $em->persist($cumplerequisito);
+                    $em->flush();
+                }
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
 
             return $this->redirect($this->generateUrl('estudiante_requisito', array(
@@ -370,44 +390,53 @@ class DefaultController extends Controller {
         $formulario->handleRequest($peticion);
 
         if ($formulario->isValid()) {
-            $doc = new Docente($formulario->getData()->getDocente());
-            $c = $doc->getCedula();
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
 
-            if ($formulario->getData()->getDocente() == null) {
+                $doc = new Docente($formulario->getData()->getDocente());
+                $c = $doc->getCedula();
 
-                $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione un docente');
+                if ($formulario->getData()->getDocente() == null) {
 
-                return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
-            }
-            if ($formulario->getData()->getNivel() == null) {
+                    $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione un docente');
 
-                $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione un nivel');
+                    return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
+                }
+                if ($formulario->getData()->getNivel() == null) {
 
-                return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
-            }
-            if ($formulario->getData()->getMateriaPeriodo()->getMateria() == null) {
+                    $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione un nivel');
 
-                $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione una materia');
+                    return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
+                }
+                if ($formulario->getData()->getMateriaPeriodo()->getMateria() == null) {
 
-                return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
-            }
+                    $this->get('session')->getFlashBag()->add('Info', 'Por favor seleccione una materia');
 
-            $em->persist($dictadomateria);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia asignada al docente'
-            );
+                    return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
+                }
 
-            for ($i = 1; $i <3; $i++) {
-                $horarioclase= new HorarioClase();
-                $horarioclase->setDictadomateria($dictadomateria);
-                $dia=$em->getRepository('administrativoBundle:Dia')->find($i);
-                $horarioclase->setDia($dia);
-                $hora=$em->getRepository('administrativoBundle:Hora')->find($i);
-                $horarioclase->setHora($hora);
-                $em->persist($horarioclase);
+                $em->persist($dictadomateria);
                 $em->flush();
+                $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia asignada al docente'
+                );
+
+                for ($i = 1; $i < 3; $i++) {
+                    $horarioclase = new HorarioClase();
+                    $horarioclase->setDictadomateria($dictadomateria);
+                    $dia = $em->getRepository('administrativoBundle:Dia')->find($i);
+                    $horarioclase->setDia($dia);
+                    $hora = $em->getRepository('administrativoBundle:Hora')->find($i);
+                    $horarioclase->setHora($hora);
+                    $em->persist($horarioclase);
+                    $em->flush();
+                }
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
-            
+
             return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
         }
 
@@ -481,7 +510,7 @@ class DefaultController extends Controller {
                     }
                 }
                 $estm = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
-                if ($estm != null) {                    
+                if ($estm != null) {
                     $this->get('session')->getFlashBag()->add('Info', 'Estudiante ya esta matriculado');
                     return $this->redirect($this->generateUrl('estudiante_buscar'));
                 }
@@ -495,8 +524,8 @@ class DefaultController extends Controller {
             }
         }
         return $this->render('academicoBundle:Default:buscarEstMat.html.twig', array(
-            'periodo'=>$periodo,
-            'formulario' => $formularioantiguos->createView()));
+                    'periodo' => $periodo,
+                    'formulario' => $formularioantiguos->createView()));
     }
 
     public function matriculaEstudianteAction($cedula) {
@@ -510,12 +539,12 @@ class DefaultController extends Controller {
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array('estado' => 1));
         $mat = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado' => 1));
         $matper = $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo);
-        
+
         if (!$mat) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-        
+
         $estudiante = $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
             'cedula' => $cedula
                 ));
@@ -535,68 +564,67 @@ class DefaultController extends Controller {
 
         $listamateriagrado = $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
             'periodo' => $periodo,
-            'estado'=>true
+            'estado' => true
                 ));
-        
+
         if (!$listamateriagrado) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias de grado para este periodo');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
         $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
-                'periodo' => $periodo->getId()
-                    ));
+            'periodo' => $periodo->getId()
+                ));
 
         if (!$listamesevaluacion) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No hay meses asignados para este periodo');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-        
+
         $formulario = $this->createForm(new MatriculaType(), $matricula);
         $formulario->handleRequest($peticion);
 
         if ($formulario->isSubmitted()) {
-            $matricula->setEstado(1);
-            $matricula->setEstudiante($estudiante);
-            $matricula->setFechamatricula(new DateTime('now'));
-            $em->persist($matricula);
-            $em->flush();
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
 
-            
-            //LENAR LA TABLA: EXAMENGRADO
-            foreach ($listamateriagrado  as $matgrado) {
-                $examengrado = new ExamenGrado();
-                $examengrado->setMateriagrado($matgrado);
-                $examengrado->setMatricula($matricula);
-                $examengrado->setEquivalencia('Reprobado');
-                $examengrado->setDescripcion('');
-                $examengrado->setNota(0);
-                $em->persist($examengrado);
+                $matricula->setEstado(1);
+                $matricula->setEstudiante($estudiante);
+                $matricula->setFechamatricula(new DateTime('now'));
+                $em->persist($matricula);
                 $em->flush();
-            }
-            
-            
-            //LENAR LA TABLA: MATERIAASIGNADA
-            foreach ($matper as $mat1) {
-                $materiaasignada = new MateriaAsignada();
-                $materiaasignada->setMateriaperiodo($mat1);
-                $materiaasignada->setMatricula($matricula);
-                $em->persist($materiaasignada);
-                $em->flush();
-            }
 
-            
-            
-            
-            $matasi = $em->getRepository('academicoBundle:MateriaAsignada')->findBy(array('matricula' => $matricula->getId()));
-            
-            //LLENAR LA TABLA: ASISTENCIA
-            foreach ($matasi as $matasi1) {
-                $asistencia = new Asistencia();
-                $asistencia->setMateriaasignada($matasi1);
-                $em->persist($asistencia);
-                $em->flush();
-                
+
+                //LENAR LA TABLA: EXAMENGRADO
+                foreach ($listamateriagrado as $matgrado) {
+                    $examengrado = new ExamenGrado();
+                    $examengrado->setMateriagrado($matgrado);
+                    $examengrado->setMatricula($matricula);
+                    $examengrado->setEquivalencia('Reprobado');
+                    $examengrado->setDescripcion('');
+                    $examengrado->setNota(0);
+                    $em->persist($examengrado);
+                    $em->flush();
+                }
+
+                //LENAR LA TABLA: MATERIAASIGNADA
+                foreach ($matper as $mat1) {
+                    $materiaasignada = new MateriaAsignada();
+                    $materiaasignada->setMateriaperiodo($mat1);
+                    $materiaasignada->setMatricula($matricula);
+                    $em->persist($materiaasignada);
+                    $em->flush();
+                }
+
+                $matasi = $em->getRepository('academicoBundle:MateriaAsignada')->findBy(array('matricula' => $matricula->getId()));
+
+                //LLENAR LA TABLA: ASISTENCIA
+                foreach ($matasi as $matasi1) {
+                    $asistencia = new Asistencia();
+                    $asistencia->setMateriaasignada($matasi1);
+                    $em->persist($asistencia);
+                    $em->flush();
+                }
                 //LLENAR LA TABLA: EVALUACION
                 foreach ($listamesevaluacion as $meseva) {
                     $evaluacion = new Evaluacion();
@@ -612,12 +640,17 @@ class DefaultController extends Controller {
                     $em->persist($evaluacion);
                     $em->flush();
                 }
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
+
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Estudiante matriculado');
 
             //codigo para hacer que retorne a la pagina principal del usuario autenticado
-            
+
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
@@ -646,9 +679,6 @@ class DefaultController extends Controller {
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
         //obtiene lista de estudiantes
         $evaluacionestudiantesxmateria = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia, $periodo->getId(), $nivel, $mesid);
-
-
-
 
         $objmes = $em->getRepository('administrativoBundle:MesEvaluacion')->find($mesid);
 
@@ -684,20 +714,28 @@ class DefaultController extends Controller {
 
         $form->handleRequest($peticion);
         if ($form->isValid()) {
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
 
-            foreach ($evaluacionestudiante->getEvaEst() as $req) {// recorro lista de objetos: cumplerequisito
-                $cod = $req->getId(); // ontengo el id de cada objeto
-                $notatb = $req->getNotatb(); // obtengo el estado de cada objto
-                $notaec = $req->getNotaec(); // obtengo el estado de cada objto
-                $notapp = $req->getNotapp(); // obtengo el estado de cada objto
-                $notapt = $req->getNotapt(); // obtengo el estado de cada objto
-                $cr = $em->getRepository('academicoBundle:Evaluacion')->find($cod); //consulto el objeto cumplerequisito
-                $cr->setNotatb($notatb);
-                $cr->setNotaec($notaec);
-                $cr->setNotapp($notapp);
-                $cr->setNotapt($notapt);
-                $em->persist($cr);
-                $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+                foreach ($evaluacionestudiante->getEvaEst() as $req) {// recorro lista de objetos: cumplerequisito
+                    $cod = $req->getId(); // ontengo el id de cada objeto
+                    $notatb = $req->getNotatb(); // obtengo el estado de cada objto
+                    $notaec = $req->getNotaec(); // obtengo el estado de cada objto
+                    $notapp = $req->getNotapp(); // obtengo el estado de cada objto
+                    $notapt = $req->getNotapt(); // obtengo el estado de cada objto
+                    $cr = $em->getRepository('academicoBundle:Evaluacion')->find($cod); //consulto el objeto cumplerequisito
+                    $cr->setNotatb($notatb);
+                    $cr->setNotaec($notaec);
+                    $cr->setNotapp($notapp);
+                    $cr->setNotapt($notapt);
+                    $em->persist($cr);
+                    $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+                }
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Notas actualizadas..!!');
@@ -757,9 +795,8 @@ class DefaultController extends Controller {
 
 
         return $this->render('academicoBundle:default:listaestudiantesinscritos.html.twig', array(
-                    'periodo' => $periodo,                    
-                    'pagination'=>$pagination
-                    
+                    'periodo' => $periodo,
+                    'pagination' => $pagination
                 ));
     }
 
@@ -830,29 +867,29 @@ class DefaultController extends Controller {
         $paginationSD = $paginatorSD->paginate(
                 $diurna, $this->getRequest()->query->get('page', 1), 10
         );
-        
+
         //seccion vespertina
         $paginatorSV = $this->get('knp_paginator');
         $paginationSV = $paginatorSV->paginate(
                 $vespertina, $this->getRequest()->query->get('page', 1), 10
         );
-        
+
         //seccion nocturna
         $paginatorSN = $this->get('knp_paginator');
         $paginationSN = $paginatorSN->paginate(
                 $nocturna, $this->getRequest()->query->get('page', 1), 10
         );
-        $sd=0; 
-        $sv=0;
-        $sn=0;
-        if($diurna){
-            $sd=1;
+        $sd = 0;
+        $sv = 0;
+        $sn = 0;
+        if ($diurna) {
+            $sd = 1;
         }
-        if($vespertina){
-            $sv=1;
+        if ($vespertina) {
+            $sv = 1;
         }
-        if($nocturna){
-            $sn=1;
+        if ($nocturna) {
+            $sn = 1;
         }
         return $this->render('academicoBundle:default:listaestudiantesmatriculados.html.twig', array(
                     'periodo' => $periodo,
@@ -861,21 +898,21 @@ class DefaultController extends Controller {
                     'nocturna' => $paginationSN,
                     'vespertina' => $paginationSV,
                     'curso' => $curso,
-                    'sd'=>$sd,
-                    'sv'=>$sv,
-                    'sn'=>$sn
+                    'sd' => $sd,
+                    'sv' => $sv,
+                    'sn' => $sn
                 ));
     }
-    
+
     //METODO: lista asistencia estudiantes matriculados por nivel, y secciones de un periodo actual    
     public function listaestudiantesxseccionesmateriaAction($materias, $nivel) {
 
-       $em = $this->getDoctrine()->getManager();
-       $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
-       $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
-                     
+        $em = $this->getDoctrine()->getManager();
+        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+
         $request = $this->getRequest();
-        
+
         if (!$periodo) {
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
@@ -891,21 +928,21 @@ class DefaultController extends Controller {
         //obtine el nivel
         $curso = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
         //obtiene lista de estudiantes matriculados de seccion: diurna
-        $secciones = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSecciones($materias, $nivel);      
-        
+        $secciones = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSecciones($materias, $nivel);
+
         //secciones
         $paginatorSS = $this->get('knp_paginator');
         $paginationSS = $paginatorSS->paginate(
                 $secciones, $this->getRequest()->query->get('page', 1), 10
         );
-        
-        $sd=0; 
-        
-        if($secciones){
-            $sd=1;
+
+        $sd = 0;
+
+        if ($secciones) {
+            $sd = 1;
         }
         $itemsecciones = new AsistenciaEstudiante();
-        
+
         foreach ($secciones as $sec) {
             $cr = new Asistencia(); //creo un objeto nuevo: asistencia
             $cr->setId($sec->getId());
@@ -917,50 +954,54 @@ class DefaultController extends Controller {
             //lleno el objto tarea con varios objetos asistencia
             $itemsecciones->getFaltasjustificadas()->add($cr);
         }
-        
+
         $formsecciones = $this->createForm(new EstudianteAsistenciaType(), $itemsecciones);
-        
+
         $formsecciones->handleRequest($request);
-          
-             if ( $formsecciones->isValid() ) {     
-            
+
+        if ($formsecciones->isValid()) {
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
+
                 foreach ($itemsecciones->getFaltasjustificadas() as $item) {
-                    $cod= $item->getId();
+                    $cod = $item->getId();
                     //$ha=$item->getHorasasistidas();
-                    $fj=$item->getFaltasjustificadas();
-                    $fi=$item->getFaltasinjustificadas();
-                    $a=$item->getAtrasos();
-                    
-                    $cr= $em->getRepository('academicoBundle:Asistencia')->find($cod);                    
+                    $fj = $item->getFaltasjustificadas();
+                    $fi = $item->getFaltasinjustificadas();
+                    $a = $item->getAtrasos();
+
+                    $cr = $em->getRepository('academicoBundle:Asistencia')->find($cod);
                     $cr->setFaltasjustificadas($fj);
                     $cr->setFaltasinjustificadas($fi);
                     $cr->setAtrasos($a);
                     $em->flush();
-                }         
-                $this->get('session')->getFlashBag()->add('Info', 'Asistencia ha sido actualizada');
-                $usuario = $this->get('security.context')->getToken()->getUser();
-                $rol = strtolower($usuario->getRol());
-                return $this->redirect($this->generateUrl('estudiante_lista_matriculados_x_materia_x_secciones', array('materias' => $materias, 'nivel' => $nivel)));
-      
-
+                }
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
-        $mat= $em->getRepository('administrativoBundle:Materia')->find($materias);
+
+            $this->get('session')->getFlashBag()->add('Info', 'Asistencia ha sido actualizada');
+            $usuario = $this->get('security.context')->getToken()->getUser();
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('estudiante_lista_matriculados_x_materia_x_secciones', array('materias' => $materias, 'nivel' => $nivel)));
+        }
+        $mat = $em->getRepository('administrativoBundle:Materia')->find($materias);
         return $this->render('academicoBundle:default:listaestudiantesmatriculadosasistecia.html.twig', array(
                     'periodo' => $periodo,
                     'niveles' => $niveles,
-                    'secciones' => $paginationSS,            
-                    'curso' => $curso,     
-                    'mat'=>$mat,
-                    'materias'=>$materias,
-                    'listamaterias'=>$listamaterias,            
-                    'formsecciones'=>$formsecciones->createView(),                       
-                    'sd'=>$sd,
+                    'secciones' => $paginationSS,
+                    'curso' => $curso,
+                    'mat' => $mat,
+                    'materias' => $materias,
+                    'listamaterias' => $listamaterias,
+                    'formsecciones' => $formsecciones->createView(),
+                    'sd' => $sd,
                 ));
     }
-        
-    
-        
-    
+
     //METODO: lista las materias por nivel    
     public function listamateriasxnivelAction($nivel) {
 
@@ -980,17 +1021,15 @@ class DefaultController extends Controller {
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
-         
+
         return $this->render('academicoBundle:default:listamateriasxnivel.html.twig', array(
                     'periodo' => $periodo,
-                    'listamaterias'=>$listamaterias,
-                    'niveles'=>$niveles,
-                    'curso'=>$curso
-            
+                    'listamaterias' => $listamaterias,
+                    'niveles' => $niveles,
+                    'curso' => $curso
                 ));
     }
-    
-    
+
     public function listamateriasxdocenteAction($codmes) {
 
         $em = $this->getDoctrine()->getEntityManager();
@@ -1023,7 +1062,6 @@ class DefaultController extends Controller {
                     'codmes' => $objmes
                 ));
     }
-
 
     public function listadictadomateriaAction() {
 
@@ -1106,19 +1144,18 @@ class DefaultController extends Controller {
             //elimino el objto dictadomateria
             $em->remove($dictadomateria);
             $em->flush();
-            
+
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Registro eliminado');
             return $this->redirect($this->generateUrl('amaterias_lista_materias_asignadas'));
-        }else{
+        } else {
             $this->get('session')->getFlashBag()->add('Info', 'Registro no encontrado');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
     }
-    
-    
+
     //METODO: modifica los datos de la matricula de un estudiante previamente matriculado 
     public function modificarmatriculaAction($mid) {
-        
+
         $em = $this->getDoctrine()->getEntityManager();
         $peticion = $this->getRequest();
 
@@ -1127,7 +1164,7 @@ class DefaultController extends Controller {
         $matricula = $em->getRepository('academicoBundle:Matricula')->findOneBy(array(
             'id' => $mid
                 ));
-               
+
         $formulario = $this->createForm(new MatriculaType(), $matricula);
 
         $formulario->handleRequest($peticion);
@@ -1143,7 +1180,7 @@ class DefaultController extends Controller {
                     'mid' => $mid,
                     'formulario' => $formulario->createView(),
                     'matricula' => $matricula
-                    //'estudiante' => $estudiante
+                        //'estudiante' => $estudiante
                 ));
     }
 
@@ -1219,7 +1256,7 @@ class DefaultController extends Controller {
         foreach ($suspensoestudiantesxmateria as $req) {
 
             $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
-            if (($asistencia->getPromediofinal() < 80) && ($req->getPromediofinal() <16)) {
+            if (($asistencia->getPromediofinal() < 80) && ($req->getPromediofinal() < 16)) {
                 $eqbd = 'Reprobado';
             } else {
                 $eqbd = 'Aprobado';
@@ -1245,49 +1282,57 @@ class DefaultController extends Controller {
         $eq = '';
         $npf = 0;
         if ($form->isValid()) {
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
 
-            foreach ($suspensoestudiante->getEvaEst() as $req) {// recorro lista de objetos: MA
-                if ($req->getPromediofinal() < 16) {
-                    $cod = $req->getId(); // ontengo el id de cada objeto
-                    $suspenso = $req->getNotasuspenso();
-                    $pf = $req->getPromediofinal();
-                    $examens = round(20 - ($pf / 2));
-                    if ($suspenso >= $examens) {
-                        $npf = round(($suspenso + $pf) / 2);
+                foreach ($suspensoestudiante->getEvaEst() as $req) {// recorro lista de objetos: MA
+                    if ($req->getPromediofinal() < 16) {
+                        $cod = $req->getId(); // ontengo el id de cada objeto
+                        $suspenso = $req->getNotasuspenso();
+                        $pf = $req->getPromediofinal();
+                        $examens = round(20 - ($pf / 2));
+                        if ($suspenso >= $examens) {
+                            $npf = round(($suspenso + $pf) / 2);
+                            $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
+                            if ($asistencia->getPromediofinal() < 80) {
+                                $eq = 'Reprobado';
+                            } else {
+                                $eq = 'Aprobado';
+                            }
+                        } else {
+                            $npf = round(($suspenso + $pf) / 2);
+                            $eq = 'Reprobado';
+                        }
+
+                        $ma = $em->getRepository('academicoBundle:MateriaAsignada')->find($cod); //consulto el objeto materiaasignada
+                        $ma->setNotasuspenso($suspenso);
+                        $ma->setEquivalencia($eq);
+                        $ma->setPromediofinal($npf);
+                        $em->persist($ma);
+                        $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+                    } else {
+                        $cod = $req->getId(); // ontengo el id de cada objeto                    
+                        $pf = $req->getPromediofinal();
                         $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
-                        if ($asistencia->getPromediofinal() < 80) {
+                        if (($asistencia->getPromediofinal() < 80)) {
                             $eq = 'Reprobado';
                         } else {
                             $eq = 'Aprobado';
                         }
-                    } else {
-                        $npf = round(($suspenso + $pf) / 2);
-                        $eq = 'Reprobado';
-                    }
 
-                    $ma = $em->getRepository('academicoBundle:MateriaAsignada')->find($cod); //consulto el objeto materiaasignada
-                    $ma->setNotasuspenso($suspenso);
-                    $ma->setEquivalencia($eq);
-                    $ma->setPromediofinal($npf);
-                    $em->persist($ma);
-                    $em->flush(); // envio a guardar/actualizar el estado de cada objeto
-                } else {
-                    $cod = $req->getId(); // ontengo el id de cada objeto                    
-                    $pf = $req->getPromediofinal();
-                    $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
-                    if (($asistencia->getPromediofinal() < 80)) {
-                        $eq = 'Reprobado';
-                    } else {
-                        $eq = 'Aprobado';
+                        $ma = $em->getRepository('academicoBundle:MateriaAsignada')->find($cod); //consulto el objeto materiaasignada
+                        $ma->setNotasuspenso(0);
+                        $ma->setPromediofinal($pf);
+                        $ma->setEquivalencia($eq);
+                        $em->persist($ma);
+                        $em->flush(); // envio a guardar/actualizar el estado de cada objeto
                     }
-
-                    $ma = $em->getRepository('academicoBundle:MateriaAsignada')->find($cod); //consulto el objeto materiaasignada
-                    $ma->setNotasuspenso(0);
-                    $ma->setPromediofinal($pf);
-                    $ma->setEquivalencia($eq);
-                    $em->persist($ma);
-                    $em->flush(); // envio a guardar/actualizar el estado de cada objeto
                 }
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Notas actualizadas..!!');
@@ -1350,49 +1395,47 @@ class DefaultController extends Controller {
                 ));
     }
 
-    
     public function notasparcialesxmesAction($codmes) {
-        
+
         $sesion = $this->getRequest()->getSession();
         $em = $this->getDoctrine()->getEntityManager();
         //obtengo el objeto autenticado: en este caso el docente
         $usuario = $this->get('security.context')->getToken()->getUser();
         //variables de sesion activas
-        $periodo = $sesion->get('periodo'); 
+        $periodo = $sesion->get('periodo');
         $materia = $sesion->get('materia');
         $nivel = $sesion->get('nivel');
-        
-        
-        $evaluacion= $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia->getId(),$periodo->getId(),$nivel->getId(),$codmes);
+
+
+        $evaluacion = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia->getId(), $periodo->getId(), $nivel->getId(), $codmes);
         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
                 ));
-        
+
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
                 $evaluacion, $this->getRequest()->query->get('page', 1), 10
         );
-        $mesactual=$em->getRepository('administrativoBundle:Nota')->find($codmes);
+        $mesactual = $em->getRepository('administrativoBundle:Nota')->find($codmes);
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
-        return $this->render('academicoBundle:default:notasparcialesxmes.html.twig',array(
-            'periodo'=>$periodo,
-            'materia'=>$materia,
-            'nivel'=>$nivel,
-            'mesevac'=>$listamesesEv,
-            'listames'=>$mes,
-            'mes'=>$mesactual,
-            'materiasdoc'=>$materiasdocente,
-            'listaeva'=>$pagination
-        ));
+        return $this->render('academicoBundle:default:notasparcialesxmes.html.twig', array(
+                    'periodo' => $periodo,
+                    'materia' => $materia,
+                    'nivel' => $nivel,
+                    'mesevac' => $listamesesEv,
+                    'listames' => $mes,
+                    'mes' => $mesactual,
+                    'materiasdoc' => $materiasdocente,
+                    'listaeva' => $pagination
+                ));
     }
-       
-    
+
     //METODO: lista materias para presentar acta de calificaciones estudiantes de un periodo actual    
     public function actageneralcalificacionesestudiantesAction() {
 
-       $em = $this->getDoctrine()->getManager();
-       
+        $em = $this->getDoctrine()->getManager();
+
         //obtengo el objeto autenticado: en este caso el docente
         $usuario = $this->get('security.context')->getToken()->getUser();
         //consulto periodo actual
@@ -1407,7 +1450,7 @@ class DefaultController extends Controller {
         $cedula = $usuario->getCedula();
         //obtiene las materias del docente autenticado
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
-         
+
         if (!$periodo) {
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
@@ -1417,45 +1460,44 @@ class DefaultController extends Controller {
             $rol = strtolower($usuario->getRol());
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-     
+
         //obtiene lista de todos los niveles
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
                 ));
-        $estudiantes = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral($materia, $nivel);        
+        $estudiantes = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral($materia, $nivel);
         $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
-   
+
         //estudiantes
         $paginatorSS = $this->get('knp_paginator');
         $paginationSS = $paginatorSS->paginate(
                 $estudiantes, $this->getRequest()->query->get('page', 1), 10
         );
-        
-         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
-       
-        
-        $sd=0; 
-        
-        if($estudiantes){
-            $sd=1;
+
+        $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
+
+
+        $sd = 0;
+
+        if ($estudiantes) {
+            $sd = 1;
         }
-               
+
         return $this->render('academicoBundle:default:actageneralcalificaciones.html.twig', array(
                     'periodo' => $periodo,
                     'niveles' => $niveles,
-                    'nivel'=> $nivel,
-                    'materia'=>$materia,  
-                    'listamaterias'=>$materiasdocente,    
-                    'listames'=>$mes,
-                    'estudiantes'=>$paginationSS,
-                    'materia'=>$materia,    
-                    'sd'=>$sd,
+                    'nivel' => $nivel,
+                    'materia' => $materia,
+                    'listamaterias' => $materiasdocente,
+                    'listames' => $mes,
+                    'estudiantes' => $paginationSS,
+                    'materia' => $materia,
+                    'sd' => $sd,
                     'mesconteo' => $mesconteo,
                     'mesevac' => $listamesesEv
                 ));
     }
-    
 
     //insertar el horario de clases de cada docente en un periodo actual   
     public function horarioclaseAction($did) {
@@ -1466,9 +1508,9 @@ class DefaultController extends Controller {
         //creo un objeto requisitoestudiante: el cual contiene la lista de cumplerequisito
         $auxhoarioclase = new AuxHorarioClase();
 
-        
+
         //consulto los requisitos con su esstado, de un determinado estudiante que fue previamente inscrito              
-        $horariosdocente = $em->getRepository('academicoBundle:Dictadomateria')->getHorarioDocente($did,$periodoN->getId());
+        $horariosdocente = $em->getRepository('academicoBundle:Dictadomateria')->getHorarioDocente($did, $periodoN->getId());
 
         //recorro lista de objetos: cumplerequisito
         foreach ($horariosdocente as $req) {
@@ -1488,62 +1530,69 @@ class DefaultController extends Controller {
 
         $form->handleRequest($peticion);
         if ($form->isValid()) {
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
 
-            foreach ($auxhoarioclase->getDocHoraClase() as $req) {// recorro lista de objetos: cumplerequisito
-                $cod = $req->getId(); // ontengo el id de cada objeto
-                
-                $dia = $req->getDia();
-                $hora = $req->getHora();
-                $cr = $em->getRepository('administrativoBundle:HorarioClase')->find($cod); //consulto el objeto cumplerequisito
-                
-                $cr->setDia($dia);
-                $cr->setHora($hora);
+                foreach ($auxhoarioclase->getDocHoraClase() as $req) {// recorro lista de objetos: cumplerequisito
+                    $cod = $req->getId(); // ontengo el id de cada objeto
 
-                $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+                    $dia = $req->getDia();
+                    $hora = $req->getHora();
+                    $cr = $em->getRepository('administrativoBundle:HorarioClase')->find($cod); //consulto el objeto cumplerequisito
+
+                    $cr->setDia($dia);
+                    $cr->setHora($hora);
+
+                    $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+                }
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
-            
 
-            return $this->redirect($this->generateUrl('inspector_horario_asignar',array('did'=>$did)));
-        }        
+
+            return $this->redirect($this->generateUrl('inspector_horario_asignar', array('did' => $did)));
+        }
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
-        $docente= $em->getRepository('administrativoBundle:Docente')->find($did);
-        $listadocentes= $em->getRepository('administrativoBundle:Docente')->findBy(array(
-                'estado'=>true
-            ));
-        
+        $docente = $em->getRepository('administrativoBundle:Docente')->find($did);
+        $listadocentes = $em->getRepository('administrativoBundle:Docente')->findBy(array(
+            'estado' => true
+                ));
+
         return $this->render('academicoBundle:Default:horarioclase.html.twig', array(
                     'periodo' => $periodoN,
-                    'niveles'=>$niveles,
-                    'did'=>$did,
-                    'docentes'=>$listadocentes,
-                    'docente'=>$docente,
-                    'did'=>$did,
+                    'niveles' => $niveles,
+                    'did' => $did,
+                    'docentes' => $listadocentes,
+                    'docente' => $docente,
+                    'did' => $did,
                     'form' => $form->createView()
                 ));
     }
-    
-    
+
     public function verhorariodocenteAction() {
 
-       $em = $this->getDoctrine()->getManager();
-       $request = $this->getRequest();
-        
+        $em = $this->getDoctrine()->getManager();
+        $request = $this->getRequest();
+
         //obtengo el objeto autenticado: en este caso el docente
         $usuario = $this->get('security.context')->getToken()->getUser();
         //consulto periodo actual
         $sesion = $this->getRequest()->getSession();
-        $periodo = $sesion->get('periodo'); 
+        $periodo = $sesion->get('periodo');
 
         $materia = $sesion->get('materia');
         $nivel = $sesion->get('nivel');
         //obtengo cedula del docente autenticado     
-        $cedula = $usuario->getCedula();           
+        $cedula = $usuario->getCedula();
         //obtiene las materias del docente autenticado
-        $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula'=>$cedula));
-        $secciones = $em->getRepository('academicoBundle:Estudiante')->getHorarioDictadoMateria($cedula, $periodo);                         
-        
-        
-        
+        $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula' => $cedula));
+        $secciones = $em->getRepository('academicoBundle:Estudiante')->getHorarioDictadoMateria($cedula, $periodo);
+
+
+
         if (!$periodo) {
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
@@ -1553,33 +1602,32 @@ class DefaultController extends Controller {
             $rol = strtolower($usuario->getRol());
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-            $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();           
-            $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
-             $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+        $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
+        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
                 ));
         return $this->render('academicoBundle:default:verdocentehorario2.html.twig', array(
                     'periodo' => $periodo,
-                    'nivel'=> $nivel,
-                    'materia'=>$materia,  
-                    'horarioclase'=>$secciones,    
-                    'docente'=>$docente,    
+                    'nivel' => $nivel,
+                    'materia' => $materia,
+                    'horarioclase' => $secciones,
+                    'docente' => $docente,
                     'mesevac' => $listamesesEv,
-                    'listamaterias'=>$listamaterias,
+                    'listamaterias' => $listamaterias,
                     'listames' => $mes,
-                    ));
+                ));
     }
 
-    
-     //METODO: lista las materias por nivel. PARA INGRESAR LISTAR MATERIAS DE GRADO   
+    //METODO: lista las materias por nivel. PARA INGRESAR LISTAR MATERIAS DE GRADO   
     public function listamateriasgradoAction($codniv) {
 
         $em = $this->getDoctrine()->getEntityManager();
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         $curso = $em->getRepository('administrativoBundle:Nivel')->find($codniv);
-        $sesion= new Session();        
+        $sesion = new Session();
         $sesion->set('niveleg', $curso);
-        
+
         if (!$periodo) {
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
@@ -1589,16 +1637,16 @@ class DefaultController extends Controller {
             $rol = strtolower($usuario->getRol());
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-        $listamateriasgrado= $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
-            'periodo'=>$periodo,
-            'estado'=>true
-         ));
-        
+        $listamateriasgrado = $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
+            'periodo' => $periodo,
+            'estado' => true
+                ));
+
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
-        
-        $lmg=0;
-        if(!$listamateriasgrado){
-            $lmg=1;
+
+        $lmg = 0;
+        if (!$listamateriasgrado) {
+            $lmg = 1;
         }
 
         return $this->render('academicoBundle:default:examengrado_listamaterias.html.twig', array(
@@ -1608,27 +1656,27 @@ class DefaultController extends Controller {
                     'curso' => $curso
                 ));
     }
-    
+
     public function notasgradoAction($codmg) {
 
         $em = $this->getDoctrine()->getEntityManager();
         $sesion = $this->getRequest()->getSession();
-        
-        $nivel= $sesion->get('niveleg');
+
+        $nivel = $sesion->get('niveleg');
         $peticion = $this->getRequest();
-        $periodoA= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $periodoA = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         //creo un objeto requisitoestudiante: el cual contiene la lista de cumplerequisito
         $auxexamengrado = new AuxExamenGrado();
 
 
         //consulto los requisitos con su esstado, de un determinado estudiante que fue previamente inscrito              
-        $examenesgrado = $em->getRepository('academicoBundle:ExamenGrado')->getEstudiantesExamenGrado($nivel->getId(),$periodoA->getId(), $codmg);
-        
+        $examenesgrado = $em->getRepository('academicoBundle:ExamenGrado')->getEstudiantesExamenGrado($nivel->getId(), $periodoA->getId(), $codmg);
+
 
         //recorro lista de objetos: cumplerequisito
         foreach ($examenesgrado as $req) {
             //obtendo el id de la inscripcion            
-            $cr= new ExamenGrado();
+            $cr = new ExamenGrado();
             //obtengo los datos de cada objeto cumplerequisito
             $cr->setId($req->getId());
             $cr->setMatricula($req->getMatricula());
@@ -1645,55 +1693,60 @@ class DefaultController extends Controller {
 
         $form->handleRequest($peticion);
         if ($form->isValid()) {
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
 
-            foreach ($auxexamengrado->getExaGrado() as $req) {// recorro lista de objetos: cumplerequisito
-                $cod = $req->getId(); // ontengo el id de cada objeto
-                $nota = $req->getNota(); // obtengo el estado de cada objto                
-                
-                $cr = $em->getRepository('academicoBundle:ExamenGrado')->find($cod); //consulto el objeto cumplerequisito
-                $cr->setNota($nota); //actualizo el estado del objeto previamente encontrado
-                $neqv='';
-                if($nota < 14){
-                    $neqv='Reprobado';
-                }else{
-                    $neqv='Aprobado';
-                }                
-                $cr->setEquivalencia($neqv);
-                $cr->setDescripcion($req->getDescripcion());
+                foreach ($auxexamengrado->getExaGrado() as $req) {// recorro lista de objetos: cumplerequisito
+                    $cod = $req->getId(); // ontengo el id de cada objeto
+                    $nota = $req->getNota(); // obtengo el estado de cada objto                
 
-                $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+                    $cr = $em->getRepository('academicoBundle:ExamenGrado')->find($cod); //consulto el objeto cumplerequisito
+                    $cr->setNota($nota); //actualizo el estado del objeto previamente encontrado
+                    $neqv = '';
+                    if ($nota < 14) {
+                        $neqv = 'Reprobado';
+                    } else {
+                        $neqv = 'Aprobado';
+                    }
+                    $cr->setEquivalencia($neqv);
+                    $cr->setDescripcion($req->getDescripcion());
+
+                    $em->flush(); // envio a guardar/actualizar el estado de cada objeto
+                }
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                return $this->redirect($this->generateUrl('admin_portada'));
             }
-            
+
             $this->get('session')->getFlashBag()->add('Info', 'Notas actualizadas');
 
-            return $this->redirect($this->generateUrl('inspector_examengrado_registro_notas',array(
-                'codmg'=>$codmg
-             )));
+            return $this->redirect($this->generateUrl('inspector_examengrado_registro_notas', array(
+                                'codmg' => $codmg
+                            )));
         }
-        $cod=0;
-        if($examenesgrado){
-            $cod=1;
+        $cod = 0;
+        if ($examenesgrado) {
+            $cod = 1;
         }
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
-        $listamateriasgrado= $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
-            'periodo'=>$periodoA,
-            'estado'=>true
-         ));
-        $exag= $em->getRepository('academicoBundle:ExamenGrado')->find($codmg);
+        $listamateriasgrado = $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
+            'periodo' => $periodoA,
+            'estado' => true
+                ));
+        $exag = $em->getRepository('academicoBundle:ExamenGrado')->find($codmg);
         return $this->render('academicoBundle:Default:notas_examengrado.html.twig', array(
                     'periodo' => $periodoA,
-                    'cod'=>$cod,
-                    'nivel'=>$nivel,
-                    'codmg'=>$codmg,
-                    'mg'=>$exag,
-                    'curso'=>$nivel,
-                    'niveles'=>$niveles,
-                    'listamaterias'=>$listamateriasgrado,
+                    'cod' => $cod,
+                    'nivel' => $nivel,
+                    'codmg' => $codmg,
+                    'mg' => $exag,
+                    'curso' => $nivel,
+                    'niveles' => $niveles,
+                    'listamaterias' => $listamateriasgrado,
                     'form' => $form->createView()
                 ));
-        
-        
-        
     }
 
     //metodo: permite listar todos los requisitos previamente registrados
@@ -1701,15 +1754,15 @@ class DefaultController extends Controller {
 
         $em = $this->getDoctrine()->getEntityManager();
 
-        $periodoA= $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $periodoA = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         $listarequisitos = $em->getRepository('administrativoBundle:Requisito')->findAll();
         return $this->render('academicoBundle:Default:requisito_listatodos.html.twig', array(
                     'periodo' => $periodoA,
                     'lista' => $listarequisitos,
                 ));
     }
-    
-         public function modificarperfildocenteAction() {
+
+    public function modificarperfildocenteAction() {
 
         $em = $this->getDoctrine()->getEntityManager();
         $peticion = $this->getRequest();
@@ -1717,186 +1770,196 @@ class DefaultController extends Controller {
         //obtengo el objeto autenticado: en este caso el docente
         $usuario = $this->get('security.context')->getToken()->getUser();
         $rol = strtoupper($usuario->getRol());
-        
+
         $sesion = $this->getRequest()->getSession();
-        $docente =  new Docente();
+        $docente = new Docente();
         //$usuario = new Usuario();        
         $periodo = $sesion->get('periodo');
         //obtengo cedula del docente autenticado
         $cedula = $usuario->getCedula();
         if ($rol == 'DOCENTE') {
-        $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula' => $cedula));        
-        $formulario = $this->createForm(new PerfilDocenteType(), $docente);
-        $passwordOriginal = $formulario->getData()->getPassword();
-        $formulario->handleRequest($peticion);
+            $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula' => $cedula));
+            $formulario = $this->createForm(new PerfilDocenteType(), $docente);
+            $passwordOriginal = $formulario->getData()->getPassword();
+            $formulario->handleRequest($peticion);
 
-        if ($formulario->isValid()) {
-            if (null == $docente->getPassword()) {
-                // El docente no cambia su contraseña, utilizar la original
-                $docente->setPassword($passwordOriginal);
-            } else {
-                $encoder = $this->get('security.encoder_factory')
-                        ->getEncoder($usuario);
-                $docente->setSalt(md5(time()));
-                $passwordCodificado = $encoder->encodePassword(
-                        $docente->getPassword(), $docente->getSalt()
-                );
-                $docente->setPassword($passwordCodificado);
+            if ($formulario->isValid()) {
+                $em->getConnection()->beginTransaction(); // suspend auto-commit
+                try {
+
+                    if (null == $docente->getPassword()) {
+                        // El docente no cambia su contraseña, utilizar la original
+                        $docente->setPassword($passwordOriginal);
+                    } else {
+                        $encoder = $this->get('security.encoder_factory')
+                                ->getEncoder($usuario);
+                        $docente->setSalt(md5(time()));
+                        $passwordCodificado = $encoder->encodePassword(
+                                $docente->getPassword(), $docente->getSalt()
+                        );
+                        $docente->setPassword($passwordCodificado);
+                    }
+
+                    $nombre = $formulario->getData()->getNombre();
+                    $apellidos = $formulario->getData()->getApellido();
+                    $email = $formulario->getData()->getEmail();
+                    $password = $docente->getPassword();
+                    $salt = $docente->getSalt();
+
+                    $usuario = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
+                    $usuario->setPassword($password);
+                    $usuario->setNombre($nombre);
+                    $usuario->setApellidos($apellidos);
+                    $usuario->setEmail($email);
+                    $usuario->setPassword($password);
+                    $usuario->setSalt($salt);
+                    $em->persist($docente);
+                    $em->persist($usuario);
+                    $em->flush();
+
+                    $this->get('session')->getFlashBag()->add('Info', 'Perfil Docente actualizado correctamente '
+                    );
+                    $em->getConnection()->commit();
+                } catch (\Exception $e) {
+                    $em->getConnection()->rollback();
+                    $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
+                    return $this->redirect($this->generateUrl('admin_portada'));
+                }
+
+                return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
             }
-            
-            $nombre = $formulario->getData()->getNombre();
-            $apellidos = $formulario->getData()->getApellido();
-            $email = $formulario->getData()->getEmail();
-            $password = $docente->getPassword();
-            $salt = $docente->getSalt();
-            
-            $usuario = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
-            $usuario->setPassword($password);
-            $usuario->setNombre($nombre);
-            $usuario->setApellidos($apellidos);
-            $usuario->setEmail($email);
-            $usuario->setPassword($password);
-            $usuario->setSalt($salt);            
-            $em->persist($docente);
-            $em->persist($usuario);            
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add('Info', 'Perfil Docente actualizado correctamente '
-            );
-             return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
-        }   
         }
-        
+
         if ($rol == 'INSPECTOR') {
-         $inspector = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
+            $inspector = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
 
-        $formulario = $this->createForm(new PerfilInspectorType(), $inspector);
-        $passwordOriginal = $formulario->getData()->getPassword();
-        $formulario->handleRequest($peticion);
+            $formulario = $this->createForm(new PerfilInspectorType(), $inspector);
+            $passwordOriginal = $formulario->getData()->getPassword();
+            $formulario->handleRequest($peticion);
 
-        if ($formulario->isValid()) {
-            if (null == $inspector->getPassword()) {
-                // La inspector no cambia su contraseña, utilizar la original
-                $inspector->setPassword($passwordOriginal);
-            } else {
-                $encoder = $this->get('security.encoder_factory')
-                        ->getEncoder($usuario);
-                $usuario->setSalt(md5(time()));
-                $passwordCodificado = $encoder->encodePassword(
-                        $usuario->getPassword(), $usuario->getSalt()
+            if ($formulario->isValid()) {
+                if (null == $inspector->getPassword()) {
+                    // La inspector no cambia su contraseña, utilizar la original
+                    $inspector->setPassword($passwordOriginal);
+                } else {
+                    $encoder = $this->get('security.encoder_factory')
+                            ->getEncoder($usuario);
+                    $usuario->setSalt(md5(time()));
+                    $passwordCodificado = $encoder->encodePassword(
+                            $usuario->getPassword(), $usuario->getSalt()
+                    );
+                    $usuario->setPassword($passwordCodificado);
+                }
+                $em->persist($inspector);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('Info', 'Perfil Inspector actualizado correctamente '
                 );
-                $usuario->setPassword($passwordCodificado);
+                return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
             }
-            $em->persist($inspector);
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add('Info', 'Perfil Inspector actualizado correctamente '
-            );
-             return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
-        }   
         }
-        
-    
-         if ($rol == 'SECRETARIA') {
-         $secretaria = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
 
-        $formulario = $this->createForm(new PerfilInspectorType(), $secretaria);
-        $passwordOriginal = $formulario->getData()->getPassword();
-        $formulario->handleRequest($peticion);
 
-        if ($formulario->isValid()) {
-            if (null == $secretaria->getPassword()) {
-                // La secretria no cambia su contraseña, utilizar la original
-                $secretaria->setPassword($passwordOriginal);
-            } else {
-                $encoder = $this->get('security.encoder_factory')
-                        ->getEncoder($usuario);
-                $usuario->setSalt(md5(time()));
-                $passwordCodificado = $encoder->encodePassword(
-                        $usuario->getPassword(), $usuario->getSalt()
+        if ($rol == 'SECRETARIA') {
+            $secretaria = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
+
+            $formulario = $this->createForm(new PerfilInspectorType(), $secretaria);
+            $passwordOriginal = $formulario->getData()->getPassword();
+            $formulario->handleRequest($peticion);
+
+            if ($formulario->isValid()) {
+                if (null == $secretaria->getPassword()) {
+                    // La secretria no cambia su contraseña, utilizar la original
+                    $secretaria->setPassword($passwordOriginal);
+                } else {
+                    $encoder = $this->get('security.encoder_factory')
+                            ->getEncoder($usuario);
+                    $usuario->setSalt(md5(time()));
+                    $passwordCodificado = $encoder->encodePassword(
+                            $usuario->getPassword(), $usuario->getSalt()
+                    );
+                    $usuario->setPassword($passwordCodificado);
+                }
+                $em->persist($secretaria);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('Info', 'Perfil Secretaria actualizado correctamente '
                 );
-                $usuario->setPassword($passwordCodificado);
+                return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
             }
-            $em->persist($secretaria);
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add('Info', 'Perfil Secretaria actualizado correctamente '
-            );
-             return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));}   
         }
-    
+
         if ($rol == 'AMATERIAS') {
-         $amaterias = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
+            $amaterias = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
 
-        $formulario = $this->createForm(new PerfilInspectorType(), $amaterias);
-        $passwordOriginal = $formulario->getData()->getPassword();
-        $formulario->handleRequest($peticion);
+            $formulario = $this->createForm(new PerfilInspectorType(), $amaterias);
+            $passwordOriginal = $formulario->getData()->getPassword();
+            $formulario->handleRequest($peticion);
 
-        if ($formulario->isValid()) {
-            if (null == $amaterias->getPassword()) {
-                // La secretria no cambia su contraseña, utilizar la original
-                $amaterias->setPassword($passwordOriginal);
-            } else {
-                $encoder = $this->get('security.encoder_factory')
-                        ->getEncoder($usuario);
-                $usuario->setSalt(md5(time()));
-                $passwordCodificado = $encoder->encodePassword(
-                        $usuario->getPassword(), $usuario->getSalt()
+            if ($formulario->isValid()) {
+                if (null == $amaterias->getPassword()) {
+                    // La secretria no cambia su contraseña, utilizar la original
+                    $amaterias->setPassword($passwordOriginal);
+                } else {
+                    $encoder = $this->get('security.encoder_factory')
+                            ->getEncoder($usuario);
+                    $usuario->setSalt(md5(time()));
+                    $passwordCodificado = $encoder->encodePassword(
+                            $usuario->getPassword(), $usuario->getSalt()
+                    );
+                    $usuario->setPassword($passwordCodificado);
+                }
+                $em->persist($amaterias);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('Info', 'Perfil Administrador actualizado correctamente '
                 );
-                $usuario->setPassword($passwordCodificado);
+                return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
             }
-            $em->persist($amaterias);
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add('Info', 'Perfil Administrador actualizado correctamente '
-            );
-             return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));}   
         }
-        
+
         if ($rol == 'ADMIN') {
-         $admin = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
+            $admin = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
 
-        $formulario = $this->createForm(new PerfilInspectorType(), $admin);
-        $passwordOriginal = $formulario->getData()->getPassword();
-        $formulario->handleRequest($peticion);
+            $formulario = $this->createForm(new PerfilInspectorType(), $admin);
+            $passwordOriginal = $formulario->getData()->getPassword();
+            $formulario->handleRequest($peticion);
 
-        if ($formulario->isValid()) {
-            if (null == $amaterias->getPassword()) {
-                // La secretria no cambia su contraseña, utilizar la original
-                $admin->setPassword($passwordOriginal);
-            } else {
-                $encoder = $this->get('security.encoder_factory')
-                        ->getEncoder($usuario);
-                $usuario->setSalt(md5(time()));
-                $passwordCodificado = $encoder->encodePassword(
-                        $usuario->getPassword(), $usuario->getSalt()
+            if ($formulario->isValid()) {
+                if (null == $amaterias->getPassword()) {
+                    // La secretria no cambia su contraseña, utilizar la original
+                    $admin->setPassword($passwordOriginal);
+                } else {
+                    $encoder = $this->get('security.encoder_factory')
+                            ->getEncoder($usuario);
+                    $usuario->setSalt(md5(time()));
+                    $passwordCodificado = $encoder->encodePassword(
+                            $usuario->getPassword(), $usuario->getSalt()
+                    );
+                    $usuario->setPassword($passwordCodificado);
+                }
+                $em->persist($admin);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('Info', 'Perfil Administrador actualizado correctamente '
                 );
-                $usuario->setPassword($passwordCodificado);
+                return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
             }
-            $em->persist($admin);
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add('Info', 'Perfil Administrador actualizado correctamente '
-            );
-             return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));}   
         }
-        
+
         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
-    
+
         return $this->render('administrativoBundle:Default:perfildocente.html.twig', array(
                     'periodo' => $periodo,
                     'formulario' => $formulario->createView(),
                     'mesevac' => $listamesesEv,
-                       
                 ));
     }
 
-    
-    
-        /**
-        * @Pdf()
-        */
-        public function reporteactageneralcalificacionesestudiantesAction() {
+    /**
+     * @Pdf()
+     */
+    public function reporteactageneralcalificacionesestudiantesAction() {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1914,7 +1977,7 @@ class DefaultController extends Controller {
         $cedula = $usuario->getCedula();
         //obtiene las materias del docente autenticado
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
-        $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula'=>$cedula));
+        $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula' => $cedula));
         if (!$periodo) {
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
@@ -1933,7 +1996,7 @@ class DefaultController extends Controller {
         $estudiantes = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_secciond($materia, $nivel);
         $estudiantesv = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_seccionv($materia, $nivel);
         $estudiantesn = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_seccionn($materia, $nivel);
-       
+
         $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
 
         //estudiantes
@@ -1942,14 +2005,14 @@ class DefaultController extends Controller {
                 $estudiantes, $this->getRequest()->query->get('page', 1), 10
         );
 
-        
+
         //estudiantesv
         $paginatorSSv = $this->get('knp_paginator');
         $paginationSSv = $paginatorSSv->paginate(
                 $estudiantesv, $this->getRequest()->query->get('page', 1), 10
         );
 
-        
+
         //estudiantesn
         $paginatorSSn = $this->get('knp_paginator');
         $paginationSSn = $paginatorSSn->paginate(
@@ -1978,58 +2041,56 @@ class DefaultController extends Controller {
         }
 
         $format = $this->get('request')->get('_format');
-        
+
         $content = $this->render(sprintf('academicoBundle:reportes:actageneralcalificaciones.%s.twig', $format), array(
-                    'periodo' => $periodo,
-                    'niveles' => $niveles,
-                    'nivel' => $nivel,
-                    'materia' => $materia,
-                    'listamaterias' => $materiasdocente,
-                    'listames' => $mes,
-                    'estudiantes' => $paginationSS,
-                    'estudiantesv' => $paginationSSv,
-                    'estudiantesn' => $paginationSSn,
-                    'materia' => $materia,
-                    'sd' => $sd,
-                    'sv' => $sv,
-                    'sn' => $sn,
-                    
-                    'mesconteo' => $mesconteo,
-                    'mesevac' => $listamesesEv,
-                    'docente' => $docente,            
+            'periodo' => $periodo,
+            'niveles' => $niveles,
+            'nivel' => $nivel,
+            'materia' => $materia,
+            'listamaterias' => $materiasdocente,
+            'listames' => $mes,
+            'estudiantes' => $paginationSS,
+            'estudiantesv' => $paginationSSv,
+            'estudiantesn' => $paginationSSn,
+            'materia' => $materia,
+            'sd' => $sd,
+            'sv' => $sv,
+            'sn' => $sn,
+            'mesconteo' => $mesconteo,
+            'mesevac' => $listamesesEv,
+            'docente' => $docente,
                 ));
-        
-        
-            return $content;
+
+
+        return $content;
     }
- 
+
     /**
-    * @Pdf()
-    */
-    public function reportenotassuspensoAction($nid,$mid) {
+     * @Pdf()
+     */
+    public function reportenotassuspensoAction($nid, $mid) {
         $em = $this->getDoctrine()->getEntityManager();
         $sesion = $this->getRequest()->getSession();
         $usuario = $this->get('security.context')->getToken()->getUser();
-        
-        $nivel=$em->getRepository('administrativoBundle:Nivel')->find($nid);
-        $materia=$em->getRepository('administrativoBundle:Materia')->find($mid);
-        
+
+        $nivel = $em->getRepository('administrativoBundle:Nivel')->find($nid);
+        $materia = $em->getRepository('administrativoBundle:Materia')->find($mid);
+
         $periodo = $sesion->get('periodo');
-                
+
         $listaEstSupletorios = $em->getRepository('academicoBundle:Dictadomateria')->getSuspensoEstudiantesxMateriaRPT($mid, $periodo->getId(), $nid);
-        
+
         $format = $this->get('request')->get('_format');
-        
+
         $content = $this->render(sprintf('academicoBundle:reportes:docente_notassuspenso.%s.twig', $format), array(
-            'periodo'=>$periodo,
-            'lista'=>$listaEstSupletorios,
-            'nivel'=>$nivel,
-            'materia'=>$materia,
-            'docente'=>$usuario
+            'periodo' => $periodo,
+            'lista' => $listaEstSupletorios,
+            'nivel' => $nivel,
+            'materia' => $materia,
+            'docente' => $usuario
+                ));
 
-        ));
-
-            return $content;
+        return $content;
     }
-    
+
 }
