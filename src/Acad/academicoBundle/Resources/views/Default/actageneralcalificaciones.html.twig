@@ -3,19 +3,17 @@
 {% block title %} INICIO {% endblock%}
 {% block id 'portada' %}
 {% block article%}
+
+{% if codn == 2 %}
+
 <section id="menu_docente">
         {% include 'academicoBundle:Default:menu_docente.html.twig' with {'mesevac': mesevac, 'listamaterias': listamaterias}%}
 </section>
-<h3><p align="center"></p></h3>
         
-{#LISTA DE ESTUDIANTES: SECCIONES#}
-
-<strong><p>Acta General de Calificaciones</p></strong>
-
-<div>{{nivel.curso.nombre | title}}&nbsp;&nbsp;{{nivel.paralelo.nombre | title}}&nbsp;&nbsp;{{materia.nombre}}</div>
-
+<p style="text-align: center; color: #0063DC; font-size: large; "><strong>ACTA GENERAL DE CALIFICACIONES</strong></p>
+<div style="color: #090"><strong>{{nivel2.curso.nombre | upper }}&nbsp;&nbsp;{{nivel2.paralelo.nombre | upper}}:&nbsp;&nbsp;{{materia2.nombre | upper }}</strong></div>
+<div style="text-align: right"><a  target="_blank" href="{{path('acta_general_calificaciones_reporte' )}}"><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></div>
 <div id="dt_example">
-    
     <div id="demo">
          {% if sd== 1 %}
         <table class="display" id="itsthetable">
@@ -54,29 +52,30 @@
     </tr>
 </tbody>                       
     {% endfor%}
-     
-                        
         </table>
-<a class="boton" href="{{path('acta_general_calificaciones_reporte')}}">REPORTE</a>
-            
     {%else%}
         <h1>No hay estudiantes</h1>
     {% endif%}
     </div>
 </div>
 <br>
-{#{% endif %}#}
+{% endif %}
+{% if codn!=2%}
+<p style="text-align: center; color: #090; font-size: large; "><strong>POR FAVOR SELECCIONE UNA MATERIA</strong></p>
+{% endif %}
 
 {% endblock%}
 {% block aside %}
 {{parent()}}
     {%set docente='docente'%}
+    {% if codn!=2 %}
         <p align="center"><a class="boton" href="{{path('portada',{'role':docente})}}">PORTADA</a></p>
-          <strong><p align="left">Materias</p></strong>
+     {% endif%}
+          <strong><p align="left">Curso/ Materia</p></strong>
     <div id="relacionadas">
         <ul>
        {% for matdoc in listamaterias %}
-                <li><a title="{{matdoc.materiaperiodo.materia.nombre | upper }}" class="boton" href="{{path('docente_variable_sesion',{'niv': matdoc.nivel.id, 'mat': matdoc.materiaperiodo.materia.id})}}">{{matdoc.nivel.descripcion | upper }}&nbsp;&nbsp;{{matdoc.materiaperiodo.materia.nombre | title | truncate(10,true)}}</a></li>
+                <li><a title="{{matdoc.materiaperiodo.materia.nombre | upper }}" class="boton" href="{{path('docente_acta_general_calificaciones_estudiantes',{'niv': matdoc.nivel.id, 'mat': matdoc.materiaperiodo.materia.id})}}">{{matdoc.nivel.descripcion | upper }}&nbsp;&nbsp;{{matdoc.materiaperiodo.materia.nombre | title | truncate(10,true)}}</a></li>
        {% endfor%}
             </ul>
         </div>

@@ -43,7 +43,7 @@ estudiante_buscar:
     defaults: { _controller: academicoBundle:default:matriculaBuscarEstudiante}      
     
 docente_notas_x_materia:
-    pattern:  /docente/notas/parciales/lista/estudiantes/{mesid}
+    pattern:  /docente/notas/parciales/lista/estudiantes/{mesid}/{niv}/{mat}
     defaults: { _controller: academicoBundle:default:notas}
      
 estudiante_lista_inscritos:
@@ -71,9 +71,9 @@ lista_materia_x_nivel:
     defaults: { _controller: academicoBundle:default:listamateriasxnivel}    
 
 docente_lista_materias_suspenso:    
-    pattern:  /docente/notas/suspenso/lista/estudiantes
+    pattern:  /docente/notas/suspenso/lista/estudiantes/{niv}/{mat}
     defaults: { _controller: academicoBundle:default:notasuspenso} 
-    
+#delete    
 docente_notas_suspenso:    
     pattern:  /docente/notas/suspenso/lista/estudiantes
     defaults: { _controller: academicoBundle:default:notasuspenso} 
@@ -83,11 +83,11 @@ docente_variable_sesion:
     defaults: { _controller: academicoBundle:default:sesionportada}    
 
 docente_notas_parciales_x_mes:    
-    pattern:  /docente/notas/parciales/mes/{codmes}
+    pattern:  /docente/notas/parciales/mes/{codmes}/{niv}/{mat}
     defaults: { _controller: academicoBundle:default:notasparcialesxmes}
       
 docente_acta_general_calificaciones_estudiantes:    
-    pattern:  /docente/acta/general/estudiantes
+    pattern:  /docente/acta/general/estudiantes/{niv}/{mat}
     defaults: { _controller: academicoBundle:default:actageneralcalificacionesestudiantes}
     
 inspector_horario_asignar:

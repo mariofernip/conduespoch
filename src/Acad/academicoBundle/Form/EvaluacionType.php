@@ -28,14 +28,19 @@ class EvaluacionType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
                 ->add('materiaasignada')
-                ->add('notatb', 'choice', array('choices' => $this->getInclinationChoices(),))
-                ->add('notaec', 'choice', array('choices' => $this->getInclinationChoices(),))
-                ->add('notapp', 'choice', array('choices' => $this->getInclinationChoices(),))
-                ->add('notapt', 'choice', array('choices' => $this->getInclinationChoices(),))
-                ->add('promedio','number', array( 'attr' => array('style' => 'width: 30px; border: none; text-align: center'),
-                        'read_only' => true,
-                        'disabled' => true
-          ))
+                ->add('notatb','number', array( 'attr' => array('style' => 'width: 50px; border: none; text-align: center')))     
+                ->add('notaec','number', array( 'attr' => array('style' => 'width: 50px; border: none; text-align: center')))     
+                ->add('notapp','number', array( 'attr' => array('style' => 'width: 50px; border: none; text-align: center')))     
+                ->add('notapt','number', array( 'attr' => array('style' => 'width: 50px; border: none; text-align: center')))     
+//                ->add('notatb', 'choice', array('choices' => $this->getInclinationChoices(),))
+//                ->add('notaec', 'choice', array('choices' => $this->getInclinationChoices(),))
+//                ->add('notapp', 'choice', array('choices' => $this->getInclinationChoices(),))
+//                ->add('notapt', 'choice', array('choices' => $this->getInclinationChoices(),))
+//                ->add('promedio','number', array( 'attr' => array('style' => 'width: 30px; border: none; text-align: center'),
+//                        'read_only' => true,
+//                        'disabled' => true
+//          ))
+
 
         ;
     }

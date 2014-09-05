@@ -659,7 +659,7 @@ class DefaultController extends Controller {
 
     //METODO PRA lISTAR LOS ESTUDIANTE DEL DOCENTE X MATERIA, NIVEL, SECCION
 
-    public function notasAction($mesid) {
+    public function notasAction($mesid,$niv, $mat) {
 
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
@@ -671,8 +671,12 @@ class DefaultController extends Controller {
         //'estado' => 1
         //  ));
 
-        $materia = $sesion->get('materia');
-        $nivel = $sesion->get('nivel');
+        $materia = $em->getRepository('administrativoBundle:Materia')->find($mat);
+        $nivel = $em->getRepository('administrativoBundle:Nivel')->find($niv);
+        $sesion->set('nivel', $nivel);
+        $sesion->set('materia', $materia);
+        $materia2 = $sesion->get('materia2');
+        $nivel2 = $sesion->get('nivel2');
         //obtengo cedula del docente autenticado
         $cedula = $usuario->getCedula();
         //obtiene las materias del docente autenticado
@@ -759,6 +763,8 @@ class DefaultController extends Controller {
                     'evaest' => $pagination,
                     'materia' => $materia,
                     'nivel' => $nivel,
+                    'materia2' => $materia2,
+                    'nivel2' => $nivel2,
                     'codmat' => $materia,
                     'codniv' => $nivel,
                     'codmes' => $objmes,
@@ -1219,7 +1225,7 @@ class DefaultController extends Controller {
 
     //METODO: insertar notas de suspenso
 
-    public function notasuspensoAction() {
+    public function notasuspensoAction($niv, $mat) {
 
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
@@ -1231,8 +1237,12 @@ class DefaultController extends Controller {
         //'estado' => 1
         //  ));
 
-        $materia = $sesion->get('materia');
-        $nivel = $sesion->get('nivel');
+        $materia = $em->getRepository('administrativoBundle:Materia')->find($mat);
+        $nivel = $em->getRepository('administrativoBundle:Nivel')->find($niv);
+        $sesion->set('nivel', $nivel);
+        $sesion->set('materia', $materia);
+        $materia2 = $sesion->get('materia2');
+        $nivel2 = $sesion->get('nivel2');
         //obtengo cedula del docente autenticado
         $cedula = $usuario->getCedula();
         //obtiene las materias del docente autenticado
@@ -1357,6 +1367,8 @@ class DefaultController extends Controller {
                     'evaest' => $pagination,
                     'mat' => $mat,
                     'niv' => $niv,
+                    'nivel2'=>$nivel2,
+                    'materia2'=>$materia2,
                     'materia' => $materia,
                     'cod' => $cod,
                     'nivel' => $nivel,
@@ -1367,14 +1379,17 @@ class DefaultController extends Controller {
     }
 
     public function sesionportadaAction($niv, $mat) {
-
+        
+        $sesion = $this->getRequest()->getSession();
         $em = $this->getDoctrine()->getEntityManager();
         //obtengo el objeto autenticado: en este caso el docente
         $usuario = $this->get('security.context')->getToken()->getUser();
         $nivel = $em->getRepository('administrativoBundle:Nivel')->find($niv);
         $materia = $em->getRepository('administrativoBundle:Materia')->find($mat);
+        $nivel2= $sesion->get('nivel2');
+        $materia2= $sesion->get('materia2');
         //consulto periodo actual
-        $sesion = $this->getRequest()->getSession();
+        
         $periodo = $sesion->get('periodo');
 
         $sesion->set('nivel', $nivel);
@@ -1392,10 +1407,12 @@ class DefaultController extends Controller {
                     'listames' => $mes,
                     'materia' => $materia,
                     'nivel' => $nivel,
+                    'materia2' => $materia2,
+                    'nivel2' => $nivel2,
                 ));
     }
 
-    public function notasparcialesxmesAction($codmes) {
+    public function notasparcialesxmesAction($codmes,$niv, $mat) {
 
         $sesion = $this->getRequest()->getSession();
         $em = $this->getDoctrine()->getEntityManager();
@@ -1403,11 +1420,17 @@ class DefaultController extends Controller {
         $usuario = $this->get('security.context')->getToken()->getUser();
         //variables de sesion activas
         $periodo = $sesion->get('periodo');
-        $materia = $sesion->get('materia');
-        $nivel = $sesion->get('nivel');
+        
+        $nivel2 = $em->getRepository('administrativoBundle:Nivel')->find($niv);
+        $materia2 = $em->getRepository('administrativoBundle:Materia')->find($mat);
+        $sesion->set('nivel2', $nivel2);
+        $sesion->set('materia2', $materia2);
+        
+        $nivel= $sesion->get('nivel');
+        $materia= $sesion->get('materia');
+        $sesion->set('materia2', $materia2);
 
-
-        $evaluacion = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($materia->getId(), $periodo->getId(), $nivel->getId(), $codmes);
+        $evaluacion = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($mat, $periodo->getId(), $niv, $codmes);
         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
@@ -1423,8 +1446,11 @@ class DefaultController extends Controller {
                     'periodo' => $periodo,
                     'materia' => $materia,
                     'nivel' => $nivel,
+                    'materia2' => $materia2,
+                    'nivel2' => $nivel2,
                     'mesevac' => $listamesesEv,
                     'listames' => $mes,
+                    'codmes'=>$codmes,
                     'mes' => $mesactual,
                     'materiasdoc' => $materiasdocente,
                     'listaeva' => $pagination
@@ -1432,7 +1458,7 @@ class DefaultController extends Controller {
     }
 
     //METODO: lista materias para presentar acta de calificaciones estudiantes de un periodo actual    
-    public function actageneralcalificacionesestudiantesAction() {
+    public function actageneralcalificacionesestudiantesAction($niv, $mat) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1443,54 +1469,65 @@ class DefaultController extends Controller {
         $periodo = $sesion->get('periodo'); //$em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
         //'estado' => 1
         //  ));
-
+        
+        
+        
+        $nivel2 = $em->getRepository('administrativoBundle:Nivel')->find($niv);
+        $codn = 0;        
+        $materia2 = $em->getRepository('administrativoBundle:Materia')->find($mat);
+        $cedula = $usuario->getCedula();
+        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+                'estado' => true
+                    ));
+        $sd = 0;
+        $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
+        $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
         $materia = $sesion->get('materia');
         $nivel = $sesion->get('nivel');
-        //obtengo cedula del docente autenticado
-        $cedula = $usuario->getCedula();
-        //obtiene las materias del docente autenticado
-        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
+        if (!$nivel2 && !$materia2) {
+            $codn = 1;
+            
+            $paginationSS=null;
+            
+        } else {
+            $codn = 2;
+            $sesion->set('nivel2', $nivel2);
+            $sesion->set('materia2', $materia2);
+            if (!$periodo) {
+                //mensaje
+                $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
 
-        if (!$periodo) {
-            //mensaje
-            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+                //codigo para hacer que retorne a la pagina principal del usuario autenticado
 
-            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+                $rol = strtolower($usuario->getRol());
+                return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+            }
 
-            $rol = strtolower($usuario->getRol());
-            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+            $estudiantes = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral($materia2, $nivel2);
+            //estudiantes
+            $paginatorSS = $this->get('knp_paginator');
+            $paginationSS = $paginatorSS->paginate(
+                    $estudiantes, $this->getRequest()->query->get('page', 1), 10
+            );
+
+            if ($estudiantes) {
+                $sd = 1;
+            }
         }
 
-        //obtiene lista de todos los niveles
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
-        $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
-            'estado' => true
-                ));
-        $estudiantes = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral($materia, $nivel);
-        $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
-
-        //estudiantes
-        $paginatorSS = $this->get('knp_paginator');
-        $paginationSS = $paginatorSS->paginate(
-                $estudiantes, $this->getRequest()->query->get('page', 1), 10
-        );
-
-        $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
-
-
-        $sd = 0;
-
-        if ($estudiantes) {
-            $sd = 1;
-        }
+        $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($cedula, $periodo->getId());
 
         return $this->render('academicoBundle:default:actageneralcalificaciones.html.twig', array(
                     'periodo' => $periodo,
                     'niveles' => $niveles,
                     'nivel' => $nivel,
                     'materia' => $materia,
+                    'nivel2' => $nivel2,
+                    'materia2' => $materia2,
                     'listamaterias' => $materiasdocente,
                     'listames' => $mes,
+                    'codn'=>$codn,
                     'estudiantes' => $paginationSS,
                     'materia' => $materia,
                     'sd' => $sd,

@@ -9,40 +9,34 @@
 </section>    
 {% set  pactivofin=  'now' | date('Y-m-d') <= codmes.ffinmes | date('Y-m-d')      %}
 {% set  pactivoinicio=  'now' | date('Y-m-d') >= codmes.finiciomes | date('Y-m-d')      %}
-<p style="text-align: center ; color: #0035C7"><strong>INGRESO DE EVALUACIONES PARCIALES DE: &nbsp;&nbsp; {{codmes | upper}}</strong></p>
+<p style="text-align: center ; color: #0035C7"><strong>INGRESO DE EVALUACIONES DEL: &nbsp;&nbsp; <strong style="color: #090" >{{codmes | upper}}</strong></strong></p>
 {% if  pactivoinicio and pactivofin %}
     
     {% if cod==1%}
-    <p><strong>Detalles:</strong></p>
-    <ul>
-        <li style="color: #08C">Se presenta los estudiantes ordenados por secciones, número de cédula y su nombre</li>
-        <li style="color: #08C">Para ingresar una nota atrasada, consulte con el administrador del sistema</li>
-            </ul>
-    <form action="{{ path('docente_notas_x_materia',{'mesid': codmes.id}) }}" method="post" {{
+    
+    <form action="{{ path('docente_notas_x_materia',{'mesid': codmes.id, 'niv': nivel.id, 'mat': materia.id}) }}" method="post" {{
         form_enctype(form) }} >
         {{ form_start(form) }}
               <div id="dt_example">
               <table id="itsthetable" >
                     <thead>
                         <tr>
-                            <th>Sección / Cédula / Estudiante</th>            
+                            <th>Cédula / Estudiante</th>            
                             <th>Trabajo en grupo</th>
                             <th>Estudio de casos</th>
                             <th>Prueba práctica</th>
                             <th>Prueba teórica</th>
-                            <th>Promedio</th>
                         </tr>
                         </thead>        
                      <tbody>
                     {% for req in form.evaest %}
                     
                         <tr >
-                            <td style="text-align: left; vertical-align: middle">{{ form_widget(req.materiaasignada, { 'attr': {'disabled' : true } }) }}</td>             
-                            <td style="text-align: center; vertical-align: middle" >{{ form_widget(req.notatb) }}</td> 
-                            <td style="text-align: center; vertical-align: middle">{{ form_widget(req.notaec) }}</td> 
-                            <td style="text-align: center; vertical-align: middle">{{ form_widget(req.notapp) }}</td> 
-                            <td style="text-align: center; vertical-align: middle">{{ form_widget(req.notapt) }}</td>
-                            <td style="text-align: center; vertical-align: middle">{{ form_widget(req.promedio)}}</td>
+                            <td style="text-align: left; vertical-align: middle; width: 220px">{{ form_widget(req.materiaasignada, { 'attr': {'disabled' : true } }) }}</td>             
+                            <td style="text-align: center; vertical-align: middle">{{ form_widget(req.notatb, { 'attr': {'autocomplete' : 'off' } })}}</td> 
+                            <td style="text-align: center; vertical-align: middle">{{ form_widget(req.notaec, { 'attr': {'autocomplete' : 'off' } })}}</td> 
+                            <td style="text-align: center; vertical-align: middle">{{ form_widget(req.notapp, { 'attr': {'autocomplete' : 'off' } })}}</td> 
+                            <td style="text-align: center; vertical-align: middle">{{ form_widget(req.notapt, { 'attr': {'autocomplete' : 'off' } })}}</td>
                         <tr>
                     <tbody>
                     {% endfor %}
@@ -86,7 +80,7 @@
     <div id="relacionadas">
         <ul>
     {% for matdoc in materiasdoc %}
-                <li><a title="{{matdoc.materiaperiodo.materia.nombre | upper }}" class="boton" href="{{path('docente_variable_sesion',{'niv': matdoc.nivel.id, 'mat': matdoc.materiaperiodo.materia.id})}}">{{matdoc.nivel.descripcion | upper }}&nbsp;&nbsp;{{matdoc.materiaperiodo.materia.nombre | title | truncate(10,true)}}</a></li>
+                <li><a title="{{matdoc.materiaperiodo.materia.nombre | upper }}" class="boton" href="{{path('docente_notas_x_materia',{'mesid': codmes.id,'niv': matdoc.nivel.id, 'mat': matdoc.materiaperiodo.materia.id})}}">{{matdoc.nivel.descripcion | upper }}&nbsp;&nbsp;{{matdoc.materiaperiodo.materia.nombre | title | truncate(10,true)}}</a></li>
     {% endfor%}
 
             </ul>

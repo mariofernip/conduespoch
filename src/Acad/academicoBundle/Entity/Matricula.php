@@ -249,6 +249,6 @@ class Matricula {
     
     
     public function __toString() {
-        return $this->seccion.' - '.$this->estudiante->getCedula().' - '.$this->estudiante->getNombre().' '.$this->estudiante->getApellido();
+        return $this->estudiante->getCedula().' - '.$this->estudiante->getNombre().' '.$this->estudiante->getApellido();
     }
 }

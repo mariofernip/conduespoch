@@ -146,8 +146,10 @@ class DefaultController extends Controller {
                                 'periodo' => $periodo,));
                 }
                 $listameses = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
-                $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
+                $materiasdocente2 = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
+                $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocenteSubPeriodo($usuario->getCedula(), $periodo->getId());
                 $x = 1;
+                $y=1;
                 if (!$materiasdocente) {
                     return $this->render('academicoBundle:Default:portada_docente_sinmaterias.html.twig', array(
                                 'periodo' => $periodo,));
@@ -163,13 +165,30 @@ class DefaultController extends Controller {
                         }
                     }
                 }
+                if (!$materiasdocente2) {
+                    return $this->render('academicoBundle:Default:portada_docente_sinmaterias.html.twig', array(
+                                'periodo' => $periodo,));
+                } else {
+                    foreach ($materiasdocente2 as $matd) {
+                        for ($index = 0; $index < $x; $index++) {
+                            $codn = $matd->getNivel();
+                            $nivel2 = $em->getRepository('administrativoBundle:Nivel')->find($codn);
+                            $codm = $matd->getMateriaPeriodo()->getMateria();
+                            $materia2 = $em->getRepository('administrativoBundle:Materia')->find($codm);
+                            $sesion->set('nivel2', $matd->getNivel());
+                            $sesion->set('materia2', $matd->getMateriaPeriodo()->getMateria());
+                        }
+                    }
+                }
                 return $this->render('academicoBundle:Default:portada_' . $role . '.html.twig', array(
                             'periodo' => $periodo,
                             'listames' => $mes,
                             'mesevac' => $listameses,
                             'lmd' => $materiasdocente,
                             'nivel' => $nivel,
-                            'materia' => $materia
+                            'materia' => $materia,
+                            'nivel2' => $nivel2,
+                            'materia2' => $materia2
                         ));
             }
             $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();

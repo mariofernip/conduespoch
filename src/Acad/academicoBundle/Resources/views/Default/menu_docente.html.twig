@@ -2,22 +2,25 @@
 <span class="preload2"></span>
 {% set rol='docente'%}
 <ul id="nave">
-    <li class="top"><a href="{{path('docente_variable_sesion',{'niv': nivel.id, 'mat': materia.id })}}" class="top_link"><span>INICIO</span></a></li>
+    <li class="top"><a href="{{path('portada',{'role': rol })}}" class="top_link"><span>INICIO</span></a></li>
     <li class="top"><a id="products" class="top_link"><span class="down">Calificaciones</span></a>        
         <ul class="sub">
             <li>
                 <a  class="fly">Parciales</a>
                 <ul>
+                    {% set  fechaactual=  'now' | date('Y-m-d')  %}
                     {% for m in listames %}
-                        <li><a  href="{{path('docente_notas_x_materia',{'mesid': m.id})}}">{{m.nota}}</a></li>                        
+                        {% if fechaactual >= m.finiciomes | date ('Y-m-d') and fechaactual <= m.ffinmes | date ('Y-m-d') %}
+                        <li><a  href="{{path('docente_notas_x_materia',{'mesid': m.id, 'niv': nivel.id, 'mat': materia.id})}}">{{m.nota}}</a></li>                        
+                        {% endif%}
                     {% endfor%}
                     
                 </ul>
             </li>                
-            <li><a href="{{path('docente_lista_materias_suspenso')}}" class="fly">Suspensos</a></li>
+            <li><a href="{{path('docente_lista_materias_suspenso',{'niv': nivel.id, 'mat': materia.id})}}" class="fly">Suspensos</a></li>
             <li><a href="" class="fly">Actas</a>
                 <ul>
-                    <li><a href="{{path('docente_acta_general_calificaciones_estudiantes')}}">Actas Generales</a></li>
+                        <li><a href="{{path('docente_acta_general_calificaciones_estudiantes',{'niv': nivel2.id, 'mat': materia2.id})}}">Actas Generales</a></li>
                 </ul>                                  
             </li>
         </ul>
@@ -27,7 +30,7 @@
             <li><a class="fly">Notas parciales</a>
                 <ul>
                     {% for me in mesevac %}
-                        <li><a href="{{path('docente_notas_parciales_x_mes',{'codmes': me.id})}}">{{me.nota}}</a></li>                    
+                        <li><a href="{{path('docente_notas_parciales_x_mes',{'codmes': me.id,'niv': nivel2.id, 'mat':materia2.id})}}">{{me.nota}}</a></li>                    
                     {% endfor%}
                 </ul>
             </li>

@@ -15,7 +15,7 @@
 {% if pactivoinicio and pactivofin %}
     {% if cod==1%}
     <p style="text-align: right"><a  target="_blank" href="{{path('docente_reporte_notas_supletorios',{'nid': nivel.id, 'mid':materia.id})}}" title="Imprimir reporte" ><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></p>
-    <form action="{{ path('docente_notas_suspenso',{'materia': mat.id, 'nivel': niv.id}) }}" method="post" {{
+    <form action="{{ path('docente_lista_materias_suspenso',{'niv': nivel.id, 'mat': materia.id}) }}" method="post" {{
         form_enctype(form) }} >
         {{ form_start(form) }}
             
@@ -27,7 +27,7 @@
                             
                         </tr>
                         <tr>
-                            <th>Sección / Cédula / Estudiante</th>                     
+                            <th>Cédula / Estudiante</th>                     
                             <th>Suspenso</th>
                             <th>Promedio final</th>
                             <th>Equivalencia</th>
@@ -38,7 +38,7 @@
                     
                         <tr {% if loop.index is odd %} class="color" {% endif %}>
                             <td style="text-align: left; vertical-align: middle">{{ form_widget(req.matricula, { 'attr': {'disabled' : true } }) }}</td>             
-                            <td style="text-align: center; width: 80px; vertical-align: middle">{{ form_widget(req.notasuspenso)}}</td> 
+                            <td style="text-align: center; width: 80px; vertical-align: middle">{{ form_widget(req.notasuspenso, { 'attr': {'autocomplete' : 'off' } })}}</td> 
                             <td style="text-align: center; width: 110px; vertical-align: middle">{{ form_widget(req.promediofinal) }}</td> 
                             <td style="text-align: center; width: 80px; vertical-align: middle">{{ form_widget(req.equivalencia) }}</td>
                             
@@ -83,7 +83,7 @@
     <div id="relacionadas">
         <ul>
     {% for matdoc in materiasdoc %}
-                <li><a title="{{matdoc.materiaperiodo.materia.nombre | upper }}" class="boton" href="{{path('docente_variable_sesion',{'niv': matdoc.nivel.id, 'mat': matdoc.materiaperiodo.materia.id})}}">{{matdoc.nivel.descripcion | upper }}&nbsp;&nbsp;{{matdoc.materiaperiodo.materia.nombre | title | truncate(10,true)}}</a></li>
+                <li><a title="{{matdoc.materiaperiodo.materia.nombre | upper }}" class="boton" href="{{path('docente_lista_materias_suspenso',{'niv': matdoc.nivel.id, 'mat': matdoc.materiaperiodo.materia.id})}}">{{matdoc.nivel.descripcion | upper }}&nbsp;&nbsp;{{matdoc.materiaperiodo.materia.nombre | title | truncate(10,true)}}</a></li>
     {% endfor%}
 
             </ul>

@@ -31,7 +31,7 @@ class MateriaAsignadaType extends AbstractType
             ->add('equivalencia','text', array( 'attr' => array('style' => 'width: 80px; border: none; text-align: center'),
                         'read_only' => true,
                         'disabled' => true))
-            ->add('notasuspenso', 'choice', array('choices' => $this->getInclinationChoices(),))
+            ->add('notasuspenso','number', array( 'attr' => array('style' => 'width: 50px; border: none; text-align: center')))     
             ->add('promediofinal','number', array( 'attr' => array('style' => 'width: 40px; border: none; text-align: center'),
                         'read_only' => true,
                         'disabled' => true))

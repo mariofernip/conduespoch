@@ -6,7 +6,7 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_docente.html.twig'%}
 </section>    
-
+<p style="text-align: center ; color: #0035C7"><strong>CONSULTA DE NOTAS PARCIALES</strong></p>
 <div id="dt_example">
     <div id="demo">
         <div class="count">
@@ -15,7 +15,7 @@
             <table class="display" id="example">
                 <thead>
                     <tr>
-                        <th colspan="7">NOTAS PARCIALES DEL MES DE: {{mes | upper}}</th>
+                        <th colspan="7">NOTAS DEL: {{mes | upper}}</th>
                     </tr>
                     <tr>
                         {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Acción</th>#}
@@ -56,12 +56,12 @@
 {% block aside%}
     {{parent()}}
     <p align="center">Materia actual</p>
-   <p style="text-align: center ; color: #090 "><strong>{{nivel.curso.nombre | upper}}&nbsp;&nbsp;{{nivel.paralelo.nombre | upper }}&nbsp;:&nbsp;{{materia.nombre}}</strong></p>
+   <p style="text-align: center ; color: #090 "><strong>{{nivel2.curso.nombre | upper}}&nbsp;&nbsp;{{nivel2.paralelo.nombre | upper }}&nbsp;:&nbsp;{{materia2.nombre}}</strong></p>
    <strong><p align="left">Curso / Materia</p></strong>
     <div id="relacionadas">
         <ul>
     {% for matdoc in materiasdoc %}
-                <li><a title="{{matdoc.materiaperiodo.materia.nombre | upper }}" class="boton" href="{{path('docente_variable_sesion',{'niv': matdoc.nivel.id, 'mat': matdoc.materiaperiodo.materia.id})}}">{{matdoc.nivel.descripcion | upper }}&nbsp;&nbsp;{{matdoc.materiaperiodo.materia.nombre | title | truncate(10,true)}}</a></li>
+                <li><a title="{{matdoc.materiaperiodo.materia.nombre | upper }}" class="boton" href="{{path('docente_notas_parciales_x_mes',{'codmes': codmes, 'niv': matdoc.nivel.id, 'mat': matdoc.materiaperiodo.materia.id})}}">{{matdoc.nivel.descripcion | upper }}&nbsp;&nbsp;{{matdoc.materiaperiodo.materia.nombre | title | truncate(10,true)}}</a></li>
     {% endfor%}
 
             </ul>

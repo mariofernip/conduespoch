@@ -51,7 +51,7 @@ class ExamenGrado {
     protected $descripcion;
     
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="float", nullable=false)
      * @Assert\Range(min=0, max=20)
      */
     protected $nota;

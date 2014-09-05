@@ -53,26 +53,26 @@ class Evaluacion
     
     
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="float", nullable=false)
      * @Assert\LessThan(value = 21)
      * @Assert\GreaterThan(value = -1)
      */
     protected $notatb;
     
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="float", nullable=false)
      * @Assert\Range(min=0, max=20)
      */
     protected $notaec;
     
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="float", nullable=false)
      * @Assert\Range(min=0, max=20)
      */
     protected $notapp;
     
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="float", nullable=false)
      * @Assert\Range(min=0, max=20)
      */
     protected $notapt;
