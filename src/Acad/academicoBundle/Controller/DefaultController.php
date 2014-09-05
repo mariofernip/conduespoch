@@ -118,7 +118,10 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Estudiante inscrito'
@@ -213,8 +216,11 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
-            }
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
+                }
 
             $usuario = $this->get('security.context')->getToken()->getUser();
             $rol = strtolower($usuario->getRol());
@@ -351,7 +357,10 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
             }
 
             return $this->redirect($this->generateUrl('estudiante_requisito', array(
@@ -434,7 +443,10 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
             }
 
             return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
@@ -643,7 +655,10 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
             }
 
             //mensaje
@@ -739,7 +754,10 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Notas actualizadas..!!');
@@ -986,7 +1004,10 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Asistencia ha sido actualizada');
@@ -1342,7 +1363,10 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Notas actualizadas..!!');
@@ -1586,7 +1610,10 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
             }
 
 
@@ -1754,7 +1781,10 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+               $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Notas actualizadas');
@@ -1860,7 +1890,10 @@ class DefaultController extends Controller {
                 } catch (\Exception $e) {
                     $em->getConnection()->rollback();
                     $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                    return $this->redirect($this->generateUrl('admin_portada'));
+                    $url = explode("?", $_SERVER['HTTP_REFERER']);
+                    $redir = $url[0];
+
+                    return $this->redirect($redir);
                 }
 
                 return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));

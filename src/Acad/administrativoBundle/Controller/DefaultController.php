@@ -284,7 +284,10 @@ class DefaultController extends Controller {
              } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
                 
             }
 
@@ -893,7 +896,10 @@ class DefaultController extends Controller {
              } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
                 
             }
 
@@ -966,7 +972,10 @@ class DefaultController extends Controller {
              } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
                 
             }
 
@@ -1060,7 +1069,10 @@ class DefaultController extends Controller {
              } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
                 
             }
 
@@ -1506,7 +1518,10 @@ class DefaultController extends Controller {
              } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red');
-                return $this->redirect($this->generateUrl('admin_portada'));
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
                 
             }
 
