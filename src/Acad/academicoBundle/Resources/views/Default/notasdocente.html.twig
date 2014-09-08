@@ -66,13 +66,13 @@
             <li style="text-align: left; color: #08C">Para mayor información por favor contáctese con el administrador del sistema</li>
  </ul>    
 {% endif %}
-        
+<br><br>        
 {% endblock%}
 
 {% block aside%}
     {{parent()}}
     <p align="center">Materia actual</p>
-    <strong style="color: #090">{{nivel}}&nbsp;{{materia}}</strong>
+    <strong style="color: #090"><label style="color: #0063DC">{{nivel | upper}}</label>:&nbsp;{{materia |title}}</strong>
     <p></p>
     <strong>
         <p align="left">Curso / Materia</p>
@@ -87,6 +87,8 @@
         </div>
 
     <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
+    <br><br>
+    
 {% endblock%}
     
 {% block javascripts %}

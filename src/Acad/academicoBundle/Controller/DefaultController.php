@@ -602,7 +602,7 @@ class DefaultController extends Controller {
 
                 $matricula->setEstado(1);
                 $matricula->setEstudiante($estudiante);
-                $matricula->setFechamatricula(new DateTime('now'));
+                $matricula->setFechamatricula(new \DateTime('now'));
                 $em->persist($matricula);
                 $em->flush();
 
@@ -624,6 +624,7 @@ class DefaultController extends Controller {
                     $materiaasignada = new MateriaAsignada();
                     $materiaasignada->setMateriaperiodo($mat1);
                     $materiaasignada->setMatricula($matricula);
+                    $materiaasignada->setNotasuspenso(0);
                     $em->persist($materiaasignada);
                     $em->flush();
                 }
@@ -636,22 +637,24 @@ class DefaultController extends Controller {
                     $asistencia->setMateriaasignada($matasi1);
                     $em->persist($asistencia);
                     $em->flush();
-                }
-                //LLENAR LA TABLA: EVALUACION
-                foreach ($listamesevaluacion as $meseva) {
-                    $evaluacion = new Evaluacion();
-                    $evaluacion->setDescripcion('');
-                    $evaluacion->setMateriaasignada($matasi1);
-                    $evaluacion->setMesevaluacion($meseva);
-                    $evaluacion->setNotatb(0);
-                    $evaluacion->setNotaec(0);
-                    $evaluacion->setNotapp(0);
-                    $evaluacion->setNotapt(0);
-                    $evaluacion->setPromedio(0);
 
-                    $em->persist($evaluacion);
-                    $em->flush();
+                    //LLENAR LA TABLA: EVALUACION
+                    foreach ($listamesevaluacion as $meseva) {
+                        $evaluacion = new Evaluacion();
+                        $evaluacion->setDescripcion('');
+                        $evaluacion->setMateriaasignada($matasi1);
+                        $evaluacion->setMesevaluacion($meseva);
+                        $evaluacion->setNotatb(0);
+                        $evaluacion->setNotaec(0);
+                        $evaluacion->setNotapp(0);
+                        $evaluacion->setNotapt(0);
+                        $evaluacion->setPromedio(0);
+
+                        $em->persist($evaluacion);
+                        $em->flush();
+                    }
                 }
+                $em->getConnection()->commit();
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
