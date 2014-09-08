@@ -235,6 +235,11 @@ class DefaultController extends Controller {
             }
 
             if ($role == 'inspector') {
+                if ($subperiodo < 2 or $subperiodo >2) {
+                    $this->get('session')->getFlashBag()->add('Info', 'URGENTE!!! Contacte al administrador Sub Periodos no corresponden');
+                    return $this->render('academicoBundle:Default:portada_docente_sinmaterias.html.twig', array(
+                                'periodo' => $periodo,));
+                }
                 $listadocentes = $em->getRepository('administrativoBundle:Docente')->findBy(array(
                     'estado' => true
                         ));

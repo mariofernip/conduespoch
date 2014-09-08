@@ -932,9 +932,9 @@ class DefaultController extends Controller {
     public function listaestudiantesxseccionesmateriaAction($materias, $nivel) {
 
         $em = $this->getDoctrine()->getManager();
-        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
+        //$listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
-
+        $listamaterias = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasInspectorSubPeriodo($periodo->getId());
         $request = $this->getRequest();
 
         if (!$periodo) {
@@ -1033,11 +1033,12 @@ class DefaultController extends Controller {
     public function listamateriasxnivelAction($nivel) {
 
         $em = $this->getDoctrine()->getEntityManager();
-        $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
+       // $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         $curso = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
-
+        $listamaterias = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasInspectorSubPeriodo($periodo->getId());
+               
         if (!$periodo) {
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
