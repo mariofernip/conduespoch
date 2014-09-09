@@ -93,6 +93,27 @@ class MatriculaRepository extends EntityRepository{
         return $consulta->getResult();
                 
     }
+
+    public function getEstudiantesxNivel($pid) {
+        
+        $em= $this->getEntityManager();
+        $dql = 'select count(n.id) as num, c.nombre as nivel, pl.nombre as paralelo
+                FROM academicoBundle:Matricula m             
+                Join m.periodo p
+                Join m.nivel n
+                Join n.paralelo pl
+                Join n.curso c
+                WHERE p.id= :pid 
+                group by n.id, c.nombre, pl.nombre
+                    
+                ';
+        $consulta = $em->createQuery($dql);        
+        $consulta->setParameter('pid', $pid);
+        //$consulta->setParameter('nid', $nid);
+        
+        return $consulta->getResult();
+    }
+    
     
 }
 

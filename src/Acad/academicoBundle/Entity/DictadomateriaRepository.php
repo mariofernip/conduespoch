@@ -263,8 +263,7 @@ class DictadomateriaRepository extends EntityRepository {
     public function getSuspensoEstudiantesxMateriaRPT($mid,$pid,$nid) {
         
         $em = $this->getEntityManager();
-        $nbase=14;
-        $dql = 'select ma,m,mat,p,n
+        $dql = 'select ma,m,mat,p,n,mp
                 FROM academicoBundle:MateriaAsignada ma
                 Join ma.matricula m
                 Join ma.materiaperiodo mp
@@ -274,16 +273,17 @@ class DictadomateriaRepository extends EntityRepository {
                 WHERE mat.id = :mid and                                                    
                           p.id= :pid and
                           n.id = :nid and
-                          ma.promediofinal <= :nb
+                          ma.notasuspenso > 0
+                          
                        
                 ';
         $consulta = $em->createQuery($dql);
         $consulta->setParameter('mid', $mid);                
-        $consulta->setParameter('pid', $pid);                        
+        $consulta->setParameter('pid', $pid);                                
         $consulta->setParameter('nid', $nid);            
-        $consulta->setParameter('nb', $nbase);   
         
         return $consulta->getResult();
+
         
     }
     

@@ -2177,11 +2177,15 @@ class DefaultController extends Controller {
         $listaEstSupletorios = $em->getRepository('academicoBundle:Dictadomateria')->getSuspensoEstudiantesxMateriaRPT($mid, $periodo->getId(), $nid);
 
         $format = $this->get('request')->get('_format');
-
+        $cod=0;
+         if($listaEstSupletorios){
+             $cod=1;
+         }   
         $content = $this->render(sprintf('academicoBundle:reportes:docente_notassuspenso.%s.twig', $format), array(
             'periodo' => $periodo,
             'lista' => $listaEstSupletorios,
             'nivel' => $nivel,
+            'cod'=>$cod,
             'materia' => $materia,
             'docente' => $usuario
                 ));

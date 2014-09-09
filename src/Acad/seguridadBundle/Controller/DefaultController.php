@@ -197,6 +197,8 @@ class DefaultController extends Controller {
             $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
             $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMaterias();
             if ($role == 'secretaria') {
+                //numero de estudiantes x niveles
+                $est= $em->getRepository('academicoBundle:Matricula')->getEstudiantesxNivel($periodo->getId());
                 //inscritos
                 $estIA = $em->getRepository('academicoBundle:Inscripcion')->findBy(array(
                     'periodo' => $periodo,
@@ -231,6 +233,7 @@ class DefaultController extends Controller {
                             'estMI' => $estMI,
                             'estMT' => $estMT,
                             'lista' => $lista,
+                            'estudiantes'=>$est,
                             'niveles'=>$niveles
                         ));
             }

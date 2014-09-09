@@ -7,7 +7,7 @@
                     <div font-style="bold" margin=" 60px 50px 50px 10px" color="black"  font-size="14px" height="30px" text-align="center">
                         <table >
                             <tr border.color="white">
-                                <td border.color="white"><br/>ESCUELA DE CONDUCCIÓN PROFESIONAL<br/> CONDUESPOCH E.P<br/>CHIMBORAZO - RIOBAMBA<br/><p font-size="15">ACTA DE CALIFICACIONES</p></td><td border.color="white" width="65" height="45" ><img src="uploads/iconos/logo.jpg"  width="75" height="65"  /></td>
+                                <td border.color="white"><br/>ESCUELA DE CONDUCCIÓN PROFESIONAL<br/> CONDUESPOCH E.P<br/>CHIMBORAZO - RIOBAMBA<br/><p font-size="15">ACTA DE SUSPENSOS</p></td><td border.color="white" width="65" height="45" ><img src="uploads/iconos/logo.jpg"  width="75" height="65"  /></td>
                             </tr>
                             <tr border.color="white">
                                 <td font-size="16" colspan="2" border.color="white"></td>
@@ -44,7 +44,6 @@
             <tr text-align="center" font-style="bold">
                 <td height="13px" >Nº</td>
                 <td>NOMINA</td>
-                <td>SECCIÓN</td>
                 <td>NOTA SUSP.</td>                
                 <td>PROM. FINAL</td>                
                 <td>EQUIVALENCIA</td> 
@@ -54,7 +53,6 @@
             <tr >
                 <td width="30px" text-align="center">{{loop.index}}</td>
                 <td>{{ma.matricula.estudiante.apellido | upper}}{{' '}}{{ma.matricula.estudiante.nombre | upper}}</td>
-                <td width="60" text-align="center"  >{{ma.matricula.seccion | title}}</td>
                 <td width="40" text-align="center">{{ma.notasuspenso}}</td>
                 <td width="40" text-align="center">{{ma.promediofinal}}</td>
                 <td width="80" text-align="center">{{ma.equivalencia | title }}</td>
