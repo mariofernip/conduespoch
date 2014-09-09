@@ -49,4 +49,5 @@
 
 {% block aside %}
     {{ parent()}}
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}

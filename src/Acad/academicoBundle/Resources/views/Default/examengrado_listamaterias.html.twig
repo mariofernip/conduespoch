@@ -4,7 +4,7 @@
 {% block id 'portada' %}
 {% block article%}
 <section id="menu_secre">
-    {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
+    {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
 </section>
 <p style="text-align: center ; color: #0035C7 "><strong>INGRESO NOTAS DE EXAMENES DE GRADO</strong></p>
 <p><strong>Detalles:</strong></p>
@@ -19,7 +19,7 @@
     <div id="relacionadas">
         <ul>
     {% for mat in listamaterias %}
-                <li ><a href="{{path('inspector_examengrado_registro_notas',{'codmg': mat.id})}}" class="boton">{{mat.materia}}<a></li>
+                <li ><a href="{{path('secretaria_examengrado_registro_notas',{'codmg': mat.id})}}" class="boton">{{mat.materia}}<a></li>
     {% endfor%}
 
             </ul>

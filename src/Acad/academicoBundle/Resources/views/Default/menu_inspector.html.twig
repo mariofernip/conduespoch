@@ -15,23 +15,6 @@
             </li>
         </ul>
     </li>
-
-    <li class="top"><a  id="shop" class="top_link"><span class="down">EXA. GRADO</span></a>
-        
-        <ul class="sub">
-            <li><a  id="shop" class="top_link"><span class="down">Ingresar</span></a>
-                <ul>
-
-                           {% for mat in niveles %}
-                    <li><a href="{{path('inspector_lista_materiasgrado_x_nivel',{'codniv': mat.id})}}">{{mat.curso.nombre | title}}&nbsp;&nbsp;{{mat.paralelo.nombre | title}}</a></li>              
-                          {% endfor%} 
-                </ul>
-            </li>
-        </ul>
-    </li>
-
-
-
     <li class="top"><a  id="shop" class="top_link"><span class="down">REPORTES</span></a>
         <ul class="sub">
             <li><a href="#nogo54">Reporte 1</a></li>

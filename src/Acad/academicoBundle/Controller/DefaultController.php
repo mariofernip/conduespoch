@@ -130,9 +130,10 @@ class DefaultController extends Controller {
             return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $estudiante->getCedula())));
         }
 
-
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         return $this->render('academicoBundle:Default:registroestudiante.html.twig', array(
                     'periodo' => $periodo,
+                    'niveles'=>$niveles,
                     'formulario' => $formulario->createView())
         );
     }
@@ -140,7 +141,7 @@ class DefaultController extends Controller {
     public function requisitoEstudianteAction($cedula) {
 
         $em = $this->getDoctrine()->getEntityManager();
-
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         $peticion = $this->getRequest();
 
         //obtengo el estudiante
@@ -232,6 +233,7 @@ class DefaultController extends Controller {
                     'estudiante' => $estudiante,
                     'requisitos' => $cumplerequisito,
                     'periodo' => $periodo,
+                    'niveles'=>$niveles,
                     'form' => $form->createView()
                 ));
     }
@@ -301,7 +303,7 @@ class DefaultController extends Controller {
 
         $em = $this->getDoctrine()->getEntityManager();
         $peticion = $this->getRequest();
-
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         //consulto el periodo actual
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
             'estado' => 1
@@ -374,6 +376,7 @@ class DefaultController extends Controller {
                     'requisito' => $req,
                     'periodo' => $periodo,
                     'cedulaest' => $cedula,
+                    'niveles'=>$niveles,
                     'formulario' => $formulario->createView()
                 ));
     }
@@ -544,10 +547,11 @@ class DefaultController extends Controller {
 
         $peticion = $this->getRequest();
         $usuario = $this->get('security.context')->getToken()->getUser();
+        
         $rol = strtolower($usuario->getRol());
         $em = $this->getDoctrine()->getManager();
         $matricula = new Matricula();
-
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array('estado' => 1));
         $mat = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado' => 1));
         $matper = $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo);
@@ -674,7 +678,11 @@ class DefaultController extends Controller {
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
-        return $this->render('academicoBundle:Default:estudiantematriculado2.html.twig', array('periodo' => $periodo, 'formulario' => $formulario->createView(), 'estudiante' => $estudiante));
+        return $this->render('academicoBundle:Default:estudiantematriculado2.html.twig', array(
+            'periodo' => $periodo, 
+            'niveles'=>$niveles,            
+            'formulario' => $formulario->createView(),
+            'estudiante' => $estudiante));
     }
 
     //METODO PRA lISTAR LOS ESTUDIANTE DEL DOCENTE X MATERIA, NIVEL, SECCION
@@ -802,8 +810,8 @@ class DefaultController extends Controller {
     public function listaestudiantesinscritosAction() {
 
         $em = $this->getDoctrine()->getEntityManager();
-
-        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();        
         if (!$periodo) {
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
@@ -825,6 +833,7 @@ class DefaultController extends Controller {
 
         return $this->render('academicoBundle:default:listaestudiantesinscritos.html.twig', array(
                     'periodo' => $periodo,
+                    'niveles'=>$niveles,
                     'pagination' => $pagination
                 ));
     }
@@ -844,7 +853,7 @@ class DefaultController extends Controller {
         $formulario = $this->createForm(new EstudianteType(), $estudiante);
 
         $formulario->handleRequest($peticion);
-
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         if ($formulario->isValid()) {
             $em->persist($estudiante);
             $em->flush();
@@ -858,6 +867,7 @@ class DefaultController extends Controller {
 
         return $this->render('academicoBundle:default:modificarestudiante.html.twig', array(
                     'periodo' => $periodo,
+                    'niveles'=>$niveles,
                     'cedula' => $cedula,
                     'formulario' => $formulario->createView()
                 ));
@@ -1193,7 +1203,7 @@ class DefaultController extends Controller {
         $peticion = $this->getRequest();
 
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
-
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         $matricula = $em->getRepository('academicoBundle:Matricula')->findOneBy(array(
             'id' => $mid
                 ));
@@ -1210,6 +1220,7 @@ class DefaultController extends Controller {
 
         return $this->render('academicoBundle:default:modificarestudiantematricula.html.twig', array(
                     'periodo' => $periodo,
+                    'niveles'=>$niveles,
                     'mid' => $mid,
                     'formulario' => $formulario->createView(),
                     'matricula' => $matricula
@@ -1795,7 +1806,7 @@ class DefaultController extends Controller {
 
             $this->get('session')->getFlashBag()->add('Info', 'Notas actualizadas');
 
-            return $this->redirect($this->generateUrl('inspector_examengrado_registro_notas', array(
+            return $this->redirect($this->generateUrl('secretaria_examengrado_registro_notas', array(
                                 'codmg' => $codmg
                             )));
         }
@@ -1808,7 +1819,14 @@ class DefaultController extends Controller {
             'periodo' => $periodoA,
             'estado' => true
                 ));
-        $exag = $em->getRepository('academicoBundle:ExamenGrado')->find($codmg);
+        $exag = $em->getRepository('administrativoBundle:MateriaGrado')->find($codmg);
+//        if(!$exag){
+//            $this->get('session')->getFlashBag()->add('Info', 'Materia no encontrada');
+//            $url = explode("?", $_SERVER['HTTP_REFERER']);
+//                    $redir = $url[0];
+//
+//                    return $this->redirect($redir);
+//        }
         return $this->render('academicoBundle:Default:notas_examengrado.html.twig', array(
                     'periodo' => $periodoA,
                     'cod' => $cod,
@@ -1829,8 +1847,10 @@ class DefaultController extends Controller {
 
         $periodoA = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         $listarequisitos = $em->getRepository('administrativoBundle:Requisito')->findAll();
+        $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         return $this->render('academicoBundle:Default:requisito_listatodos.html.twig', array(
                     'periodo' => $periodoA,
+                    'niveles'=>$niveles,
                     'lista' => $listarequisitos,
                 ));
     }

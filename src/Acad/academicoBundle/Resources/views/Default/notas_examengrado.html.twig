@@ -7,14 +7,14 @@
 
 {% block article %}
 <section id="menu_secre">
-    {% include 'academicoBundle:Default:menu_inspector.html.twig'%}
+    {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
 </section>
-<p style="text-align: center ; color: #0035C7 "><strong>INGRESO NOTAS DE GRADO: <label style="color: #090">{{mg.materiagrado.materia}}</label></strong></p>
+<p style="text-align: center ; color: #0035C7 "><strong>INGRESO NOTAS DE GRADO: <label style="color: #090">{{mg.materia | upper }}</label></strong></p>
 
 
 {% if cod==1%}
     
-    <form action="{{ path('inspector_examengrado_registro_notas',{'codmg': codmg}) }}" method="post" {{
+    <form action="{{ path('secretaria_examengrado_registro_notas',{'codmg': codmg}) }}" method="post" {{
         form_enctype(form) }} >
         {{ form_start(form) }}
             
@@ -64,7 +64,7 @@
     <div id="relacionadas">
         <ul>
     {% for mat in listamaterias %}
-                <li ><a href="{{path('inspector_examengrado_registro_notas',{'codmg': mat.id})}}" class="boton">{{mat.materia}}<a></li>
+                <li ><a href="{{path('secretaria_examengrado_registro_notas',{'codmg': mat.id})}}" class="boton">{{mat.materia}}<a></li>
     {% endfor%}
 
             </ul>

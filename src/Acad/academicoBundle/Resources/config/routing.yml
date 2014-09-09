@@ -98,12 +98,12 @@ docente_ver_horario:
     pattern:  /docente/ver/horario/docente
     defaults: { _controller: academicoBundle:default:verhorariodocente}        
     
-inspector_lista_materiasgrado_x_nivel:    
-    pattern:  /inspector/materias/grado/lista/{codniv}
+secretaria_lista_materiasgrado_x_nivel:    
+    pattern:  /secretaria/materias/grado/lista/{codniv}
     defaults: { _controller: academicoBundle:default:listamateriasgrado}    
     
-inspector_examengrado_registro_notas:
-    pattern:  /inspector/examenes/grado/notas/{codmg}
+secretaria_examengrado_registro_notas:
+    pattern:  /secretaria/examenes/grado/notas/{codmg}
     defaults: { _controller: academicoBundle:default:notasgrado }            
     
 secretaria_requisito_listar_todos:    

@@ -9,32 +9,28 @@
 {% block article %}
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
-</section>
-<h1>{{ block ('title')}}</h1>
-
-
-
-
-<form action="{{ path('admin_requisito_modificar_estados') }}" method="post" {{
+    </section>
+    <p style="text-align: center ; color: #0035C7 "><strong>MODIFICAR LISTA DE REQUISITOS</strong></p>
+    <form action="{{ path('admin_requisito_modificar_estados') }}" method="post" {{
         form_enctype(form) }} >
     {{ form_start(form) }}
-        {# render the task's only field: description #}
-    
-    <br>
-    
-    <ul>
-        {# iterate over each existing tag and render its only field: name #}
-        {% for req in form.estreq %}
-            
-            <li>{{ form_widget(req.estado) }}&nbsp;&nbsp;{{ form_widget(req.descripcion) }}</li>
-            
-        {% endfor %}
-    </ul>
+              <table style="width: 600px">
+                  <thead>
+                  <th>ESTADO</th>
+                  <th>NOMBRE DEL REQUISITO</th>
+                  </thead>
+                  <tbody>
+                    {% for req in form.estreq %}
+                          <tr>
+                              <td style="text-align: center; vertical-align: middle; width: 30px" > {{ form_widget(req.estado) }}</td><td style="text-align: left; vertical-align: middle; width: 500px">{{ form_widget(req.descripcion) }}</td>
+                          </tr>
+                    {% endfor %}
+                      </tbody>
+                  </table>
 
-    
-    <input type="submit" value="guardar" class="boton" >
+                  <input type="submit" value="guardar" class="boton" >
     {{ form_end(form) }}
-    </form>
+              </form>
 
 
 
@@ -42,5 +38,9 @@
 
 {% block aside %}
     {{ parent()}}
-    <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
+              <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
 {% endblock%}
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'academicoBundle:Default:tablecss.html.twig'%}
+{% endblock%}    

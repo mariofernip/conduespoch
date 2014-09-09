@@ -230,7 +230,8 @@ class DefaultController extends Controller {
                             'estMA' => $estMA,
                             'estMI' => $estMI,
                             'estMT' => $estMT,
-                            'lista' => $lista
+                            'lista' => $lista,
+                            'niveles'=>$niveles
                         ));
             }
 

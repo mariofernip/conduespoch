@@ -10,7 +10,7 @@
 <section id="menu_admin">
     {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
+<p style="text-align: center ; color: #0035C7 "><strong>MODIFICAR UN REQUISITOS</strong></p>
 <br><br>
 <form action="{{ path('admin_requisito_modificar',{'codreq': codreq}) }}" method="post" {{
         form_enctype(formulario) }}>
@@ -49,7 +49,7 @@
                             {% set esta='Inactivo'%}                                                    
                         {% endif%}
                         <tr >
-                            <td>{{m.descripcion }}</td> <td>{{ esta }}</td> <td><a href="{{path('admin_requisito_modificar', {'codreq': m.id})}}">Mod</a></td>                        
+                            <td>{{m.descripcion }}</td> <td style="width: 40px; vertical-align: middle; text-align: center">{{ esta }}</td> <td style="width: 30px; vertical-align: middle; text-align: center"><a href="{{path('admin_requisito_modificar', {'codreq': m.id})}}"><img title="Editar requisito"  src="{{ asset('uploads/iconos/edit.gif') }}"></a></td>                        
                             
                         <tr>
                     <tbody>
@@ -68,8 +68,8 @@
     {{ parent() }}
 {% endblock%}
 {% block stylesheets %}
-{{ parent() }}
-    
- {% endblock %}
+    {{ parent() }}
+    {% include 'academicoBundle:Default:tablecss.html.twig'%}
+{% endblock%}    
 
         
