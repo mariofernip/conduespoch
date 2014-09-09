@@ -19,19 +19,19 @@ estudiante_busqueda:
     defaults: { _controller: academicoBundle:default:buscarEst}
             
 amaterias_dictadomateria:
-    pattern:  /amaterias/materias
+    pattern:  /pedagogico/materias
     defaults: { _controller: academicoBundle:default:dictadomateria}
     
 amaterias_lista_materias_asignadas:
-    pattern:  /amaterias/lista/materias-asignadas
+    pattern:  /pedagogico/lista/materias-asignadas
     defaults: { _controller: academicoBundle:default:listadictadomateria}
     
 amaterias_modificar_materias_asignadas:
-    pattern:  /amaterias/modificar/materias-asignadas/{codm}
+    pattern:  /pedagogico/modificar/materias-asignadas/{codm}
     defaults: { _controller: academicoBundle:default:modificardictadomateria}    
     
 amaterias_eliminar_materias_asignadas:
-    pattern:  /amaterias/eliminar/materias-asignadas
+    pattern:  /pedagogico/eliminar/materias-asignadas
     defaults: { _controller: academicoBundle:default:eliminardictadomateria}    
    
 estudiante_matricula:

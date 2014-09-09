@@ -1963,7 +1963,7 @@ class DefaultController extends Controller {
             }
         }
 
-        if ($rol == 'AMATERIAS') {
+        if ($rol == 'PEDAGOGICO') {
             $amaterias = $em->getRepository('seguridadBundle:Usuario')->findOneBy(array('cedula' => $cedula));
 
             $formulario = $this->createForm(new PerfilInspectorType(), $amaterias);
