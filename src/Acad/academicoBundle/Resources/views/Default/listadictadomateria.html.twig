@@ -39,7 +39,7 @@
 {% endblock%}
 
 {% block aside %}
-    {%set rol='amaterias'%}
+    {%set rol='pedagogico'%}
         <p align="center"><a class="boton" href="{{path('portada',{'role': rol})}}">INICIO</a></p>
     {{ parent()}}
         <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>

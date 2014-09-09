@@ -126,3 +126,9 @@ docente_reporte_notas_supletorios:
     defaults: { _controller: academicoBundle:default:reportenotassuspenso, _format: pdf}    
     requirements:
         _format: pdf                
+        
+docente_reporte_notas_parciales_x_mes:
+    pattern:  /docente/reporte/notas/parciale/mes/{mesid}/{nid}/{mid}
+    defaults: { _controller: academicoBundle:default:reportenotasparcialesxmes, _format: pdf}    
+    requirements:
+        _format: html|pdf                                

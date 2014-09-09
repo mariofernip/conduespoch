@@ -625,6 +625,8 @@ class DefaultController extends Controller {
                     $materiaasignada->setMateriaperiodo($mat1);
                     $materiaasignada->setMatricula($matricula);
                     $materiaasignada->setNotasuspenso(0);
+                    $materiaasignada->setEquivalencia('Reprobado');
+                    $materiaasignada->setPromediofinal(0);
                     $em->persist($materiaasignada);
                     $em->flush();
                 }
@@ -2167,4 +2169,42 @@ class DefaultController extends Controller {
         return $content;
     }
 
+    /**
+     * @Pdf()
+     */
+    public function reportenotasparcialesxmesAction($mesid,$nid, $mid) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $sesion = $this->getRequest()->getSession();
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $nota=$em->getRepository('administrativoBundle:Nota')->find($mesid);
+        $meseva=$em->getRepository('administrativoBundle:MesEvaluacion')->findOneBy(array(
+            'nota'=>$nota
+        ));
+        $nivel = $em->getRepository('administrativoBundle:Nivel')->find($nid);
+        $materia = $em->getRepository('administrativoBundle:Materia')->find($mid);
+
+        $periodo = $sesion->get('periodo');
+
+        $listaEstudiantes = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($mid, $periodo->getId(), $nid, $mesid);
+        $cod=0;
+        if($listaEstudiantes){
+            $cod=1;
+        }
+
+        $format = $this->get('request')->get('_format');
+
+        $content = $this->render(sprintf('academicoBundle:reportes:docente_notasparcialesxmes.%s.twig', $format), array(
+            'periodo' => $periodo,
+            'lista' => $listaEstudiantes,
+            'nivel' => $nivel,
+            'meseva'=>$meseva,
+            'cod'=>$cod,
+            'materia' => $materia,
+            'docente' => $usuario
+                ));
+
+        return $content;
+    }
+    
+    
 }

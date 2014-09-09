@@ -13,7 +13,7 @@
 {% if  pactivoinicio and pactivofin %}
     
     {% if cod==1%}
-    
+    <div style="text-align: right"><a  target="_blank" href="{{path('docente_reporte_notas_parciales_x_mes',{'mesid': codmes.id, 'nid': nivel.id, 'mid':materia.id})}}" title="Imprimir reporte" ><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></div>
     <form action="{{ path('docente_notas_x_materia',{'mesid': codmes.id, 'niv': nivel.id, 'mat': materia.id}) }}" method="post" {{
         form_enctype(form) }} >
         {{ form_start(form) }}
@@ -66,7 +66,7 @@
             <li style="text-align: left; color: #08C">Para mayor información por favor contáctese con el administrador del sistema</li>
  </ul>    
 {% endif %}
-<br><br>        
+        
 {% endblock%}
 
 {% block aside%}
@@ -87,8 +87,6 @@
         </div>
 
     <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
-    <br><br>
-    
 {% endblock%}
     
 {% block javascripts %}

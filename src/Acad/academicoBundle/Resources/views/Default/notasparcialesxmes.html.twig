@@ -6,27 +6,27 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_docente.html.twig'%}
 </section>    
-<p style="text-align: center ; color: #0035C7"><strong>CONSULTA DE NOTAS PARCIALES</strong></p>
+<div style="text-align: center ; color: #0035C7"><strong>CONSULTA DE NOTAS PARCIALES</strong></div>
+<div style="text-align: right"><a  target="_blank" href="{{path('docente_reporte_notas_parciales_x_mes',{'mesid': mes.id, 'nid': nivel.id, 'mid':materia.id})}}" title="Imprimir reporte" ><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></div>
 <div id="dt_example">
     <div id="demo">
-        <div class="count">
-            {#{{ pagination.getTotalItemCount }}#}
-            </div>
+    
             <table class="display" id="example">
                 <thead>
                     <tr>
-                        <th colspan="7">NOTAS DEL: {{mes | upper}}</th>
+                        <th colspan="8">NOTAS DEL: {{mes | upper}}</th>
                     </tr>
                     <tr>
                         {#<th>Cédula</th><th>Nombre</th><th>Apellido</th><th>Correo electrónico</th><th>Estado</th><th>Acción</th>#}
 
                             <th>{{ knp_pagination_sortable(listaeva, 'Cédula', 'e.cedula') }}</th>
                             <th>{{ knp_pagination_sortable(listaeva, 'Nombre', 'e.nombre') }}</th>                            
-                            <th>{{ knp_pagination_sortable(listaeva, 'Sección', 'm.seccion') }}</th>                            
                             <th>{{ knp_pagination_sortable(listaeva, 'Trabajo grupo', 'ev.notatb') }}</th>                            
                             <th>{{ knp_pagination_sortable(listaeva, 'Estudio casos', 'ev.notaec') }}</th>
                             <th>{{ knp_pagination_sortable(listaeva, 'Prueba práctica', 'ev.notapp') }}</th>
                             <th>{{ knp_pagination_sortable(listaeva, 'Prueba teórica', 'ev.notapt') }}</th>
+                            <th>SUMA</th>
+                            <th>PROM.</th>
 
                         </tr>
 
@@ -36,11 +36,12 @@
                         <tr {% if loop.index is odd %}class="color"{% endif %}>
                                 <td style="text-align: center; width: 30px; vertical-align: middle">{{est.materiaasignada.matricula.estudiante.cedula}}</td>
                                 <td style="vertical-align: middle">{{est.materiaasignada.matricula.estudiante.apellido | title }}&nbsp; {{est.materiaasignada.matricula.estudiante.nombre | title}}</td>
-                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.materiaasignada.matricula.seccion | title}}</td>
                                 <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notatb}}</td>
                                 <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notaec}}</td>
                                 <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notapp}}</td>
                                 <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notapt}}</td>                                
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notatb + est.notaec + est.notapp + est.notapt}}</td>                                
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{((est.notatb + est.notaec + est.notapp + est.notapt)/ 4) | round(2,'floor')}}</td>                                
                          <tr>
                         </tbody>
                     {% endfor%}
@@ -50,13 +51,13 @@
                         {{ knp_pagination_render(listaeva) }}
                      </div>
                </div>
-
+    </div>
 <br><br>
 {% endblock%}
 {% block aside%}
     {{parent()}}
     <p align="center">Materia actual</p>
-   <p style="text-align: center ; color: #090 "><strong>{{nivel2.curso.nombre | upper}}&nbsp;&nbsp;{{nivel2.paralelo.nombre | upper }}&nbsp;:&nbsp;{{materia2.nombre}}</strong></p>
+    <p style="text-align: center ; color: #090 "><strong><label style="color: #0035C7">{{nivel2.curso.nombre | upper}}</label>: &nbsp;&nbsp;{{nivel2.paralelo.nombre | upper }}&nbsp;:&nbsp;{{materia2.nombre}}</strong></p>
    <strong><p align="left">Curso / Materia</p></strong>
     <div id="relacionadas">
         <ul>

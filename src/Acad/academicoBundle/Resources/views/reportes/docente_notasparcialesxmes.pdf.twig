@@ -20,7 +20,7 @@
                             <tr><td text-align="left" > PARALELO:</td><td text-align="left" >{{nivel.paralelo | upper}}</td></tr>
                             <tr><td text-align="left" > SECCIÓN:</td><td text-align="left" >DIURNA</td></tr>
                             <tr><td text-align="left" > PERIODO:</td><td text-align="left" >{{periodo | upper}}</td></tr>
-                            <tr><td text-align="left" > CALIFICACIONES DE:</td><td text-align="left" ></td></tr>
+                            <tr><td text-align="left" > CALIFICACIONES DE:</td><td text-align="left" >{{meseva.nota | upper}}</td></tr>
                             
                         </table>                        
                     </div>                    
@@ -40,24 +40,28 @@
         {# CONTENIDO DE REPORTE#}
         <br/><br/>
         {% if cod == 1%}
-        <table margin=" 60px 10px 50px 10px"  >
+        <table margin=" 40px 10px 40px 10px"  >
             <tr text-align="center" font-style="bold">
                 <td height="13px" >Nº</td>
                 <td>NOMINA</td>
-                <td>SECCIÓN</td>
-                <td>NOTA SUSP.</td>                
-                <td>PROM. FINAL</td>                
-                <td>EQUIVALENCIA</td> 
+                <td>Trabajo en equipo</td>
+                <td>Estudio de casos</td>                
+                <td>Prueba práctica</td>                
+                <td>Prueba teórica</td> 
+                <td>SUMA</td> 
+                <td>PROMEDIO</td> 
             </tr>
             
-            {% for ma in lista %}            
+            {% for eva in lista %}            
             <tr >
                 <td width="30px" text-align="center">{{loop.index}}</td>
-                <td>{{ma.matricula.estudiante.apellido | upper}}{{' '}}{{ma.matricula.estudiante.nombre | upper}}</td>
-                <td width="60" text-align="center"  >{{ma.matricula.seccion | title}}</td>
-                <td width="40" text-align="center">{{ma.notasuspenso}}</td>
-                <td width="40" text-align="center">{{ma.promediofinal}}</td>
-                <td width="80" text-align="center">{{ma.equivalencia | title }}</td>
+                <td>{{eva.materiaasignada.matricula.estudiante.apellido | upper}}{{' '}}{{eva.materiaasignada.matricula.estudiante.nombre | upper}}</td>
+                <td width="60" text-align="center"  >{{eva.notatb}}</td>
+                <td width="40" text-align="center">{{eva.notaec}}</td>
+                <td width="40" text-align="center">{{eva.notapp}}</td>
+                <td width="40" text-align="center">{{eva.notapt}}</td>
+                <td width="40" text-align="center">{{eva.notatb + eva.notaec + eva.notapp + eva.notapt}}</td>
+                <td width="50" text-align="center">{{((eva.notatb + eva.notaec + eva.notapp + eva.notapt)/ 4) | round(2,'floor')}}</td>
             </tr>
             
             {% endfor%}
