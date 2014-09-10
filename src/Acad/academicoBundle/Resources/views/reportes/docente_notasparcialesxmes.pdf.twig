@@ -1,7 +1,7 @@
 <pdf Title="Notas de supletorios: {{nivel | title}}" Author="{{docente}}">
     <dynamic-page>
         <placeholders>
-            {#EMCABEZADO#}
+            {#ENCABEZADO#}
             <header>
                 <div height="230px" width="100%">
                     <div font-style="bold" margin=" 60px 50px 50px 10px" color="black"  font-size="14px" height="30px" text-align="center">
@@ -56,12 +56,12 @@
             <tr >
                 <td width="30px" text-align="center">{{loop.index}}</td>
                 <td>{{eva.materiaasignada.matricula.estudiante.apellido | upper}}{{' '}}{{eva.materiaasignada.matricula.estudiante.nombre | upper}}</td>
-                <td width="60" text-align="center"  >{{eva.notatb}}</td>
-                <td width="40" text-align="center">{{eva.notaec}}</td>
-                <td width="40" text-align="center">{{eva.notapp}}</td>
-                <td width="40" text-align="center">{{eva.notapt}}</td>
-                <td width="40" text-align="center">{{eva.notatb + eva.notaec + eva.notapp + eva.notapt}}</td>
-                <td width="50" text-align="center">{{((eva.notatb + eva.notaec + eva.notapp + eva.notapt)/ 4) | round(2,'floor')}}</td>
+                <td width="60" text-align="center">{{'%.2f'|format(eva.notaec)}}</td>
+                <td width="40" text-align="center">{{'%.2f'|format(eva.notaec)}}</td>
+                <td width="40" text-align="center">{{'%.2f'|format(eva.notapp)}}</td>
+                <td width="40" text-align="center">{{'%.2f'|format(eva.notapt)}}</td>
+                <td width="40" text-align="center">{{'%.2f'|format(eva.notatb + eva.notaec + eva.notapp + eva.notapt)}}</td>
+                <td width="50" text-align="center">{{'%.2f'|format(((eva.notatb + eva.notaec + eva.notapp + eva.notapt)/ 4) | round(2,'floor'))}}</td>
             </tr>
             
             {% endfor%}

@@ -14,6 +14,7 @@ use Acad\academicoBundle\Entity\ExamenGrado;
 use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Entity\MateriaAsignada;
 use Acad\academicoBundle\Entity\Matricula;
+use Acad\academicoBundle\Entity\MateriaPeriodo;
 use Acad\administrativoBundle\Entity\MesEvaluacion;
 use Acad\academicoBundle\Entity\RequisitoEstudiante;
 use Acad\academicoBundle\Entity\SuspensoEstudiante;
@@ -1503,17 +1504,13 @@ class DefaultController extends Controller {
     public function actageneralcalificacionesestudiantesAction($niv, $mat) {
 
         $em = $this->getDoctrine()->getManager();
-
         //obtengo el objeto autenticado: en este caso el docente
         $usuario = $this->get('security.context')->getToken()->getUser();
         //consulto periodo actual
         $sesion = $this->getRequest()->getSession();
         $periodo = $sesion->get('periodo'); //$em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
         //'estado' => 1
-        //  ));
-        
-        
-        
+        //  ));                
         $nivel2 = $em->getRepository('administrativoBundle:Nivel')->find($niv);
         $codn = 0;        
         $materia2 = $em->getRepository('administrativoBundle:Materia')->find($mat);
@@ -1521,8 +1518,26 @@ class DefaultController extends Controller {
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
                 'estado' => true
                     ));
-        $sd = 0;
-        $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
+        $mateperi = $em->getRepository('academicoBundle:MateriaPeriodo')->findOneBy(array('materia' => $mat));
+        $matper = new MateriaPeriodo();       
+        $matper->setSubperiodo($mateperi->getSubperiodo());
+        
+        $subp1 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 1));       
+        $subp2 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 2));       
+        $subp3 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 3));       
+        
+        if ($matper->getSubperiodo() == $subp1) {
+            $mesconteo = 4;
+        }
+        if ($matper->getSubperiodo() == $subp2) {
+            $mesconteo = 2;
+        }
+        if ($matper->getSubperiodo() == $subp3) {
+            $mesconteo = 1;
+        }
+        
+        $sd = 0;               
+        
         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
         $materia = $sesion->get('materia');
         $nivel = $sesion->get('nivel');
@@ -1574,7 +1589,7 @@ class DefaultController extends Controller {
                     'materia' => $materia,
                     'sd' => $sd,
                     'mesconteo' => $mesconteo,
-                    'mesevac' => $listamesesEv
+                    'mesevac' => $listamesesEv,
                 ));
     }
 
@@ -1669,6 +1684,7 @@ class DefaultController extends Controller {
         $nivel = $sesion->get('nivel');
         //obtengo cedula del docente autenticado     
         $cedula = $usuario->getCedula();
+        
         //obtiene las materias del docente autenticado
         $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula' => $cedula));
         $secciones = $em->getRepository('academicoBundle:Estudiante')->getHorarioDictadoMateria($cedula, $periodo);
@@ -1880,7 +1896,7 @@ class DefaultController extends Controller {
             if ($formulario->isValid()) {
                 $em->getConnection()->beginTransaction(); // suspend auto-commit
                 try {
-
+                
                     if (null == $docente->getPassword()) {
                         // El docente no cambia su contraseña, utilizar la original
                         $docente->setPassword($passwordOriginal);
@@ -1913,15 +1929,15 @@ class DefaultController extends Controller {
 
                     $this->get('session')->getFlashBag()->add('Info', 'Perfil Docente actualizado correctamente '
                     );
-                    $em->getConnection()->commit();
-                } catch (\Exception $e) {
-                    $em->getConnection()->rollback();
-                    $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
-                    $url = explode("?", $_SERVER['HTTP_REFERER']);
-                    $redir = $url[0];
+                       $em->getConnection()->commit();
+                    } catch (\Exception $e) {
+                        $em->getConnection()->rollback();
+                        $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                        $url = explode("?", $_SERVER['HTTP_REFERER']);
+                        $redir = $url[0];
 
-                    return $this->redirect($redir);
-                }
+                        return $this->redirect($redir);
+                    }
 
                 return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
             }
@@ -2056,7 +2072,7 @@ class DefaultController extends Controller {
     /**
      * @Pdf()
      */
-    public function reporteactageneralcalificacionesestudiantesAction() {
+    public function reporteactageneralcalificacionesestudiantesAction($mat) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -2068,7 +2084,8 @@ class DefaultController extends Controller {
         //'estado' => 1
         //  ));
 
-        $materia = $sesion->get('materia');
+        //$materia = $sesion->get('materia');
+        $materia2 = $em->getRepository('administrativoBundle:Materia')->find($mat);
         $nivel = $sesion->get('nivel');
         //obtengo cedula del docente autenticado
         $cedula = $usuario->getCedula();
@@ -2085,16 +2102,35 @@ class DefaultController extends Controller {
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
+        //mes conteo para calculo de promedio
+        $mateperi = $em->getRepository('academicoBundle:MateriaPeriodo')->findOneBy(array('materia' => $mat));
+        $matper = new MateriaPeriodo();       
+        $matper->setSubperiodo($mateperi->getSubperiodo());
+        
+        $subp1 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 1));       
+        $subp2 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 2));       
+        $subp3 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 3));               
+
+        if ($matper->getSubperiodo() == $subp1) {
+            $mesconteo = 4;
+        }
+        if ($matper->getSubperiodo() == $subp2) {
+            $mesconteo = 2;
+        }
+        if ($matper->getSubperiodo() == $subp3) {
+            $mesconteo = 1;
+        }                
+        
         //obtiene lista de todos los niveles
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
                 ));
-        $estudiantes = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_secciond($materia, $nivel);
-        $estudiantesv = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_seccionv($materia, $nivel);
-        $estudiantesn = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_seccionn($materia, $nivel);
+        $estudiantes = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_secciond($materia2, $nivel);
+        $estudiantesv = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_seccionv($materia2, $nivel);
+        $estudiantesn = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_seccionn($materia2, $nivel);
 
-        $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
+       // $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
 
         //estudiantes
         $paginatorSS = $this->get('knp_paginator');
@@ -2143,13 +2179,13 @@ class DefaultController extends Controller {
             'periodo' => $periodo,
             'niveles' => $niveles,
             'nivel' => $nivel,
-            'materia' => $materia,
+            'materia' => $materia2,
             'listamaterias' => $materiasdocente,
             'listames' => $mes,
             'estudiantes' => $paginationSS,
             'estudiantesv' => $paginationSSv,
             'estudiantesn' => $paginationSSn,
-            'materia' => $materia,
+            
             'sd' => $sd,
             'sv' => $sv,
             'sn' => $sn,

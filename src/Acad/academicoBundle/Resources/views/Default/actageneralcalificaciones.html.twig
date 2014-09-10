@@ -12,7 +12,7 @@
         
 <p style="text-align: center; color: #0063DC; font-size: large; "><strong>ACTA GENERAL DE CALIFICACIONES</strong></p>
 <div style="color: #090"><strong>{{nivel2.curso.nombre | upper }}&nbsp;&nbsp;{{nivel2.paralelo.nombre | upper}}:&nbsp;&nbsp;{{materia2.nombre | upper }}</strong></div>
-<div style="text-align: right"><a  target="_blank" href="{{path('acta_general_calificaciones_reporte' )}}"><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></div>
+<div style="text-align: right"><a  target="_blank" href="{{path('acta_general_calificaciones_reporte' ,{'mat': materia2.id} )}}"><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></div>
 <div id="dt_example">
     <div id="demo">
          {% if sd== 1 %}
@@ -42,10 +42,10 @@
         <td ALIGN="CENTER" style="vertical-align:middle">{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
         <td ALIGN="CENTER" style="vertical-align:middle">{#{{est.promedio}}#}</td>
         <td ALIGN="CENTER" style="vertical-align:middle">
-        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 14 %}
+        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 16 %}
             <strong>Reprobado</strong>
         {% endif %}
-        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 > 14 %}
+        {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 > 16 %}
             <strong>Aprobado</strong>
         {% endif %}</td>
         

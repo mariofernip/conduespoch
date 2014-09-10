@@ -36,12 +36,12 @@
                         <tr {% if loop.index is odd %}class="color"{% endif %}>
                                 <td style="text-align: center; width: 30px; vertical-align: middle">{{est.materiaasignada.matricula.estudiante.cedula}}</td>
                                 <td style="vertical-align: middle">{{est.materiaasignada.matricula.estudiante.apellido | title }}&nbsp; {{est.materiaasignada.matricula.estudiante.nombre | title}}</td>
-                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notatb}}</td>
-                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notaec}}</td>
-                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notapp}}</td>
-                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notapt}}</td>                                
-                                <td style="text-align: center; width: 30px; vertical-align: middle">{{est.notatb + est.notaec + est.notapp + est.notapt}}</td>                                
-                                <td style="text-align: center; width: 30px; vertical-align: middle">{{((est.notatb + est.notaec + est.notapp + est.notapt)/ 4) | round(2,'floor')}}</td>                                
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.2f'|format(est.notatb)}}</td>
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.2f'|format(est.notaec)}}</td>
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.2f'|format(est.notapp)}}</td>
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.2f'|format(est.notapt)}}</td>                                
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.2f'|format(est.notatb + est.notaec + est.notapp + est.notapt)}}</td>                                
+                                <td style="text-align: center; width: 30px; vertical-align: middle">{{'%.2f'|format(((est.notatb + est.notaec + est.notapp + est.notapt)/ 4) | round(2,'floor'))}}</td>                                
                          <tr>
                         </tbody>
                     {% endfor%}

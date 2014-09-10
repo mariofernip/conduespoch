@@ -116,7 +116,7 @@ modificar_perfil:
     
     
 acta_general_calificaciones_reporte:
-    pattern:  /docente/acta/general/reporte
+    pattern:  /docente/acta/general/reporte/{mat}
     defaults: { _controller: academicoBundle:default:reporteactageneralcalificacionesestudiantes, _format: pdf}    
     requirements:
         _format: html|pdf

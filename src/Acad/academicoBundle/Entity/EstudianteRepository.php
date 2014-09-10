@@ -293,6 +293,48 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
          return $count;  
     }
     
+    
+    public function getMesEvaluacionxSub1PeriodoActivo($pid) {
+        
+        
+        $em = $this->getEntityManager();
+        $tipo = 1;
+        $dql = 'select count(mp.id)
+                FROM academicoBundle:MateriaPeriodo mp
+                Join mp.subperiodo sp
+                Join sp.periodo p
+                WHERE p.id = :pid and 
+                      sp.tipo = :tipo                        
+                ';
+        
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('pid', $pid);
+        $consulta->setParameter('tipo', $tipo);              
+        $count = $consulta->getSingleScalarResult();
+         return $count;  
+    }
+    
+    public function getMesEvaluacionxSub2PeriodoActivo($pid) {
+        
+        $em = $this->getEntityManager();
+        $tipo = 2;
+        $dql = 'select count(mp.id)
+                FROM academicoBundle:MateriaPeriodo mp
+                Join mp.subperiodo sp
+                Join sp.periodo p
+                WHERE p.id = :pid and 
+                      sp.tipo =:tipo                        
+                ';
+        
+
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('pid', $pid);
+        $consulta->setParameter('tipo', $tipo);
+              
+        $count = $consulta->getSingleScalarResult();
+         return $count; 
+    }
+    
     public function getHorarioDictadoMateria($did, $pid) {
         
         $em = $this->getEntityManager();
@@ -319,7 +361,7 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
     }
     
     
-     public function findEstudiantexActaGeneral_secciond($materias, $nivel) {
+    public function findEstudiantexActaGeneral_secciond($materias, $nivel) {
         
         $em = $this->getEntityManager();
         $seccion='Diurna';
@@ -332,7 +374,7 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
                 WHERE m.estado = 1 
                 AND n.id =:nid 
                 AND mp.materia = :mid
-                AND m.seccion = :sec
+                AND m.seccion = :sec                
                 GROUP BY e.cedula, e.apellido, e.nombre
                 ';   
         
@@ -341,8 +383,38 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
         $estudiante->setParameter('mid', $materias);
         $estudiante->setParameter('sec', $seccion);
         $estudiante->setParameter('nid', $nivel);
+        //$estudiante->setParameter('subp', $subp);
+        
         return $estudiante->getResult();        
     }
+
+    
+    
+//     public function findEstudiantexActaGeneral_secciond($materias, $nivel) {
+//        
+//        $em = $this->getEntityManager();
+//        $seccion='Diurna';
+//        $dql =  'SELECT sum(a.notatb) as notatb, sum(a.notaec) as notaec, sum(a.notapp) as notapp, sum(a.notapt) as notapt, e.cedula, e.apellido, e.nombre FROM academicoBundle:Evaluacion a
+//                join a.materiaasignada ma
+//                join ma.matricula m
+//                join m.estudiante e
+//                join m.nivel n
+//                Join ma.materiaperiodo mp
+//                WHERE m.estado = 1 
+//                AND n.id =:nid 
+//                AND mp.materia = :mid
+//                AND m.seccion = :sec
+//                GROUP BY e.cedula, e.apellido, e.nombre
+//                ';   
+//        
+//        
+//        $estudiante = $em->createQuery($dql);
+//        $estudiante->setParameter('mid', $materias);
+//        $estudiante->setParameter('sec', $seccion);
+//        $estudiante->setParameter('nid', $nivel);
+//        
+//        return $estudiante->getResult();        
+//    }
 
     
     public function findEstudiantexActaGeneral_seccionv($materias, $nivel) {
@@ -396,6 +468,48 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
         return $estudiante->getResult();        
     }
 
+    
+     public function getMesConteo($mat, $pid) {
+        
+        
+        $em = $this->getEntityManager();
+       // $tipo = 2;
+        $dql = 'select count(mp.id)
+                FROM academicoBundle:MateriaPeriodo mp
+                Join mp.subperiodo sp
+                Join sp.periodo p
+                WHERE p.id = :pid and 
+                      mp.materia = :mat
+                ';
+        
+        $consulta = $em->createQuery($dql);
+        $consulta->setParameter('pid', $pid);
+        $consulta->setParameter('mat', $mat);      
+        $count = $consulta->getSingleScalarResult();
+         return $count;  
+    }
+    
+//     public function getMesConteo($mat, $pid, $tipo) {
+//        
+//        
+//        $em = $this->getEntityManager();
+//       // $tipo = 2;
+//        $dql = 'select count(mp.id)
+//                FROM academicoBundle:MateriaPeriodo mp
+//                Join mp.subperiodo sp
+//                Join sp.periodo p
+//                WHERE p.id = :pid and 
+//                      sp.tipo = :tipo and
+//                      mp.materia = :mat
+//                ';
+//        
+//        $consulta = $em->createQuery($dql);
+//        $consulta->setParameter('pid', $pid);
+//        $consulta->setParameter('mat', $mat);           
+//        $consulta->setParameter('tipo', $tipo);    
+//        $count = $consulta->getSingleScalarResult();
+//         return $count;  
+//    }
     
 }
 
