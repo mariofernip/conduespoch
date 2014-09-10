@@ -14,6 +14,7 @@ use Acad\academicoBundle\Entity\ExamenGrado;
 use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Entity\MateriaAsignada;
 use Acad\academicoBundle\Entity\Matricula;
+use Acad\administrativoBundle\Entity\MesEvaluacion;
 use Acad\academicoBundle\Entity\RequisitoEstudiante;
 use Acad\academicoBundle\Entity\SuspensoEstudiante;
 use Acad\academicoBundle\Form\AuxExamenGradoType;
@@ -2206,6 +2207,17 @@ class DefaultController extends Controller {
         ));
         $nivel = $em->getRepository('administrativoBundle:Nivel')->find($nid);
         $materia = $em->getRepository('administrativoBundle:Materia')->find($mid);
+                $fecha = $em->getRepository('administrativoBundle:MesEvaluacion')->find($mesid);
+        $meseval = new MesEvaluacion();
+        $meseval->setFiniciomes($fecha->getFiniciomes());        
+        $meseval->setFfinmes($fecha->getFfinmes());        
+                
+         $mese = $meseval->getFiniciomes();
+            $formatter = new \IntlDateFormatter(\Locale::getDefault(), \IntlDateFormatter::NONE, \IntlDateFormatter::NONE);
+            $formatter->setPattern("MMMM");
+         $mesefin = $meseval->getFfinmes();
+            $formatterfin = new \IntlDateFormatter(\Locale::getDefault(), \IntlDateFormatter::NONE, \IntlDateFormatter::NONE);
+            $formatterfin->setPattern("MMMM");   
 
         $periodo = $sesion->get('periodo');
 
@@ -2224,7 +2236,9 @@ class DefaultController extends Controller {
             'meseva'=>$meseva,
             'cod'=>$cod,
             'materia' => $materia,
-            'docente' => $usuario
+            'docente' => $usuario,
+            'finicio' => $formatter->format($mese),
+            'ffin' => $formatterfin->format($mesefin)
                 ));
 
         return $content;

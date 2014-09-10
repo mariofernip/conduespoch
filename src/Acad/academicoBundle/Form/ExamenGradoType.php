@@ -29,7 +29,8 @@ class ExamenGradoType extends AbstractType
     {
         $builder
             ->add('equivalencia','text',array('disabled'=>true))
-           ->add('nota', 'choice', array('choices' => $this->getInclinationChoices(),))
+           //->add('nota', 'choice', array('choices' => $this->getInclinationChoices(),))
+            ->add('nota','number', array( 'attr' => array('style' => 'width: 50px; border: none; text-align: center'))) 
             ->add('matricula')
             ->add('descripcion')
         ;
