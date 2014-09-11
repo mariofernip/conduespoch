@@ -1683,6 +1683,9 @@ class DefaultController extends Controller {
 
         $materia = $sesion->get('materia');
         $nivel = $sesion->get('nivel');
+        $nivel2 = $sesion->get('nivel2');
+        $materia2 = $sesion->get('materia2');
+        
         //obtengo cedula del docente autenticado     
         $cedula = $usuario->getCedula();
         
@@ -1703,17 +1706,22 @@ class DefaultController extends Controller {
         }
         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
         $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
+        $listahoras = $em->getRepository('administrativoBundle:Periodo')->getTodasHoras();
+        
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
                 ));
         return $this->render('academicoBundle:default:verdocentehorario2.html.twig', array(
                     'periodo' => $periodo,
                     'nivel' => $nivel,
+                    'nivel2' => $nivel2,            
                     'materia' => $materia,
+                    'materia2' => $materia2,        
                     'horarioclase' => $secciones,
                     'docente' => $docente,
                     'mesevac' => $listamesesEv,
                     'listamaterias' => $listamaterias,
+                    'listahoras' => $listahoras,                   
                     'listames' => $mes,
                 ));
     }

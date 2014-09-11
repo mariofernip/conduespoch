@@ -85,6 +85,24 @@ class PeriodoRepository extends EntityRepository{
         
     }
     
+    
+    public function getTodasHoras() {
+        
+        $em = $this->getEntityManager();
+
+        $dql = 'select h
+                FROM administrativoBundle:Hora h                                               
+                ORDER BY h.hora_inicio ASC
+                ';
+ 
+
+        $consulta = $em->createQuery($dql);
+
+        return $consulta->getResult();
+        
+    }
+    
+    
 }
 
 
