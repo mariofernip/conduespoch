@@ -643,6 +643,10 @@ class DefaultController extends Controller {
                 foreach ($matasi as $matasi1) {
                     $asistencia = new Asistencia();
                     $asistencia->setMateriaasignada($matasi1);
+                    $asistencia->setHorasmodulo($matasi1->getMateriaperiodo()->getMateria()->getNumerohoras());
+                    $asistencia->setFaltasinjustificadas(0);
+                    $asistencia->setFaltasjustificadas(0);
+                    $asistencia->setAtrasos(0);                    
                     $em->persist($asistencia);
                     $em->flush();
 
@@ -970,7 +974,6 @@ class DefaultController extends Controller {
         $curso = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
         //obtiene lista de estudiantes matriculados de seccion: diurna
         $secciones = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSecciones($materias, $nivel);
-
         //secciones
         $paginatorSS = $this->get('knp_paginator');
         $paginationSS = $paginatorSS->paginate(
@@ -987,6 +990,7 @@ class DefaultController extends Controller {
         foreach ($secciones as $sec) {
             $cr = new Asistencia(); //creo un objeto nuevo: asistencia
             $cr->setId($sec->getId());
+            $cr->setHorasmodulo($sec->getHorasmodulo());            
             $cr->setFaltasjustificadas($sec->getFaltasjustificadas());
             $cr->setFaltasinjustificadas($sec->getFaltasinjustificadas());
             $cr->setAtrasos($sec->getAtrasos());

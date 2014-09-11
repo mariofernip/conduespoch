@@ -15,7 +15,7 @@
     {% if sd== 1 %}
         <form name="diurna" method="post" {{form_enctype(formsecciones) }}>
             {{ form_start(formsecciones) }}
-        <table class="display" id="example">
+                <table class="display" id="example">
             <thead>
                 <tr >
                     {#<th>{{ knp_pagination_sortable(secciones, 'Seccion- Cedula- Nombre Completo', 'e.nombre') }}</th>
@@ -23,11 +23,12 @@
                     <th>{{ knp_pagination_sortable(secciones, 'Faltas Injustificadas', 'a.faltasinjustificadas') }}</th>
                     <th>{{ knp_pagination_sortable(secciones, 'Atrasos', 'a.atrasos') }}</th>
                     <th>{{ knp_pagination_sortable(secciones, 'Promedio', 'a.horasasistidas') }}</th>#}
-                    <th>Seccion / Cédula / Estudiante</th>
+                    <th>Seccion - Cédula - Estudiante</th>
+                    <th>Horas Módulo</th>                    
                     <th>Faltas Justificadas</th>
                     <th>Faltas Injustificadas</th>
                     <th>Atrasos</th>
-                    <th>Promedio</th>
+                    <th>Prom</th>
                  </tr>
                 </thead>
                             
@@ -35,7 +36,8 @@
         {% for est in formsecciones.faltasjustificadas %}
 <tbody>
     <tr>            
-        <td style="vertical-align:middle; text-align: left">{{ form_widget(est.materiaasignada) }}</td>                
+        <td style="vertical-align:middle; text-align: left">{{ form_widget(est.materiaasignada) }}</td>     
+        <td  style="vertical-align:middle; text-align: left">{{ form_widget(est.horasmodulo) }}</td>
         <td style="vertical-align:middle; text-align: center">{{ form_errors(est.faltasjustificadas ) }} {{ form_widget(est.faltasjustificadas ) }} </td>
         <td style="vertical-align:middle; text-align: center">{{ form_widget(est.faltasinjustificadas)}}</td>
         <td style="vertical-align:middle; text-align: center">{{ form_widget(est.atrasos) }}</td>

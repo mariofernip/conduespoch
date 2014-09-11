@@ -29,13 +29,18 @@ class AsistenciaType extends AbstractType
              'attr' => array('style' => 'width: 30px; border: none; text-align: center'),
              'read_only' => true,
              'disabled' => true
-          ))         
+          )) ->add('horasmodulo', 'text', array(
+             'attr' => array('style' => 'width: 25px; border: none; text-align: center'),
+             'read_only' => true,
+             'disabled' => true
+          ))        
            ->add('materiaasignada', 'entity', array(
-             'attr' => array('style' => 'width: 270px; border: none'),
+             'attr' => array('style' => 'width: 250px; border: none'),
              'class'   =>  'Acad\academicoBundle\Entity\MateriaAsignada',
              'read_only' => true,
              'disabled' => true
-          ))                                      
+          ))   
+                      
         ;
     }
     
