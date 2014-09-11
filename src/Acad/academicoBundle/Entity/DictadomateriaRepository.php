@@ -225,9 +225,7 @@ class DictadomateriaRepository extends EntityRepository {
                 WHERE mat.id = :mid and                                                    
                           p.id= :pid and
                           n.id = :nid and
-                          and ma.notasuspenso > 0 or
-                          ma.promediofinal < 16
-                       
+                          order by ma.promediofinal asc
                 ';
         $consulta = $em->createQuery($dql);
         $consulta->setParameter('mid', $mid);                
