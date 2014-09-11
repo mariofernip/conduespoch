@@ -131,4 +131,10 @@ docente_reporte_notas_parciales_x_mes:
     pattern:  /docente/reporte/notas/parciale/mes/{mesid}/{nid}/{mid}
     defaults: { _controller: academicoBundle:default:reportenotasparcialesxmes, _format: pdf}    
     requirements:
-        _format: html|pdf                                
+        _format: html|pdf           
+        
+inspector_reporte_asistencia:
+    pattern:  /inspector/reporte/estudiante/asistencia/{mid}/{nid}
+    defaults: { _controller: academicoBundle:default:reporteasistencia, _format: pdf}    
+    requirements:
+        _format: html|pdf    

@@ -1,173 +1,182 @@
 <pdf>
-    
+
     <dynamic-page> 
-          
-       <placeholders>
+
+        <placeholders>
                {#ENCABEZADO#}
-            <header>
-                <div height="230px" width="100%">
-                    <div font-style="bold" margin=" 60px 50px 50px 10px" color="black"  font-size="14px" height="30px" text-align="center">
-                        <table >
-                            <tr border.color="white">
-                                <td border.color="white"><br/>ESCUELA DE CONDUCCIÓN PROFESIONAL<br/> CONDUESPOCH E.P<br/>CHIMBORAZO - RIOBAMBA<br/><p font-size="15">ACTA GENERAL DE CALIFICACIONES</p></td><td border.color="white" width="65" height="45" ><img src="uploads/iconos/logo.jpg"  width="75" height="65"  /></td>
-                            </tr>
-                            <tr border.color="white">
-                                <td font-size="16" colspan="2" border.color="white"></td>
-                            </tr>
-                        </table>   
-                        <table >
-                            <tr><td text-align="left" width="160px"> ASIGNATURA:</td><td text-align="left" >{{materia | title}}</td></tr>
-                            <tr><td text-align="left" > DOCENTE:</td><td text-align="left" >{{docente | title}}</td></tr>
-                            <tr><td text-align="left" > CURSO:</td><td text-align="left" >FORMACIÓN Y CAPACITACIÓN PROFESIONAL</td></tr>
-                            <tr><td text-align="left" > PARALELO:</td><td text-align="left" >{{nivel.paralelo | upper}}</td></tr>
-                            <tr><td text-align="left" > PERIODO:</td><td text-align="left" >{{periodo | upper}}</td></tr>
-                            
-                        </table>                        
-                    </div>                    
-                </div>
-            </header>
+                <header>
+                    <div height="230px" width="100%">
+                        <div font-style="bold" margin=" 60px 50px 50px 10px" color="black"  font-size="14px" height="30px" text-align="center">
+                            <table >
+                                <tr border.color="white">
+                                    <td border.color="white"><br/>ESCUELA DE CONDUCCIÓN PROFESIONAL<br/> CONDUESPOCH E.P<br/>CHIMBORAZO - RIOBAMBA<br/><p font-size="15">ACTA GENERAL DE CALIFICACIONES</p></td><td border.color="white" width="65" height="45" ><img src="uploads/iconos/logo.jpg"  width="75" height="65"  /></td>
+                                </tr>
+                                <tr border.color="white">
+                                    <td font-size="16" colspan="2" border.color="white"></td>
+                                </tr>
+                            </table>   
+                            <table >
+                                <tr><td text-align="left" width="160px"> ASIGNATURA:</td><td text-align="left" >{{materia | title}}</td></tr>
+                                <tr><td text-align="left" > DOCENTE:</td><td text-align="left" >{{docente | title}}</td></tr>
+                                <tr><td text-align="left" > CURSO:</td><td text-align="left" >FORMACIÓN Y CAPACITACIÓN PROFESIONAL</td></tr>
+                                <tr><td text-align="left" > PARALELO:</td><td text-align="left" >{{nivel.paralelo | upper}}</td></tr>
+                                <tr><td text-align="left" > PERIODO:</td><td text-align="left" >{{periodo | upper}}</td></tr>
+
+                            </table>                        
+                        </div>                    
+                    </div>
+                </header>
             {# PIE DE PÁGINA#}
-            <footer>
-                <div height="20px" width="80%"  text-align="center" font-size="10px" font-style="italic">
-                    Dirección: Panamericana Sur km 1 1/2, Riobamba - Ecuador <br/>
-                    (c)Sistema conduespoch
-                    <div margin="6px 10px"  text-align="right" font-size="10px" font-style="bold">
-                        <page-info format="%s / %s" />
-                    </div>    
-                </div>
-            </footer>
+                <footer>
+                    <div height="20px" width="80%"  text-align="center" font-size="10px" font-style="italic">
+                        Dirección: Panamericana Sur km 1 1/2, Riobamba - Ecuador <br/>
+                        (c)Sistema conduespoch
+                        <div margin="6px 10px"  text-align="right" font-size="10px" font-style="bold">
+                            <page-info format="%s / %s" />
+                        </div>    
+                    </div>
+                </footer>
             </placeholders>
 
-<div>
+            <div>
     {%if sd == 1%}
-    <p style="text-align: right;">Seccion: Diurna</p>
-    <div style="text-align: center; vertical-align: middle;">
-        <table>            
-                <tr >
-                    <td>{{'Nombre Completo'}}</td>                    
-                    <td>{{'Prom. Tra. Gru'}}</td>
-                    <td>{{'Prom. Est. Cas'}}</td>
-                    <td>{{'Prom. Pra.'}}</td>
-                    <td>{{'Prom. Teo.'}}</td>
-                    <td>{{'Prom. Tot.'}}</td>                    
-                    <td>{{'Sus.'}}</td>                                       
-                    <td>{{'Equi.'}}</td>
-                   
-                 </tr>
-                            
+                    <p style="text-align: right;">Seccion: Diurna</p>
+                    <div style="text-align: center; vertical-align: middle;">
+                        <table>            
+                            <tr text-align="center" font-style="bold">
+                                <td height="13px" >Nº</td>
+                                <td>{{'Apellidos y Nombres'}}</td>                    
+                                <td>{{'Prom. Tra. Gru'}}</td>
+                                <td>{{'Prom. Est. Cas'}}</td>
+                                <td>{{'Prom. Pra.'}}</td>
+                                <td>{{'Prom. Teo.'}}</td>
+                                <td>{{'Prom. Tot.'}}</td>                                                                               
+                                <td>{{'Equi.'}}</td>
+
+                            </tr>
+
         {% for est in estudiantes %}
-    <tr>            
-        <td>{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
-        <td>{{'%.2f'|format((est.notatb/mesconteo))}}</td>
-        <td>{{'%.2f'|format((est.notaec/mesconteo))}}</td>
-        <td>{{'%.2f'|format((est.notapp/mesconteo))}}</td>
-        <td>{{'%.2f'|format((est.notapt/mesconteo))}}</td>
-        <td>{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
-        <td>{#{{est.promedio}}#}</td>
-        <td>
+                            <tr>      
+                                <td width="30px" text-align="center">{{loop.index}}</td>                       
+                                <td>{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
+                                <td>{{'%.2f'|format((est.notatb/mesconteo))}}</td>
+                                <td>{{'%.2f'|format((est.notaec/mesconteo))}}</td>
+                                <td>{{'%.2f'|format((est.notapp/mesconteo))}}</td>
+                                <td>{{'%.2f'|format((est.notapt/mesconteo))}}</td>
+                                <td>{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
+
+                                <td>
         {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 16 %}
-            <strong>Reprobado</strong>
+                                        <strong>Reprobado</strong>
         {% endif %}
         {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 > 16 %}
-            <strong>Aprobado</strong>
+                                        <strong>Aprobado</strong>
         {% endif %}</td>
-        
-    </tr>                  
+
+                                </tr>                  
     {% endfor%}
-     
-                        
-        </table>
-    </div>
+
+
+                            </table>
+                        </div>
     {%endif %}
     {%if sv == 1%}
-    <p style="text-align: right;">Seccion: Vespertina</p>
-    
-    <div style="text-align: center; vertical-align: middle;">
-        <table>            
-                <tr >
-                    <td>{{'Nombre Completo'}}</td>                    
-                    <td>{{'Prom. Tra. Gru'}}</td>
-                    <td>{{'Prom. Est. Cas'}}</td>
-                    <td>{{'Prom. Pra.'}}</td>
-                    <td>{{'Prom. Teo.'}}</td>
-                    <td>{{'Prom. Tot.'}}</td>                    
-                    <td>{{'Sus.'}}</td>                                       
-                    <td>{{'Equi.'}}</td>
-                   
-                 </tr>
-                            
+                        <p style="text-align: right;">Seccion: Vespertina</p>
+
+                        <div style="text-align: center; vertical-align: middle;">
+                            <table>            
+                                <tr text-align="center" font-style="bold">
+                                    <td height="13px" >Nº</td>
+                                    <td>Apellidos y Nombres</td>                   
+                                    <td>{{'Prom. Tra. Gru'}}</td>
+                                    <td>{{'Prom. Est. Cas'}}</td>
+                                    <td>{{'Prom. Pra.'}}</td>
+                                    <td>{{'Prom. Teo.'}}</td>
+                                    <td>{{'Prom. Tot.'}}</td>                                 
+                                    <td>{{'Equi.'}}</td>
+
+                                </tr>
+
         {% for est in estudiantesv %}
-    <tr>            
-        <td>{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
-        <td>{{'%.2f'|format((est.notatb/mesconteo))}}</td>
-        <td>{{'%.2f'|format((est.notaec/mesconteo))}}</td>
-        <td>{{'%.2f'|format((est.notapp/mesconteo))}}</td>
-        <td>{{'%.2f'|format((est.notapt/mesconteo))}}</td>
-        <td>{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
-        <td>{#{{est.promedio}}#}</td>
-        <td>
+                                <tr>            
+                                    <td width="30px" text-align="center">{{loop.index}}</td>                        
+                                    <td>{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
+                                    <td>{{'%.2f'|format((est.notatb/mesconteo))}}</td>
+                                    <td>{{'%.2f'|format((est.notaec/mesconteo))}}</td>
+                                    <td>{{'%.2f'|format((est.notapp/mesconteo))}}</td>
+                                    <td>{{'%.2f'|format((est.notapt/mesconteo))}}</td>
+                                    <td>{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
+
+                                    <td>
         {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 16 %}
-            <strong>Reprobado</strong>
+                                            <strong>Reprobado</strong>
         {% endif %}
         {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 > 16 %}
-            <strong>Aprobado</strong>
+                                            <strong>Aprobado</strong>
         {% endif %}</td>
-        
-    </tr>                  
+
+                                    </tr>                  
     {% endfor%}
-     
-                        
-        </table>
-    </div>
-    
+
+
+                                </table>
+                            </div>
+
     {%endif%}
     {%if sn == 1%}
-    <p style="text-align: right;">Seccion: Nocturna</p>
-    
-    <div style="text-align: center; vertical-align: middle;">
-        <table>            
-                <tr >
-                    <td>{{'Nombre Completo'}}</td>                    
-                    <td>{{'Prom. Tra. Gru'}}</td>
-                    <td>{{'Prom. Est. Cas'}}</td>
-                    <td>{{'Prom. Pra.'}}</td>
-                    <td>{{'Prom. Teo.'}}</td>
-                    <td>{{'Prom. Tot.'}}</td>                    
-                    <td>{{'Sus.'}}</td>                                       
-                    <td>{{'Equi.'}}</td>
-                   
-                 </tr>
-                            
+                            <p style="text-align: right;">Seccion: Nocturna</p>
+
+                            <div style="text-align: center; vertical-align: middle;">
+                                <table>            
+                                    <tr text-align="center" font-style="bold">
+                                        <td height="13px" >Nº</td>
+                                        <td>Apellidos y Nombres</td>                                       
+                                        <td>{{'Prom. Tra. Gru'}}</td>
+                                        <td>{{'Prom. Est. Cas'}}</td>
+                                        <td>{{'Prom. Pra.'}}</td>
+                                        <td>{{'Prom. Teo.'}}</td>
+                                        <td>{{'Prom. Tot.'}}</td>                                 
+                                        <td>{{'Equi.'}}</td>
+
+                                    </tr>
+
         {% for est in estudiantesn %}
-    <tr>            
-        <td>{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
-        <td>{{'%.2f'|format((est.notatb/mesconteo))}}</td>
-        <td>{{'%.2f'|format((est.notaec/mesconteo))}}</td>
-        <td>{{'%.2f'|format((est.notapp/mesconteo))}}</td>
-        <td>{{'%.2f'|format((est.notapt/mesconteo))}}</td>
-        <td>{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
-        <td>{#{{est.promedio}}#}</td>
-        <td>
+                                    <tr>    
+                                        <td width="30px" text-align="center">{{loop.index}}</td>                       
+                                        <td>{{est.apellido}}{{'  '}}{{est.nombre}}</td>                
+                                        <td>{{'%.2f'|format((est.notatb/mesconteo))}}</td>
+                                        <td>{{'%.2f'|format((est.notaec/mesconteo))}}</td>
+                                        <td>{{'%.2f'|format((est.notapp/mesconteo))}}</td>
+                                        <td>{{'%.2f'|format((est.notapt/mesconteo))}}</td>
+                                        <td>{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>                                        
+                                        <td>
         {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 16 %}
-            <strong>Reprobado</strong>
+                                                <strong>Reprobado</strong>
         {% endif %}
         {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 > 16 %}
-            <strong>Aprobado</strong>
+                                                <strong>Aprobado</strong>
         {% endif %}</td>
-        
-    </tr>                  
+
+                                        </tr>                  
     {% endfor%}
-     
-                        
-        </table>
-    </div>
+
+
+                                    </table>
+                                </div>
     {%endif %}
-    
-</div>
+{# SECCION DE FIRMAS#}        
+        <br/><br/><br/>
+        <div height="20px" width="100%"  text-align="center" font-size="10px" font-style="bold">                    
+            <table>
+                <tr><td border.color="white">____________________________</td><td border.color="white">____________________________</td></tr>
+                <tr><td border.color="white">(f) DIRECTOR(A) PEGAGÓGICO</td><td border.color="white">(f) INSPECTOR</td></tr>
+            </table>
+        </div>
+                            </div>
 
 
-</dynamic-page>
-</pdf>
-     
+                        </dynamic-page>
+                    </pdf>
 
-    
+
+

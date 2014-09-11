@@ -7,6 +7,7 @@
         {% include 'academicoBundle:Default:menu_inspector.html.twig' with {'niveles': niveles, 'listamaterias': listamaterias}%}
 </section>
 <p style="text-align: center ; color: #0035C7 "><strong>INGRESO DE ASISTENCIAS:&nbsp;<label style="color: #090">{{mat.nombre}}</label></strong></p>
+<div style="text-align: right"><a  target="_blank" href="{{path('inspector_reporte_asistencia',{'mid': materias, 'nid': nivel })}}" title="Imprimir reporte" ><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></div>
         
 
 <div id="dt_example">
@@ -70,7 +71,7 @@
         <ul>
        {% for mat in listamaterias %}
                 {#<li><a class="boton" href="{{path('estudiante_lista_matriculados_x_secciones',{'nivel': niv.id, 'nivel': niv.id})}}">{{niv.curso | title}}&nbsp;&nbsp;{{niv.paralelo | title}}</a></li>#}
-                <li><a href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materiaperiodo.materia.id, 'nivel': mat.nivel.id})}}" class="boton">{{mat.materiaperiodo.materia.nombre | title}}</a></li>
+                <li><a title="{{mat.materiaperiodo.materia.nombre | upper }}" href="{{path('estudiante_lista_matriculados_x_materia_x_secciones',{'materias': mat.materiaperiodo.materia.id, 'nivel': mat.nivel.id})}}" class="boton">{{mat.materiaperiodo.materia.nombre | title | truncate(10,true)}}</a></li>
    {% endfor%}
             </ul>
         </div>

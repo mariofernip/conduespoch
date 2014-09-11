@@ -1043,6 +1043,7 @@ class DefaultController extends Controller {
                     'listamaterias' => $listamaterias,
                     'formsecciones' => $formsecciones->createView(),
                     'sd' => $sd,
+                    'nivel' => $nivel
                 ));
     }
 
@@ -2279,6 +2280,68 @@ class DefaultController extends Controller {
 
         return $content;
     }
+    
+
+    
+     /**
+     * @Pdf()
+     */
+    public function reporteasistenciaAction($mid, $nid) {
+
+        $em = $this->getDoctrine()->getManager();
+        $sesion = $this->getRequest()->getSession();
+        $periodo = $sesion->get('periodo');
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $nivel = $em->getRepository('administrativoBundle:Nivel')->find($nid);
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+            $usuario = $this->get('security.context')->getToken()->getUser();
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+                
+        $mat = $em->getRepository('administrativoBundle:Materia')->find($mid);
+        
+        $secciones = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionesd($mid, $nid);
+        $seccionesv = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionesv($mid, $nid);
+        $seccionesn = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionesn($mid, $nid);
+        
+        $sd=0;
+        $sv=0;
+        $sn=0;
+        if($secciones){
+             $sd=1;
+         }
+         if($seccionesv){
+             $sv=1;
+         }
+         if($seccionesn){
+             $sn=1;
+         }
+        $format = $this->get('request')->get('_format');
+
+        $content = $this->render(sprintf('academicoBundle:reportes:actaasistencia.%s.twig', $format), array(
+            'periodo' => $periodo,
+            'nivel' => $nivel,
+            'materia' => $mat,
+            'docente' => $usuario,
+            'estudiantes' => $secciones,
+            'estudiantesv' => $seccionesv,
+            'estudiantesn' => $seccionesn,
+            'sd' => $sd,
+            'sv' => $sv,
+            'sn' => $sn,
+
+            
+            ));
+
+        return $content;
+    }
+
+    
     
     
 }
