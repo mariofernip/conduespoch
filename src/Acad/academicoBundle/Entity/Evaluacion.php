@@ -34,7 +34,7 @@ class Evaluacion
     protected $materiaasignada;
     
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="float", nullable=false)
      */
     protected $promedio;
 

@@ -30,8 +30,8 @@ class SubPeriodo {
     
     /**
      *
-     * @ORM\Column(type="string", length=2, nullable=false)
-     * @Assert\Choice(choices = {"1", "2","3"})
+     * @ORM\Column(type="string", length=32, nullable=false)
+     * @Assert\Choice(choices = {"Cuatrimestre", "Bimestre","General"})
      */
     protected $tipo;    
         

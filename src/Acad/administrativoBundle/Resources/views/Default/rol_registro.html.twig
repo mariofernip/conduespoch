@@ -1,0 +1,63 @@
+{% extends '::frontend.html.twig' %}
+
+
+{% block id 'materia' %}
+
+{% block title %}Registro de un nuevo subperiodo{% endblock%}
+
+{% block article %}
+<section id="menu_admin">
+    {% include 'administrativoBundle:Default:menu_admin.html.twig'%}
+</section>
+<p style="text-align: center ; color: #0035C7 "><strong>REGISTRO DE UN NUEVO ROL</strong></p>
+<br>
+<form action="{{ path('admin_rol_registro') }}" method="post" {{
+        form_enctype(formulario) }}>
+        {{ form_errors(formulario) }}
+          <fieldset>
+                                  
+                  {{form_label(formulario.nombre,'Nombre:')}}{{form_errors(formulario.nombre)}}{{form_widget(formulario.nombre) }}<br>                                    
+                  {{form_label(formulario.descripcion,'Descripción:')}}{{form_errors(formulario.descripcion)}}{{form_widget(formulario.descripcion) }}<br>                                    
+           </fieldset>   
+         {{form_rest(formulario)}}                   
+          <input class="boton" type="submit" value="Guardar" />
+</form>
+{% if sd== 1 %}
+<p style="text-align: center ; color: #0035C7 "><strong>ROLES PREVIAMENTE REGISTRADOS</strong></p>
+<div id="dt_example">
+    <div id="demo">
+        <table class="display" id="example">
+            <thead>
+                <tr >
+                    <th>NOMBRE DE ROL</th>                                         
+                    <th>DESCRIPCIÓN</th> 
+                    <th>ACCIÓN</th>
+                </tr>
+            </thead>
+            <tbody>{% for rl in lista %}
+                <tr>
+                        <td style="vertical-align:middle">{{rl.nombre}}</td>
+                        <td style="vertical-align:middle">{{rl.descripcion}}</td>
+                        <td style="vertical-align:middle; text-align: center"><a href="{{path('admin_rol_modificar',{'rid':rl.id})}}"><img title="Editar rol"   src="{{ asset('uploads/iconos/edit.gif') }}" ></a></td>
+                <tr>{% endfor%}
+            </tbody>
+
+    
+        </table>
+            
+    </div>
+</div>
+<br>
+{% endif %}
+
+{% endblock%}
+
+{% block aside %}
+    {{ parent()}}
+    <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
+{% endblock%}
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% include 'academicoBundle:Default:tablecss.html.twig'%}
+{% endblock%}

@@ -26,6 +26,7 @@
                             <th>Estudio de casos</th>
                             <th>Prueba práctica</th>
                             <th>Prueba teórica</th>
+                            <th>Promedio</th>
                         </tr>
                         </thead>        
                      <tbody>
@@ -37,6 +38,7 @@
                             <td style="text-align: center; vertical-align: middle">{{ form_widget(req.notaec, { 'attr': {'autocomplete' : 'off', 'onkeypress' : 'return NumCheck(event, this)' } })}}</td> 
                             <td style="text-align: center; vertical-align: middle">{{ form_widget(req.notapp, { 'attr': {'autocomplete' : 'off', 'onkeypress' : 'return NumCheck(event, this)' } })}}</td> 
                             <td style="text-align: center; vertical-align: middle">{{ form_widget(req.notapt, { 'attr': {'autocomplete' : 'off', 'onkeypress' : 'return NumCheck(event, this)' } })}}</td>
+                            <td style="text-align: center; vertical-align: middle">{{ form_widget(req.promedio, { 'attr': {'disabled' : true } }) }}</td>            
                         <tr>
                     <tbody>
                     {% endfor %}

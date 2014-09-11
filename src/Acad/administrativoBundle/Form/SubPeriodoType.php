@@ -16,8 +16,8 @@ class SubPeriodoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('tipo', 'choice', array('choices' => array('1' => '1', '2' => '2', '3' => '3'), 'required' => false,
-             'attr' => array('style' => 'width: 60px; text-align: center'),'required'=>true))
+            ->add('tipo', 'choice', array('choices' => array('Cuatrimestre' => 'Cuatrimestre', 'Bimestre' => 'Bimestre', 'General' => 'General'), 'required' => false,
+             'attr' => array('style' => 'width: 120px; text-align: center'),'required'=>true))
             ->add('estado','checkbox',array('required'=>false))
             ->add('periodo','entity',array(
                     'class'=> 'administrativoBundle:Periodo',

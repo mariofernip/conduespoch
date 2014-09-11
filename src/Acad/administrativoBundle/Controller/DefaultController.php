@@ -15,9 +15,9 @@ use Acad\administrativoBundle\Entity\Hora;
 use Acad\administrativoBundle\Entity\Materia;
 use Acad\administrativoBundle\Entity\MateriaAdministrador;
 use Acad\administrativoBundle\Entity\MateriaGrado;
-use Acad\administrativoBundle\Entity\Nota;
 use Acad\administrativoBundle\Entity\MesEvaluacion;
 use Acad\administrativoBundle\Entity\Nivel;
+use Acad\administrativoBundle\Entity\Nota;
 use Acad\administrativoBundle\Entity\Paralelo;
 use Acad\administrativoBundle\Entity\Periodo;
 use Acad\administrativoBundle\Entity\Requisito;
@@ -39,8 +39,11 @@ use Acad\administrativoBundle\Form\ParaleloType;
 use Acad\administrativoBundle\Form\PeriodoType;
 use Acad\administrativoBundle\Form\RequisitoType;
 use Acad\administrativoBundle\Form\SubPeriodoType;
+use Acad\seguridadBundle\Entity\Rol;
 use Acad\seguridadBundle\Form\ModificarUsuarioType;
+use Acad\seguridadBundle\Form\RolType;
 use DateTime;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -201,11 +204,10 @@ class DefaultController extends Controller {
                     $em->flush();
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
                 return $this->redirect($this->generateUrl('admin_portada'));
-                
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Periodo agregado correctamente'
@@ -281,14 +283,13 @@ class DefaultController extends Controller {
                     $em->flush(); // envio a guardar/actualizar el estado de cada objeto
                 }
                 $em->getConnection()->commit();
-             } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
                 return $this->redirect($redir);
-                
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Fechas actualizadas');
@@ -893,14 +894,13 @@ class DefaultController extends Controller {
                     $em->flush(); // envio a guardar/actualizar el estado de cada objeto
                 }
                 $em->getConnection()->commit();
-             } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
                 return $this->redirect($redir);
-                
             }
 
             return $this->redirect($this->generateUrl('admin_portada'));
@@ -969,14 +969,13 @@ class DefaultController extends Controller {
                     $em->flush();
                 }
                 $em->getConnection()->commit();
-             } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
                 return $this->redirect($redir);
-                
             }
 
             $this->get('session')->getFlashBag()->add('Info', 'Materias han sido actualizada');
@@ -1066,14 +1065,13 @@ class DefaultController extends Controller {
                 }
 
                 $em->getConnection()->commit();
-             } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
                 return $this->redirect($redir);
-                
             }
 
 
@@ -1515,14 +1513,13 @@ class DefaultController extends Controller {
                 }
 
                 $em->getConnection()->commit();
-             } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
                 return $this->redirect($redir);
-                
             }
 
 
@@ -1681,6 +1678,122 @@ class DefaultController extends Controller {
         return $this->render('administrativoBundle:Default:materiaperiodo_listatodos.html.twig', array(
                     'periodo' => $periodo,
                     'lista' => $listamatperiodo,
+                    'sd' => $sd
+                ));
+    }
+
+    //metodo: inserta un nuevo rol
+    public function rolregistroAction() {
+
+        $em = $this->getDoctrine()->getManager();
+        $peticion = $this->getRequest();
+        $usuario = $this->get('security.context')->getToken()->getUser();
+
+        $rol = strtolower($usuario->getRol());
+        $role = new Rol();
+
+        $formulario = $this->createForm(new RolType(), $role);
+
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
+                //inserta nuevo rol               
+                $em->persist($role);
+                $em->flush();
+
+                $em->getConnection()->commit();
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
+            }
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Rol ingresado'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        $listaroles = $em->getRepository('seguridadBundle:Rol')->findAll();
+        $sd = 0;
+        if ($listaroles) {
+            $sd = 1;
+        }
+        $periodo='';
+        return $this->render('administrativoBundle:Default:rol_registro.html.twig', array(
+                    'periodo' => $periodo,
+                    'sd'=>$sd,
+                    'lista'=>$listaroles,
+                    'formulario' => $formulario->createView())
+        );
+    }
+
+    //metodo: modifica un nuevo rol
+    public function rolmodificarAction($rid) {
+
+        $em = $this->getDoctrine()->getManager();
+        $peticion = $this->getRequest();
+        $usuario = $this->get('security.context')->getToken()->getUser();
+
+        $rol = strtolower($usuario->getRol());
+        $role = $em->getRepository('seguridadBundle:Rol')->find($rid);
+
+        $formulario = $this->createForm(new RolType(), $role);
+
+        $formulario->handleRequest($peticion);
+
+        if ($formulario->isValid()) {
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
+                //inserta nuevo rol               
+                $em->flush();
+
+                $em->getConnection()->commit();
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
+            }
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Rol actualizado'
+            );
+            //llamo al la vista requisito estudiante
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        $listaroles = $em->getRepository('seguridadBundle:Rol')->findAll();
+        $sd = 0;
+        if ($listaroles) {
+            $sd = 1;
+        }
+        $periodo='';
+        return $this->render('administrativoBundle:Default:rol_modificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'rid'=>$rid,
+                    'lista'=>$listaroles,
+                    'sd'=>$sd,
+                    'formulario' => $formulario->createView())
+        );
+    }
+
+    //metodo: listar todos los roles
+    public function rollistartodosAction() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $listaroles = $em->getRepository('seguridadBundle:Rol')->findAll();
+        $sd = 0;
+        if ($listaroles) {
+            $sd = 1;
+        }
+        $periodo = '';
+        return $this->render('administrativoBundle:Default:rol_listartodos.html.twig', array(
+                    'periodo' => $periodo,
+                    'lista' => $listaroles,
                     'sd' => $sd
                 ));
     }

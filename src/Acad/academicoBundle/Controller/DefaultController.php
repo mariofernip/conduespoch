@@ -1340,7 +1340,7 @@ class DefaultController extends Controller {
                         $cod = $req->getId(); // ontengo el id de cada objeto
                         $suspenso = $req->getNotasuspenso();
                         $pf = $req->getPromediofinal();
-                        $examens = round(20 - ($pf / 2));
+                        $examens = round(32 - ($pf));
                         if ($suspenso >= $examens) {
                             $npf = round(($suspenso + $pf) / 2);
                             $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
