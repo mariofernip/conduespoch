@@ -197,6 +197,39 @@ class DefaultController extends Controller {
             $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
             $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMaterias();
             if ($role == 'secretaria') {
+                $sp2= $em->getRepository('administrativoBundle:SubPeriodo')->findBy(array(
+                    'periodo'=>$periodo,
+                    'tipo'=>'2',
+                    'estado'=>true
+                ));
+                $control=0;                
+                $control2=0;
+                if($sp2){
+                    $control2=1;
+                    $sp1= $em->getRepository('administrativoBundle:SubPeriodo')->findBy(array(
+                        'periodo'=>$periodo,
+                        'tipo'=>'1',
+                        'estado'=>true
+                    ));
+                    if($sp1){
+                        //debe salir mensaje para desactivar subperiodo1 = cuatrimestre 
+                        $control=1;
+                    }else{
+                        $spmateria= $em->getRepository('administrativoBundle:Periodo')->getSubperiodoActivo($periodo->getId());
+                        if($spmateria){
+                            //ya se han matricularon a los estudiantes para segundo subperiodo
+                            //aparece la portada normalmente
+                            $control=2;
+                        }else{
+                            //se debe activar el boton
+                            $control=3;
+                        }
+                    }
+                    
+                }
+                $nsubperiodos= $em->getRepository('administrativoBundle:SubPeriodo')->findBy(array(
+                    'estado'=>true
+                ));
                 //numero de estudiantes x niveles
                 $est= $em->getRepository('academicoBundle:Matricula')->getEstudiantesxNivel($periodo->getId());
                 //inscritos
@@ -234,7 +267,10 @@ class DefaultController extends Controller {
                             'estMT' => $estMT,
                             'lista' => $lista,
                             'estudiantes'=>$est,
-                            'niveles'=>$niveles
+                            'niveles'=>$niveles,
+                            'control'=>$control,
+                            'control2'=>$control2,
+                            'nsubperiodos'=>$nsubperiodos
                         ));
             }
 

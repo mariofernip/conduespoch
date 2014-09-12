@@ -31,7 +31,7 @@ class SubPeriodo {
     /**
      *
      * @ORM\Column(type="string", length=32, nullable=false)
-     * @Assert\Choice(choices = {"Cuatrimestre", "Bimestre","General"})
+     * @Assert\Choice(choices = {"1", "2","3"})
      */
     protected $tipo;    
         
@@ -184,6 +184,16 @@ class SubPeriodo {
     }
     
     public function __toString() {
-        return  $this->tipo;
+        $ntipo='';
+        if($this->tipo=='1'){
+            $ntipo='Cuatrimestre';
+        }
+        if($this->tipo=='2'){
+            $ntipo='Bimestre';
+        }
+        if($this->tipo=='3'){
+            $ntipo='General';
+        }
+        return  $ntipo;
     }
 }

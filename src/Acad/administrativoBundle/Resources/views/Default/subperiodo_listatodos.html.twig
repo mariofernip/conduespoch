@@ -11,6 +11,7 @@
 </section>
 <p style="text-align: center ; color: #0035C7 "><strong>LISTA DE SUBPERIODOS</strong></p>
 {% if sd== 1 %}
+{% set tipo=''%}
 <div id="dt_example">
     <div id="demo">
         <table class="display" id="example">
@@ -23,9 +24,18 @@
                 </tr>
             </thead>
             <tbody>{% for sbp in lista %}
+                {% if sbp.tipo=='1' %} 
+                    {% set tipo='Cuatrimestre'%}
+               {% endif %}
+               {% if sbp.tipo== '2' %} 
+                    {% set tipo='Bimestre'%}
+               {% endif %}
+                {% if sbp.tipo== '3'%} 
+                    {% set tipo='General'%}
+               {% endif %}
                 <tr>
                         <td style="vertical-align:middle">{{sbp.periodo}}</td>
-                        <td style="vertical-align:middle; text-align: center">{{sbp.tipo}}</td>                        
+                        <td style="vertical-align:middle; text-align: center">{{tipo}}</td>                        
                         <td  style="vertical-align:middle; text-align: center">{% if (sbp.estado) ==1 %}
             <strong>Activo</strong>
         {% endif %}

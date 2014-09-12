@@ -102,6 +102,31 @@ class PeriodoRepository extends EntityRepository{
         
     }
     
+
+    public function getSubperiodoActivo($pid) {
+        
+        
+        $em = $this->getEntityManager();
+        $tipo='2';
+        $dql = 'select ma,mp,sp,p
+                FROM academicoBundle:MateriaAsignada ma                                               
+                Join ma.materiaperiodo mp
+                Join mp.subperiodo sp
+                Join sp.periodo p
+                where
+                    p.id = :pid and
+                    sp.tipo = :tipo
+                
+                ';
+ 
+
+        $consulta = $em->createQuery($dql);
+        
+        $consulta->setParameter('pid', $pid);
+        $consulta->setParameter('tipo', $tipo);
+
+        return $consulta->getResult();
+    }
     
 }
 
