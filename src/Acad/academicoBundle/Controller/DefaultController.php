@@ -2369,7 +2369,117 @@ class DefaultController extends Controller {
         return $content;
     }
 
-    
-    
+    //METODO: matricular estudiantes en el segundo subperiodo
+    public function matriculaEstudiantesSegundoSubperiodoAction() {
+
+        $em = $this->getDoctrine()->getManager();
+        $sesion = $this->getRequest()->getSession();
+        $periodo = $sesion->get('periodo');
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $rol = strtolower($usuario->getRol());
+        //devuelve la lista de estudiantes matriculados: obj= matricula
+        $matriculados = $em->getRepository('academicoBundle:Matricula')->findBy(array(
+            'periodo' => $periodo
+                ));
+        if (!$matriculados) {
+            $this->get('session')->getFlashBag()->add('Info', 'No existe estudiantes matriculados en este periodo ');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        //obtengo la lista de notas parciales
+        $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+            'periodo' => $periodo->getId()
+                ));
+
+        if (!$listamesevaluacion) {
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No hay meses asignados para este periodo');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        //obtengo la lista dematreias del 2 subperiodo
+        $materiasSegundoSP = $em->getRepository('academicoBundle:Matricula')->getMateriasSegundoSP($periodo->getId());
+        if (!$materiasSegundoSP) {
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias asignadas al segundo subperiodo');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        //recorro lista de estudiantes matriculados
+        foreach ($matriculados as $matricula) {
+            //inicializo contado de numero de materias aprobadas
+            $cont = 0;
+            //obtengo la lista de materiasasignadas mediante el filtro de id matrocula
+            $listaMA = $em->getRepository('academicoBundle:MateriaAsignada')->findBy(array(
+                'matricula' => $matricula
+                    ));
+
+            //recorro lista materiasignadas
+            foreach ($listaMA as $matasig) {
+                //compruebo x cada materia si esta aprobada
+                if ($matasig->getEquivalencia() == "Aprobado") {
+                    $cont++;
+                }
+            }
+            //compruebo si las materias aprobadas con igual al numero de materias del 1 subperiodo
+            if ($cont >= 6) {
+                $em->getConnection()->beginTransaction(); // suspend auto-commit
+                try {
+                    //recorro la lista de materias del segundo subperiodo
+                    foreach ($materiasSegundoSP as $matper) {
+                        //creo un nuevo obt materiaasignada
+                        $materiaasignada = new MateriaAsignada();
+                        $materiaasignada->setMateriaperiodo($matper);
+                        $materiaasignada->setMatricula($matricula);
+                        $materiaasignada->setNotasuspenso(0);
+                        $materiaasignada->setEquivalencia('Reprobado');
+                        $materiaasignada->setPromediofinal(0);
+                        //inserto un nuevo registro de materiaasignada
+                        $em->persist($materiaasignada);
+                        $em->flush();
+
+
+                        //LLENAR LA TABLA: ASISTENCIA
+
+                        $asistencia = new Asistencia();
+                        $asistencia->setMateriaasignada($materiaasignada);
+                        $asistencia->setHorasmodulo($materiaasignada->getMateriaperiodo()->getMateria()->getNumerohoras());
+                        $asistencia->setFaltasinjustificadas(0);
+                        $asistencia->setFaltasjustificadas(0);
+                        $asistencia->setAtrasos(0);
+                        $em->persist($asistencia);
+                        $em->flush();
+
+                        //LLENAR LA TABLA: EVALUACION
+                        foreach ($listamesevaluacion as $meseva) {
+                            $evaluacion = new Evaluacion();
+                            $evaluacion->setDescripcion('');
+                            $evaluacion->setMateriaasignada($materiaasignada);
+                            $evaluacion->setMesevaluacion($meseva);
+                            $evaluacion->setNotatb(0);
+                            $evaluacion->setNotaec(0);
+                            $evaluacion->setNotapp(0);
+                            $evaluacion->setNotapt(0);
+                            $evaluacion->setPromedio(0);
+
+                            $em->persist($evaluacion);
+                            $em->flush();
+                        }
+                    }
+                    $em->getConnection()->commit();
+                } catch (\Exception $e) {
+                    $em->getConnection()->rollback();
+                    $this->get('session')->getFlashBag()->add('Info', 'Error! Estudiantes no fueron matriculado, consulte al administrador');
+                    $url = explode("?", $_SERVER['HTTP_REFERER']);
+                    $redir = $url[0];
+
+                    return $this->redirect($redir);
+                }
+            }
+        }
+
+        //mensaje
+        $this->get('session')->getFlashBag()->add('Info', 'Éxito! Estudiante matriculados en nuevo subperiodo');
+
+        return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+    }
     
 }

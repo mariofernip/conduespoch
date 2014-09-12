@@ -138,3 +138,7 @@ inspector_reporte_asistencia:
     defaults: { _controller: academicoBundle:default:reporteasistencia, _format: pdf}    
     requirements:
         _format: html|pdf    
+        
+secretaria_matricula_nuevo_subperiodo:            
+    pattern:  /secretaria/matriculas/estudiante/nuevo/subperiodo
+    defaults: { _controller: academicoBundle:default:matriculaEstudiantesSegundoSubperiodo}            

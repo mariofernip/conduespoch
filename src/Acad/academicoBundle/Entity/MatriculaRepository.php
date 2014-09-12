@@ -113,6 +113,26 @@ class MatriculaRepository extends EntityRepository{
         
         return $consulta->getResult();
     }
+
+    public function getMateriasSegundoSP($pid) {
+        $tipo='2';
+        
+        $em= $this->getEntityManager();
+        $dql = 'select mp,sp,p
+                FROM academicoBundle:MateriaPeriodo mp             
+                Join mp.subperiodo sp
+                Join sp.periodo p
+                WHERE p.id= :pid and
+                    sp.tipo= :tipo                                    
+                ';
+        $consulta = $em->createQuery($dql);        
+        $consulta->setParameter('pid', $pid);
+        $consulta->setParameter('tipo', $tipo);
+        
+        return $consulta->getResult();
+        
+        
+    }
     
     
 }
