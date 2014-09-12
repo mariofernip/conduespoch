@@ -44,6 +44,32 @@ class PeriodoRepository extends EntityRepository{
         
     }
     
+    
+     public function getMateriasSubperiodounoytres($pid) {
+        
+        
+        $em= $this->getEntityManager();
+        $tu = 1;
+        $tt = 3;  
+        $dql = 'select mp,sp,p
+                FROM academicoBundle:MateriaPeriodo mp
+                Join mp.subperiodo sp
+                Join sp.periodo p
+                WHERE p.id = :pid and
+                sp.tipo = :tu or
+                sp.tipo = :tt                
+                ';
+        $consulta = $em->createQuery($dql);   
+        $consulta->setParameter('pid', $pid);
+        $consulta->setParameter('tu', $tu);
+        $consulta->setParameter('tt', $tt);
+       
+        return $consulta->getResult();
+        
+        
+    }
+   
+    
     public function getprimerSubperiodo($pid) {
         
         
@@ -85,6 +111,47 @@ class PeriodoRepository extends EntityRepository{
         
     }
     
+    public function getnumeroMateriasSubperiodounoytres($pid)
+     {                
+        $em= $this->getEntityManager();
+        $std = 1;
+        $tipo1 = 1;        
+        $tipo3 = 3;                
+        $dql = 'select count(sp.id) 
+                FROM administrativoBundle:SubPeriodo sp
+                Join sp.periodo p
+                WHERE p.id = :pid and
+                sp.estado = :std and
+                sp.tipo = :tu 
+                
+                ';
+        
+        $consulta = $em->createQuery($dql);   
+        $consulta->setParameter('pid', $pid);
+        $consulta->setParameter('std', $std);
+        $consulta->setParameter('tu', $tipo1);        
+        $count = $consulta->getSingleScalarResult();
+        
+        $dql3 = 'select count(sp.id) 
+                FROM administrativoBundle:SubPeriodo sp
+                Join sp.periodo p
+                WHERE p.id = :pid and
+                sp.estado = :std and
+                 sp.tipo = :tt
+                
+                ';
+        $consulta3 = $em->createQuery($dql3);   
+        $consulta3->setParameter('pid', $pid);
+        $consulta3->setParameter('std', $std);
+        $consulta3->setParameter('tt', $tipo3);        
+        $count3 = $consulta3->getSingleScalarResult();
+        
+        $total = $count+$count3;
+        
+        return $total;
+        
+        
+    }
     
     public function getTodasHoras() {
         

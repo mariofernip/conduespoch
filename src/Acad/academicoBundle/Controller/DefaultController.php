@@ -556,13 +556,104 @@ class DefaultController extends Controller {
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array('estado' => 1));
         $mat = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado' => 1));
-        $matper = $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo);
-
+        //$matper = $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo);
+        $matper = $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodounoytres($periodo);        
+        $subperiodo = $em->getRepository('administrativoBundle:Periodo')->getnumeroMateriasSubperiodo($periodo);
+        $subperiodounoytres = $em->getRepository('administrativoBundle:Periodo')->getnumeroMateriasSubperiodounoytres($periodo);
+        
         if (!$mat) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
+        if ($subperiodo < 2 or $subperiodo >2) {
+            $est= $em->getRepository('academicoBundle:Matricula')->getEstudiantesxNivel($periodo->getId());
+                //inscritos
+                $estIA = $em->getRepository('academicoBundle:Inscripcion')->findBy(array(
+                    'periodo' => $periodo,
+                    'estado' => true
+                        ));
+                $estII = $em->getRepository('academicoBundle:Inscripcion')->findBy(array(
+                    'periodo' => $periodo,
+                    'estado' => false
+                        ));
+                $estIT = $em->getRepository('academicoBundle:Inscripcion')->findBy(array(
+                    'periodo' => $periodo,
+                        ));
+                //matriculados
+                $estMA = $em->getRepository('academicoBundle:Matricula')->findBy(array(
+                    'periodo' => $periodo,
+                    'estado' => true
+                        ));
+                $estMI = $em->getRepository('academicoBundle:Matricula')->findBy(array(
+                    'periodo' => $periodo,
+                    'estado' => false
+                        ));
+                $estMT = $em->getRepository('academicoBundle:Matricula')->findBy(array(
+                    'periodo' => $periodo,
+                        ));
+                $lista = $em->getRepository('administrativoBundle:Nivel')->findAll();
+                
+                           
+                    $this->get('session')->getFlashBag()->add('Info', 'ADVERTENCIA!!! Contacte al administrador Sub Periodos no corresponden');
+                    return $this->render('academicoBundle:Default:portada_secretaria.html.twig', array(
+                                 'periodo' => $periodo,
+                            'estIA' => $estIA,
+                            'estII' => $estII,
+                            'estIT' => $estIT,
+                            'estMA' => $estMA,
+                            'estMI' => $estMI,
+                            'estMT' => $estMT,
+                            'lista' => $lista,
+                            'estudiantes'=>$est,
+                            'niveles'=>$niveles
+                        ));
+                }
+                
+           if ($subperiodounoytres < 2 or $subperiodounoytres >2) {
+            $est= $em->getRepository('academicoBundle:Matricula')->getEstudiantesxNivel($periodo->getId());
+                //inscritos
+                $estIA = $em->getRepository('academicoBundle:Inscripcion')->findBy(array(
+                    'periodo' => $periodo,
+                    'estado' => true
+                        ));
+                $estII = $em->getRepository('academicoBundle:Inscripcion')->findBy(array(
+                    'periodo' => $periodo,
+                    'estado' => false
+                        ));
+                $estIT = $em->getRepository('academicoBundle:Inscripcion')->findBy(array(
+                    'periodo' => $periodo,
+                        ));
+                //matriculados
+                $estMA = $em->getRepository('academicoBundle:Matricula')->findBy(array(
+                    'periodo' => $periodo,
+                    'estado' => true
+                        ));
+                $estMI = $em->getRepository('academicoBundle:Matricula')->findBy(array(
+                    'periodo' => $periodo,
+                    'estado' => false
+                        ));
+                $estMT = $em->getRepository('academicoBundle:Matricula')->findBy(array(
+                    'periodo' => $periodo,
+                        ));
+                $lista = $em->getRepository('administrativoBundle:Nivel')->findAll();
+                
+                           
+                    $this->get('session')->getFlashBag()->add('Info', 'ADVERTENCIA!!! Contacte al administrador Sub Periodos no corresponden');
+                    return $this->render('academicoBundle:Default:portada_secretaria.html.twig', array(
+                                 'periodo' => $periodo,
+                            'estIA' => $estIA,
+                            'estII' => $estII,
+                            'estIT' => $estIT,
+                            'estMA' => $estMA,
+                            'estMI' => $estMI,
+                            'estMT' => $estMT,
+                            'lista' => $lista,
+                            'estudiantes'=>$est,
+                            'niveles'=>$niveles
+                        ));
+                }     
+        
         $estudiante = $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
             'cedula' => $cedula
                 ));
