@@ -609,7 +609,11 @@ class DefaultController extends Controller {
         $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'periodo' => $periodo->getId()
                 ));
-
+        
+        //lista de evaluaciones en el cuatrimestre
+        $listamesevaluacioncuatrimestre = $em->getRepository('administrativoBundle:Periodo')->getlistaEvSubpcuatrimestre($periodo->getId());
+        
+        
         if (!$listamesevaluacion) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No hay meses asignados para este periodo');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
@@ -666,6 +670,31 @@ class DefaultController extends Controller {
                     $em->persist($asistencia);
                     $em->flush();
 
+                    //CONTROL INGRESO EVALUACIONES PARA CUATRIMESTRE
+                    if ($matasi1->getMateriaperiodo()->getSubperiodo()->getTipo() == 1) {
+                        
+                    //LLENAR LA TABLA: EVALUACION
+                    foreach ($listamesevaluacioncuatrimestre as $meseva) {
+                        $evaluacion = new Evaluacion();
+                        $evaluacion->setDescripcion('');
+                        $evaluacion->setMateriaasignada($matasi1);
+                        $evaluacion->setMesevaluacion($meseva);
+                        $evaluacion->setNotatb(0);
+                        $evaluacion->setNotaec(0);
+                        $evaluacion->setNotapp(0);
+                        $evaluacion->setNotapt(0);
+                        $evaluacion->setPromedio(0);
+
+                        $em->persist($evaluacion);
+                        $em->flush();
+                    }
+                    }
+                    
+                  
+                    
+                   //CONTROL INGRESO EVALUACIONES GENERAL                    
+                    if ($matasi1->getMateriaperiodo()->getSubperiodo()->getTipo() == 3) {
+                        
                     //LLENAR LA TABLA: EVALUACION
                     foreach ($listamesevaluacion as $meseva) {
                         $evaluacion = new Evaluacion();
@@ -681,6 +710,8 @@ class DefaultController extends Controller {
                         $em->persist($evaluacion);
                         $em->flush();
                     }
+                   }
+
                 }
                 $em->getConnection()->commit();
             } catch (\Exception $e) {
@@ -2386,12 +2417,18 @@ class DefaultController extends Controller {
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
+        //cantidad de materias del primer subperiodo
+        $numeromesevalprimerp = $em->getRepository('administrativoBundle:Perido')->getnumeroMateriasSubperiodouno($periodo->getId()); 
+        
         //obtengo la lista de notas parciales
-        $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
-            'periodo' => $periodo->getId()
-                ));
+//        $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
+//            'periodo' => $periodo->getId()
+//                ));
+        
+        //lista devuelve las evaluaciones del bimestre
+        $listamesevaluacionbimestre = $em->getRepository('administrativoBundle:Periodo')->getlistaEvSubpbimestre($periodo->getId());;
 
-        if (!$listamesevaluacion) {
+        if (!$listamesevaluacionbimestre) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No hay meses asignados para este periodo');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
@@ -2420,7 +2457,7 @@ class DefaultController extends Controller {
                 }
             }
             //compruebo si las materias aprobadas con igual al numero de materias del 1 subperiodo
-            if ($cont >= 6) {
+            if ($cont >= $numeromesevalprimerp) {
                 $em->getConnection()->beginTransaction(); // suspend auto-commit
                 try {
                     //recorro la lista de materias del segundo subperiodo
@@ -2448,8 +2485,10 @@ class DefaultController extends Controller {
                         $em->persist($asistencia);
                         $em->flush();
 
+                        
+                       
                         //LLENAR LA TABLA: EVALUACION
-                        foreach ($listamesevaluacion as $meseva) {
+                        foreach ($listamesevaluacionbimestre as $meseva) {
                             $evaluacion = new Evaluacion();
                             $evaluacion->setDescripcion('');
                             $evaluacion->setMateriaasignada($materiaasignada);
@@ -2463,6 +2502,7 @@ class DefaultController extends Controller {
                             $em->persist($evaluacion);
                             $em->flush();
                         }
+                        
                     }
                     $em->getConnection()->commit();
                 } catch (\Exception $e) {

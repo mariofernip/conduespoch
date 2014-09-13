@@ -69,6 +69,28 @@ class PeriodoRepository extends EntityRepository{
         
     }
    
+    public function getnumeroMateriasSubperiodouno($pid) {
+        
+        
+        $em= $this->getEntityManager();
+        $tu = 1; 
+        $dql = 'select count(mp.id)
+                FROM academicoBundle:MateriaPeriodo mp
+                Join mp.subperiodo sp
+                Join sp.periodo p
+                WHERE p.id = :pid and
+                sp.tipo = :tu               
+                ';
+        $consulta = $em->createQuery($dql);   
+        $consulta->setParameter('pid', $pid);
+        $consulta->setParameter('tu', $tu);
+       
+         $count = $consulta->getSingleScalarResult();
+        return $count;
+        
+    }
+    
+    
     
     public function getprimerSubperiodo($pid) {
         
@@ -194,6 +216,46 @@ class PeriodoRepository extends EntityRepository{
 
         return $consulta->getResult();
     }
+    
+      public function getlistaEvSubpcuatrimestre($pid) {
+        
+        
+        $em= $this->getEntityManager();
+        
+        $dql = 'select me,p
+                FROM administrativoBundle:MesEvaluacion me
+                Join me.periodo p
+                WHERE p.id = :pid
+                order by me.nota asc                
+                ';
+        $consulta = $em->createQuery($dql);   
+        $consulta->setParameter('pid', $pid);
+        $consulta->setMaxResults(4);
+        
+        return $consulta->getResult();
+        
+        
+    }
+    public function getlistaEvSubpbimestre($pid) {
+        
+        
+        $em= $this->getEntityManager();
+        
+        $dql = 'select me, p
+                FROM administrativoBundle:MesEvaluacion me
+                Join me.periodo p
+                WHERE p.id = :pid
+                order by me.nota desc
+                
+                ';
+        $consulta = $em->createQuery($dql);   
+        $consulta->setParameter('pid', $pid);
+        $consulta->setMaxResults(2);
+        return $consulta->getResult();
+        
+        
+    }
+    
     
 }
 
