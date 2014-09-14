@@ -1585,7 +1585,7 @@ class DefaultController extends Controller {
             $mesconteo = 2;
         }
         if ($matper->getSubperiodo() == $subp3) {
-            $mesconteo = 1;
+            $mesconteo = 6;
         }
         
         $sd = 0;               
@@ -2418,7 +2418,7 @@ class DefaultController extends Controller {
         }
 
         //cantidad de materias del primer subperiodo
-        $numeromesevalprimerp = $em->getRepository('administrativoBundle:Perido')->getnumeroMateriasSubperiodouno($periodo->getId()); 
+        $numeromesevalprimerp = $em->getRepository('administrativoBundle:Periodo')->getnumeroMateriasSubperiodouno($periodo->getId()); 
         
         //obtengo la lista de notas parciales
 //        $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
