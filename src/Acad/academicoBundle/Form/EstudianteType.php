@@ -27,7 +27,7 @@ class EstudianteType extends AbstractType
             ->add('email','email')
             ->add('ocupacion')
             ->add('lugarnacimiento')            
-            ->add('file')    
+            ->add('foto')    
         ;
     }
     

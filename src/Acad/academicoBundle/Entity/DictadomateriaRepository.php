@@ -224,7 +224,7 @@ class DictadomateriaRepository extends EntityRepository {
                 Join m.nivel n
                 WHERE mat.id = :mid and                                                    
                           p.id= :pid and
-                          n.id = :nid and
+                          n.id = :nid
                           order by ma.promediofinal asc
                 ';
         $consulta = $em->createQuery($dql);

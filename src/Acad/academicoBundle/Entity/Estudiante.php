@@ -89,16 +89,16 @@ class Estudiante {
     /**
      * @Assert\File(maxSize="6000000")
      */
-    private $file;
+    private $foto;
 
     /**
-     * Sets file.
+     * Sets foto.
      *
-     * @param UploadedFile $file
+     * @param UploadedFile $foto
      */
-    public function setFile(UploadedFile $file = null)
+    public function setFoto(UploadedFile $foto = null)
     {
-        $this->file = $file;
+        $this->foto = $foto;
         // check if we have an old image path
         if (isset($this->path)) {
             // store the old name to delete after the update
@@ -110,13 +110,13 @@ class Estudiante {
     }
 
     /**
-     * Get file.
+     * Get foto.
      *
      * @return UploadedFile
      */
-    public function getFile()
+    public function getFoto()
     {
-        return $this->file;
+        return $this->foto;
     }
     
      public function getAbsolutePath()
@@ -463,10 +463,10 @@ class Estudiante {
      */
     public function preUpload()
     {
-        if (null !== $this->getFile()) {
+        if (null !== $this->getFoto()) {
             // haz lo que quieras para generar un nombre único
             $filename = sha1(uniqid(mt_rand(), true));
-            $this->path = $filename.'.'.$this->getFile()->guessExtension();
+            $this->path = $filename.'.'.$this->getFoto()->guessExtension();
         }
     }
     
@@ -476,14 +476,14 @@ class Estudiante {
      */
     public function upload()
     {
-        if (null === $this->getFile()) {
+        if (null === $this->getFoto()) {
             return;
         }
 
         // si hay un error al mover el archivo, move() automáticamente
         // envía una excepción. This will properly prevent
         // the entity from being persisted to the database on error
-        $this->getFile()->move($this->getUploadRootDir(), $this->path);
+        $this->getFoto()->move($this->getUploadRootDir(), $this->path);
 
         // check if we have an old image
         if (isset($this->temp)) {
@@ -492,7 +492,7 @@ class Estudiante {
             // clear the temp image path
             $this->temp = null;
         }
-        $this->file = null;
+        $this->foto = null;
     }
 
     /**
@@ -500,8 +500,8 @@ class Estudiante {
      */
     public function removeUpload()
     {
-        if ($file == $this->getAbsolutePath()) {
-            unlink($file);
+        if ($foto == $this->getAbsolutePath()) {
+            unlink($foto);
         }
     }
     
