@@ -1534,7 +1534,7 @@ class DefaultController extends Controller {
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Subperiodo ingresado'
             );
             //llamo al la vista requisito estudiante
-            return $this->redirect($this->generateUrl('admin_portada'));
+            return $this->redirect($this->generateUrl('admin_subperiodo_registro'));
         }
 
         return $this->render('administrativoBundle:Default:subperiodo_registro.html.twig', array(
