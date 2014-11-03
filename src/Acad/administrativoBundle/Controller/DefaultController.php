@@ -215,8 +215,9 @@ class DefaultController extends Controller {
             $this->get('session')->getFlashBag()->add('Info', 'Modifique las fechas de evaluación'
             );
             $periodoA = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
-            return $this->redirect($this->generateUrl('mes_evaluacion', array('pid' => $periodoA->getId())));
-            //return $this->redirect($this->generateUrl('mes_evaluacion', array('pid' => $periodo->getId())));
+            //return $this->redirect($this->generateUrl('mes_evaluacion', array('pid' => $periodoA->getId())));
+            return $this->redirect($this->generateUrl('mes_evaluacion', array('pid' => $periodo->getId())));
+            //return $this->redirect($this->generateUrl('admin_portada'));
         }
 
 
