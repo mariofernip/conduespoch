@@ -134,6 +134,38 @@ class MatriculaRepository extends EntityRepository{
         
     }
     
+    public function getMaterias() {
+                
+        $em= $this->getEntityManager();
+        $dql = 'select m
+                FROM administrativoBundle:Materia m             
+                WHERE m.estado = 1                                    
+                ';
+        $consulta = $em->createQuery($dql);        
+               
+        return $consulta->getResult();
+        
+        
+    }
+    
+    
+    public function getMateriaPeriodoActual() {
+        $em= $this->getEntityManager();
+        
+        $dql = 'select mp,sp,p
+                FROM academicoBundle:MateriaPeriodo mp             
+                Join mp.subperiodo sp
+                Join sp.periodo p
+                WHERE p.estado= 1
+                ';
+                   
+        $consulta = $em->createQuery($dql);        
+        $consulta->setMaxResults(1);
+        
+        return $consulta->getOneOrNullResult();
+        
+        
+    }
     
 }
 

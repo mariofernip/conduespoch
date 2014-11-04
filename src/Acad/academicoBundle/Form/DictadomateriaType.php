@@ -25,8 +25,28 @@ class DictadomateriaType extends AbstractType
                         ->select('d')    
                         ->where('d.estado=1'); }
                 ))
-            ->add('periodo')
-            ->add('materiaperiodo')
+           ->add('periodo', 'entity', array(
+                    'class' => 'administrativoBundle:Periodo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('p')
+                                ->select('p')
+                                ->where('p.estado = 1')
+
+                        ;
+                    }
+                ))
+            ->add('materiaperiodo', 'entity', array(
+                    'class' => 'academicoBundle:MateriaPeriodo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('mp')
+                                ->select('mp')
+                                ->join('mp.subperiodo', 's')
+                                ->join('s.periodo', 'p')                                
+                                ->where('p.estado = 1')
+
+                        ;
+                    }
+                ) )
         ;
     }
     

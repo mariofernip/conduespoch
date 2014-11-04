@@ -387,17 +387,31 @@ class DefaultController extends Controller {
 
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
-
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $rol = strtolower($usuario->getRol());
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         if (!$periodo) {
             $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
 
             //codigo para hacer que retorne a la pagina principal del usuario autenticado
-            $usuario = $this->get('security.context')->getToken()->getUser();
-            $rol = strtolower($usuario->getRol());
+//            $usuario = $this->get('security.context')->getToken()->getUser();
+//            $rol = strtolower($usuario->getRol());
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-
+         $mat = $em->getRepository('academicoBundle:Matricula')->getMaterias();
+        
+        if (!$mat) {
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+        
+        $matper = $em->getRepository('academicoBundle:Matricula')->getMateriaPeriodoActual();
+        
+        if (!$matper) {
+            $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar en subperiodos');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+        
         $dictadomateria = new Dictadomateria();
 
         $formulario = $this->createForm(new DictadomateriaType(), $dictadomateria);
@@ -1184,7 +1198,17 @@ class DefaultController extends Controller {
         }
 
         $dicmat = $em->getRepository('academicoBundle:Estudiante')->getTodosDictadoMateria($periodo->getId());
+        
+        if (!$dicmat) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Advertencia!. No se han asignado materias a los docentes');
 
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+            $usuario = $this->get('security.context')->getToken()->getUser();
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+        
         //paginacion
         $paginatorDM = $this->get('knp_paginator');
         $paginationDM = $paginatorDM->paginate(
