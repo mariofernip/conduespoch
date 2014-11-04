@@ -215,8 +215,8 @@ class DefaultController extends Controller {
             );
             $this->get('session')->getFlashBag()->add('Info', 'Modifique las fechas de evaluación');
             //$periodoA = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
-            
-            $PB= $sesion->get('periodoB');
+
+            $PB = $sesion->get('periodoB');
             //return $this->redirect($this->generateUrl('mes_evaluacion', array('pid' => $periodoA->getId())));
             return $this->redirect($this->generateUrl('mes_evaluacion', array('pid' => $PB->getId())));
             //return $this->redirect($this->generateUrl('admin_portada'));
@@ -239,7 +239,7 @@ class DefaultController extends Controller {
 
         $peticion = $this->getRequest();
 
-        
+
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
 
         if (!$periodo) {
@@ -674,8 +674,8 @@ class DefaultController extends Controller {
             $em->persist($mes);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('Info', 'Nota ingresado correctamente..!');
-            return $this->redirect($this->generateUrl('admin_portada'));
+            $this->get('session')->getFlashBag()->add('Info', 'Parcial ingresado correctamente..!');
+            return $this->redirect($this->generateUrl('admin_mes_registro'));
         }
         $periodo = '';
         $listameses = $em->getRepository('administrativoBundle:Nota')->findAll();
@@ -1289,13 +1289,17 @@ class DefaultController extends Controller {
 
         $periodo = '';
         $periodoA = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
-        if(!$periodoA){
+        if (!$periodoA) {
             $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo');
             return $this->redirect($this->generateUrl('admin_portada'));
         }
         $listamateriagrado = $em->getRepository('administrativoBundle:MateriaGrado')->findBy(array(
             'periodo' => $periodoA
                 ));
+        if (!$listamateriagrado) {
+            $this->get('session')->getFlashBag()->add('Info', 'No existe materias de grado aún asignadas para este periodo');
+            return $this->redirect($this->generateUrl('admin_materiagrado_registro'));
+        }
         $mg = 0;
         if ($listamateriagrado) {
             $mg = 1;
@@ -1504,7 +1508,7 @@ class DefaultController extends Controller {
             $em->getConnection()->beginTransaction(); // suspend auto-commit
             try {
 
-                //inserta nueva area               
+                //inserta nuevo subperiodo
                 $em->persist($subperiodo);
                 $em->flush();
 
@@ -1528,9 +1532,6 @@ class DefaultController extends Controller {
 
                 return $this->redirect($redir);
             }
-
-
-
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Subperiodo ingresado'
             );
             //llamo al la vista requisito estudiante
@@ -1582,8 +1583,8 @@ class DefaultController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
-        
-        if(!$periodo){
+
+        if (!$periodo) {
             $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo'
             );
             return $this->redirect($this->generateUrl('admin_portada'));
@@ -1591,9 +1592,8 @@ class DefaultController extends Controller {
         $listasubperiodo = $em->getRepository('administrativoBundle:SubPeriodo')->findBy(array(
             'periodo' => $periodo
                 ));
-        if(!$listasubperiodo){
+        if (!$listasubperiodo) {
             $this->get('session')->getFlashBag()->add('Info', 'No existe subperiodos asignados al periodo actual');
-            
         }
         $sd = 0;
         if ($listasubperiodo) {
@@ -1671,7 +1671,7 @@ class DefaultController extends Controller {
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia actualizada'
             );
             //llamo al la vista requisito estudiante
-            return $this->redirect($this->generateUrl('admin_portada'));
+            return $this->redirect($this->generateUrl('admin_materiaperiodo_listar_todos'));
         }
 
         return $this->render('administrativoBundle:Default:materiaperiodo_modificar.html.twig', array(
@@ -1686,7 +1686,7 @@ class DefaultController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
-        if(!$periodo){
+        if (!$periodo) {
             $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo'
             );
             return $this->redirect($this->generateUrl('admin_portada'));
@@ -1744,11 +1744,11 @@ class DefaultController extends Controller {
         if ($listaroles) {
             $sd = 1;
         }
-        $periodo='';
+        $periodo = '';
         return $this->render('administrativoBundle:Default:rol_registro.html.twig', array(
                     'periodo' => $periodo,
-                    'sd'=>$sd,
-                    'lista'=>$listaroles,
+                    'sd' => $sd,
+                    'lista' => $listaroles,
                     'formulario' => $formulario->createView())
         );
     }
@@ -1792,12 +1792,12 @@ class DefaultController extends Controller {
         if ($listaroles) {
             $sd = 1;
         }
-        $periodo='';
+        $periodo = '';
         return $this->render('administrativoBundle:Default:rol_modificar.html.twig', array(
                     'periodo' => $periodo,
-                    'rid'=>$rid,
-                    'lista'=>$listaroles,
-                    'sd'=>$sd,
+                    'rid' => $rid,
+                    'lista' => $listaroles,
+                    'sd' => $sd,
                     'formulario' => $formulario->createView())
         );
     }

@@ -561,6 +561,15 @@ class DefaultController extends Controller {
         $subperiodo = $em->getRepository('administrativoBundle:Periodo')->getnumeroMateriasSubperiodo($periodo);
         $subperiodounoytres = $em->getRepository('administrativoBundle:Periodo')->getnumeroMateriasSubperiodounoytres($periodo);
         
+       //valida que los subperiodos 1 y 3 tengas materias asignadas
+        //para proceder luego a matricular estudiantes
+        
+        if (!$matper) {
+            $this->get('session')->getFlashBag()->add('Info', 'Error! Los subperiodos cuatrimestre y bimestre no poseen materias asignadas, contacte al Administrador del Sistema');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+        
+        
         if (!$mat) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));

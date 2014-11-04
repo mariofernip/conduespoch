@@ -23,19 +23,19 @@ admin_portada:
     defaults: { _controller: administrativoBundle:Default:portada}    
 
 admin_mes_registro:
-    pattern:  /admin/mes/registro
+    pattern:  /admin/parcial/registro
     defaults: { _controller: administrativoBundle:Default:registromes}    
 
 admin_mes_listar_todos:
-    pattern:  /admin/mes/lista
+    pattern:  /admin/parcial/lista
     defaults: { _controller: administrativoBundle:Default:listatodosmeses}        
 
 admin_mes_modificar:
-    pattern:  /admin/mes/modificar/{codmes}
+    pattern:  /admin/parcial/modificar/{codmes}
     defaults: { _controller: administrativoBundle:Default:mesmodicar}            
 
 admin_mes_modificar_todos:
-    pattern:  /admin/mes/cambiar/estados
+    pattern:  /admin/parcial/cambiar/estados
     defaults: { _controller: administrativoBundle:Default:mesmodicartodos}     
 
 admin_nivel_registro:
