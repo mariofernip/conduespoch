@@ -1479,6 +1479,10 @@ class DefaultController extends Controller {
 
         $peticion = $this->getRequest();
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        if (!$periodo) {
+            $this->get('session')->getFlashBag()->add('Info', 'No existe un periodo activo');
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
 
         $usuario = $this->get('security.context')->getToken()->getUser();
 
@@ -1509,10 +1513,9 @@ class DefaultController extends Controller {
         if ($formulario->isValid()) {
             $em->getConnection()->beginTransaction(); // suspend auto-commit
             try {
-
                 //inserta nuevo subperiodo
-                $em->persist($subperiodo);
-                $em->flush();
+                    $em->persist($subperiodo);
+                    $em->flush();
 
                 if ($materiaperiodos == null) {
                     //LENAR LA TABLA: MATERIAPERIODO
@@ -1570,7 +1573,7 @@ class DefaultController extends Controller {
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Subperiodo actualizado'
             );
             //llamo al la vista requisito estudiante
-            return $this->redirect($this->generateUrl('admin_portada'));
+            return $this->redirect($this->generateUrl('admin_subperiodo_listar_todos'));
         }
 
         return $this->render('administrativoBundle:Default:subperiodo_modificar.html.twig', array(
@@ -1596,6 +1599,7 @@ class DefaultController extends Controller {
                 ));
         if (!$listasubperiodo) {
             $this->get('session')->getFlashBag()->add('Info', 'No existe subperiodos asignados al periodo actual');
+            return $this->redirect($this->generateUrl('admin_subperiodo_registro'));
         }
         $sd = 0;
         if ($listasubperiodo) {
@@ -1870,8 +1874,8 @@ class DefaultController extends Controller {
 
                 foreach ($auxmateriaperiodo->getMatPerAux() as $item) {
                     $cod = $item->getId();
-                    $mat= $item->getMateria();
-                    $subp = $item->getSubperiodo();                    
+                    $mat = $item->getMateria();
+                    $subp = $item->getSubperiodo();
                     $mp = $em->getRepository('academicoBundle:MateriaPeriodo')->find($cod);
                     $mp->setMateria($mat);
                     $mp->setSubperiodo($subp);
@@ -1899,5 +1903,5 @@ class DefaultController extends Controller {
                     'sd' => $sd,
                 ));
     }
-    
+
 }

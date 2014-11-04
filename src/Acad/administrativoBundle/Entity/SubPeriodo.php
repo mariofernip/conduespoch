@@ -6,8 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+
 /**
- * @ORM\Table(name="subperiodo")
+ * @ORM\Table(name="subperiodo",
+ * uniqueConstraints={
+ * @ORM\UniqueConstraint(name="unique_subperiodo", columns={"periodo_id","tipo"})
+ *  })
+ * @UniqueEntity(fields={"periodo", "tipo"}, message="El regisro a insertar ya existe")
  * @ORM\Entity
  */
 class SubPeriodo {
