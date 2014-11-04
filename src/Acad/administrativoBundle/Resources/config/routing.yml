@@ -207,6 +207,10 @@ admin_materiaperiodo_listar_todos:
     pattern:  /admin/materia-periodo/lista
     defaults: { _controller: administrativoBundle:Default:materiaperiodolistartodos}                            
     
+admin_materiaperiodo_modificar_todos:    
+    pattern:  /admin/materias-periodo/modificar/todos
+    defaults: { _controller: administrativoBundle:Default:materiaperiodoModificartodos}    
+    
 admin_rol_registro:                
     pattern:  /admin/rol/registro
     defaults: { _controller: administrativoBundle:Default:rolregistro}    

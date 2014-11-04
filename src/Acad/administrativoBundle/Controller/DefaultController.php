@@ -5,6 +5,7 @@ namespace Acad\administrativoBundle\Controller;
 use Acad\academicoBundle\Entity\MateriaPeriodo;
 use Acad\academicoBundle\Form\MateriaPeriodoType;
 use Acad\administrativoBundle\Entity\Area;
+use Acad\administrativoBundle\Entity\AuxMateriaPeriodo;
 use Acad\administrativoBundle\Entity\AuxMes;
 use Acad\administrativoBundle\Entity\AuxRequisito;
 use Acad\administrativoBundle\Entity\Curso;
@@ -24,6 +25,7 @@ use Acad\administrativoBundle\Entity\Requisito;
 use Acad\administrativoBundle\Entity\SubPeriodo;
 use Acad\administrativoBundle\Form\AdministradorMateriaType;
 use Acad\administrativoBundle\Form\AreaType;
+use Acad\administrativoBundle\Form\AuxMateriaPeriodoType;
 use Acad\administrativoBundle\Form\AuxMesType;
 use Acad\administrativoBundle\Form\AuxRequisitoType;
 use Acad\administrativoBundle\Form\CursoType;
@@ -1820,4 +1822,82 @@ class DefaultController extends Controller {
                 ));
     }
 
+    //METODO: Modifica todas las materias de los subperiodos al mismo tiempo
+    //METODO: modifica los datos de las materia
+    public function materiaperiodoModificartodosAction() {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->getRequest();
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
+        if (!$periodo) {
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo académico no activo'
+            );
+            return $this->redirect($this->generateUrl('admin_portada'));
+        }
+        $materiasperiodo = $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo->getId());
+
+        //obtiene la materia actual
+        //secciones
+        $paginatorSS = $this->get('knp_paginator');
+        $paginationSS = $paginatorSS->paginate(
+                $materiasperiodo, $this->getRequest()->query->get('page', 1), 10
+        );
+
+        $sd = 0;
+
+        if ($materiasperiodo) {
+            $sd = 1;
+        }
+        $auxmateriaperiodo = new AuxMateriaPeriodo();
+
+        foreach ($materiasperiodo as $mat) {
+            $cr = new MateriaPeriodo; //creo un objeto nuevo: asistencia
+            $cr->setId($mat->getId());
+            $cr->setMateria($mat->getMateria());
+            $cr->setSubperiodo($mat->getSubperiodo());
+
+            //lleno el objto auxmateriaperiodo con varios objetos materiaperiodo
+            $auxmateriaperiodo->getMatPerAux()->add($cr);
+        }
+
+        $form = $this->createForm(new AuxMateriaPeriodoType(), $auxmateriaperiodo);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
+
+                foreach ($auxmateriaperiodo->getMatPerAux() as $item) {
+                    $cod = $item->getId();
+                    $mat= $item->getMateria();
+                    $subp = $item->getSubperiodo();                    
+                    $mp = $em->getRepository('academicoBundle:MateriaPeriodo')->find($cod);
+                    $mp->setMateria($mat);
+                    $mp->setSubperiodo($subp);
+                    $em->flush();
+                }
+                $em->getConnection()->commit();
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $redir = $url[0];
+
+                return $this->redirect($redir);
+            }
+
+            $this->get('session')->getFlashBag()->add('Info', 'Materias de subperiodos han sido actualizadas');
+
+            return $this->redirect($this->generateUrl('admin_materiaperiodo_listar_todos'));
+        }
+
+        return $this->render('administrativoBundle:default:listamateriasperiodomodificar.html.twig', array(
+                    'periodo' => $periodo,
+                    'materias' => $paginationSS,
+                    'formmaterias' => $form->createView(),
+                    'sd' => $sd,
+                ));
+    }
+    
 }
