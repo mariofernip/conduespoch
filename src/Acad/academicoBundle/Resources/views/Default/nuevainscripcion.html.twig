@@ -9,16 +9,32 @@
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
 </section>
-<h1>{{ block ('title')}}</h1>
-
-<strong>DATOS DEL ESTUDIANTE</strong><br><br>
-<strong>Cédula:</strong>{{estudiante.cedula}}<br>
-<strong>Nombres:</strong>{{estudiante.nombre}}<br>
-<strong>Apellidos:</strong>{{estudiante.apellido}}<br><br>
+<div style="text-align: center" >
+    <strong style="color: #0063DC">REGISTRO NUEVA INSCRIPCIÓN</strong>
+</div>
+<br>
+<table class="display" id="itsthetable" style="width: 330px" align="left">
+    <thead>
+        <th colspan="2">DATOS DEL ESTUDIANTE</th>   
+    </thead>
+    <tbody>
+        <tr>
+          <td style="width: 250px"><strong>Cédula:&nbsp;&nbsp;</strong>{{estudiante.cedula}}</td>
+          <td  ROWSPAN=3 ALIGN="CENTER" style="vertical-align:middle; width: 80px; height: 80px"><img src="{{ asset('uploads/documents/'~ estudiante.path) }}" width="80" height="80" border="0" alt="{{estudiante.nombre}}{{estudiante.apellido}}"></td>
+        </tr>
+        <tr>
+            <td  class="odd"><strong>Nombre:&nbsp;&nbsp;</strong>{{estudiante.nombre}}</td>
+        </tr>
+        <tr>
+          <td ><strong>Apellido:&nbsp;&nbsp;</strong>{{estudiante.apellido}}</td>
+        </tr>
+    </tbody>
+</table>
+<br><br><br><br><br><br>
 {% if  iactiva %}
 <form action="{{ path('estudiante_registro_p', {'cedula': estudiante.cedula})}}" method="post" {{
         form_enctype(formulario) }} >
-          
+          <br>
           {{form_row(formulario.Inscribir)}}
           {{form_rest(formulario)}}
 </form>
@@ -34,4 +50,9 @@
 
 {% block aside %}
     {{ parent()}}
+    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}
+{% block stylesheets %}
+      {{ parent()}}                 
+        {% include 'academicoBundle:Default:tablecss.html.twig'%}
+{% endblock %}

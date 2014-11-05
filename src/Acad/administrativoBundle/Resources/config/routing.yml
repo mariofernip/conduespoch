@@ -63,7 +63,7 @@ admin_requisito_modificar:
     defaults: { _controller: administrativoBundle:Default:requisitomodicar}                   
     
 admin_requisito_modificar_estados:
-    pattern:  /admin/requisito/cambiar/estados
+    pattern:  /admin/requisito/modificar-todos/lista
     defaults: { _controller: administrativoBundle:Default:requisitomodicarestados}                           
     
 area_ingresar:

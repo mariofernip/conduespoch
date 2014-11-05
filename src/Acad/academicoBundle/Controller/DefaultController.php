@@ -208,8 +208,9 @@ class DefaultController extends Controller {
                 if ($numreqxest == $numreqxper) {
                     $inscripcion = $em->getRepository('academicoBundle:Inscripcion')->find($codinsc);
                     $inscripcion->setEstado(1);
-                    $em->flush();
+                    $em->flush();                    
                     $this->get('session')->getFlashBag()->add('Info', 'Estudiante apto para matricularse');
+                    $this->get('session')->getFlashBag()->add('Info', $estudiante);
                 } else {
                     $inscripcion = $em->getRepository('academicoBundle:Inscripcion')->find($codinsc);
                     $inscripcion->setEstado(0);
@@ -282,9 +283,11 @@ class DefaultController extends Controller {
                 if ($est2) {
                     $inscripcion = $em->getRepository('academicoBundle:CumpleRequisito')->getEstadoInscripcionxEstudiante($cedula, $periodo->getid());
                     if ($inscripcion) {
-                        $this->get('session')->getFlashBag()->add('Info', 'No cumple los requisitos');
+                        $this->get('session')->getFlashBag()->add('Info', $est);
+                        $this->get('session')->getFlashBag()->add('Info', 'No cumple aún todos los requisitos');
                         return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $cedula)));
                     } else {
+                        $this->get('session')->getFlashBag()->add('Info', $est);
                         $this->get('session')->getFlashBag()->add('Info', 'Estudiante apto para matricularse');
 
                         return $this->redirect($this->generateUrl('estudiante_busqueda'));
@@ -543,6 +546,7 @@ class DefaultController extends Controller {
                 }
                 $estm = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
                 if ($estm != null) {
+                    $this->get('session')->getFlashBag()->add('Info', $estudiante);
                     $this->get('session')->getFlashBag()->add('Info', 'Estudiante ya esta matriculado');
                     return $this->redirect($this->generateUrl('estudiante_buscar'));
                 }

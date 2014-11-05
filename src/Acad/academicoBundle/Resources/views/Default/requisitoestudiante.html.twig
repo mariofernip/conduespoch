@@ -8,22 +8,22 @@
 {% block article %}
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
-</section>
-<p style="color: #0035C7; text-align: center"><strong>REQUISITOS DEL ESTUDIANTE</strong></p>
-<table class="display" id="itsthetable" style="width: 330px" align="left">
-    <thead>
+    </section>
+    <p style="color: #0035C7; text-align: center"><strong>REQUISITOS DEL ESTUDIANTE</strong></p>
+    <table class="display" id="itsthetable" style="width: 330px" align="left">
+        <thead>
         <th colspan="2">DATOS DEL ESTUDIANTE</th>   
     </thead>
     <tbody>
         <tr>
-          <td style="width: 250px"><strong>Cédula:&nbsp;&nbsp;</strong>{{estudiante.cedula}}</td>
-          <td  ROWSPAN=3 ALIGN="CENTER" style="vertical-align:middle; width: 80px; height: 80px"><img src="{{ asset('uploads/documents/'~ estudiante.path) }}" width="80" height="80" border="0" alt="{{estudiante.nombre}}{{estudiante.apellido}}"></td>
+            <td style="width: 250px"><strong>Cédula:&nbsp;&nbsp;</strong>{{estudiante.cedula}}</td>
+            <td  ROWSPAN=3 ALIGN="CENTER" style="vertical-align:middle; width: 80px; height: 80px"><img src="{{ asset('uploads/documents/'~ estudiante.path) }}" width="80" height="80" border="0" alt="{{estudiante.nombre}}{{estudiante.apellido}}"></td>
         </tr>
         <tr>
             <td  class="odd"><strong>Nombre:&nbsp;&nbsp;</strong>{{estudiante.nombre}}</td>
         </tr>
         <tr>
-          <td ><strong>Apellido:&nbsp;&nbsp;</strong>{{estudiante.apellido}}</td>
+            <td ><strong>Apellido:&nbsp;&nbsp;</strong>{{estudiante.apellido}}</td>
         </tr>
     </tbody>
 </table>
@@ -32,22 +32,30 @@
 <form action="{{ path('estudiante_requisito',{'cedula': estudiante.cedula}) }}" method="post" {{
         form_enctype(form) }} >
     {{ form_start(form) }}
-    
-    
-    <br>
-    <p style="color: #0035C7; text-align: left"><strong>REQUISITOS:</strong>&nbsp;&nbsp;estado / nombre</p>
-    
-    <ul>
-        {# iterate over each existing tag and render its only field: name #}
-        {% for req in form.reqest %}
-            <li>{{ form_widget(req.estado) }}{{ form_widget(req.requisito, { 'attr': {'disabled' : 'true' } }) }}</li>
-        {% endfor %}
-    </ul>
 
-    
-    <input type="submit" value="guardar" class="boton" >
+
+          <br>
+          <p style="color: #0035C7; text-align: center"><strong>REQUISITOS:</strong></p>
+
+          <table style="width: 600px">
+              <thead>
+              <th>ESTADO</th>
+              <th>NOMBRE DEL REQUISITO</th>
+              </thead>
+              <tbody>
+
+        {% for req in form.reqest %}
+              <tr>
+                  <td style="text-align: center; vertical-align: middle; width: 30px" > {{ form_widget(req.estado) }}</td><td style="text-align: left; vertical-align: middle; width: 500px">{{ form_widget(req.requisito, { 'attr': {'disabled' : 'true' } }) }}</td>
+              </tr>
+        {% endfor %}
+              </tbody>
+                  </table>
+
+
+              <input type="submit" value="guardar" class="boton" >
     {{ form_end(form) }}
-    </form>
+              </form>
 
 
 
@@ -55,7 +63,7 @@
 
 {% block aside %}
     {{ parent()}}
-    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
+              <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
 {% endblock%}
 {% block stylesheets %}
       {{ parent()}}                 
