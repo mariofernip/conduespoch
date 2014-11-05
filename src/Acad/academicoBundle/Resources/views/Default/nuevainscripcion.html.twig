@@ -41,9 +41,12 @@
 {% endif%}
 
 {% if not iactiva %}
+<br>
 <h1>EL PERIODO DE INSCRIPCIONES HA VENCIDO</h1>
-<h1>Para mayor información comuicarse con el administrador del sistema</h1>
-<a href="{{path('_portada')}}">regresar</a>
+<h1>Para mayor información comunicarse con el administrador del sistema</h1>
+{%set secretaria='secretaria'%}
+<a href="{{path('portada', {'role':secretaria})}}">Atrás</a>
+
 {% endif%}
 
 {% endblock%}

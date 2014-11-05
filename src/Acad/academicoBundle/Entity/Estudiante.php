@@ -26,11 +26,11 @@ class Estudiante {
    protected $id;
    
    /** @ORM\Column(type="integer", nullable=false, unique=true) 
-    * @Assert\NotBlank(message="Por favor ingrese el número de cédula")
+    * @Assert\NotBlank(message="Por favor ingrese el número de cédula")    
     */    
    protected $cedula;
    
-   /** @ORM\Column(type="string", length=64, nullable=false) 
+   /** @ORM\Column(type="string", length=64, nullable=false)     
     * @Assert\NotBlank(message="Por favor ingrese un nombre")
     */    
    protected $nombre;

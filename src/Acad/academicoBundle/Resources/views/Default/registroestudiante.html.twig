@@ -9,18 +9,18 @@
 {% block article %}
 <section id="menu_secre">
     {% include 'academicoBundle:Default:menu_secretaria.html.twig'%}
-</section>
-<p style="color: #0035C7; text-align: center"><strong>REGISTRO DE UN NUEVO ESTUDIANTE</strong></p>
-<li style="color: #0066ff">Los campos con fondo de de <label style="color: red">color</label> son obligatorios</li>
-<li style="color: #0066ff">Luego del registro deberá seleccionar los requisitos  </li>
-<br>
+    </section>
+    <p style="color: #0035C7; text-align: center"><strong>REGISTRO DE UN NUEVO ESTUDIANTE</strong></p>
+    <li style="color: #0066ff">Los campos con fondo de de <label style="color: red">color</label> son obligatorios</li>
+    <li style="color: #0066ff">Luego del registro deberá seleccionar los requisitos  </li>
+    <br>
 {% if  iactiva %}
 
-<form action="{{ path('estudiante_registro')}}" method="post" {{
+    <form action="{{ path('estudiante_registro')}}" method="post" {{
         form_enctype(formulario) }}>
         {{ form_errors(formulario) }}
-          <fieldset>
-                  {{form_label(formulario.cedula,'Número de cédula: ')}}{{form_errors(formulario.cedula)}}{{form_widget(formulario.cedula, { 'attr': {'autocomplete' : 'off' } }) }}
+              <fieldset>
+                  {{form_label(formulario.cedula,'Número de cédula: ')}}{{form_errors(formulario.cedula)}}{{form_widget(formulario.cedula, { 'attr': {'autocomplete' : 'off' , 'onchange' : "validarcedula()" } }) }}
                   {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}{{form_errors(formulario.nombre)}}
                   {{form_row(formulario.apellido, { 'attr': {'autocomplete' : 'off' } }) }}{{form_errors(formulario.apellido)}}
                   {{form_label(formulario.telefonofijo,'Teléfono fijo')}}{{form_widget(formulario.telefonofijo, { 'attr': {'autocomplete' : 'off' } }) }}
@@ -33,17 +33,19 @@
                   {{form_row(formulario.ocupacion, { 'attr': {'autocomplete' : 'off' } }) }}
                   {{form_label(formulario.lugarnacimiento,'Lugar de nacimiento')}}{{form_widget(formulario.lugarnacimiento, { 'attr': {'autocomplete' : 'off' } }) }}
 
-              
-              </fieldset>   
+
+                  </fieldset>   
          {{form_rest(formulario)}}                   
-          <input class="boton" type="submit" value="Guardar" />
-          </form>
+                  <input class="boton" type="submit" value="Guardar" />
+              </form>
 
 {% endif %}
 {% if not iactiva %}
-<h1>EL PERIODO DE INSCRIPCIONES HA VENCIDO</h1>
-<h1>Para mayor información comuicarse con el administrador del sistema</h1>
-<a href="{{path('_portada')}}">regresar</a>
+              <h1>EL PERIODO DE INSCRIPCIONES HA VENCIDO</h1>
+              <br>
+              <h1>Para mayor información comunicarse con el administrador del sistema</h1>
+{%set secretaria='secretaria'%}
+              <a href="{{path('portada', {'role':secretaria})}}">Atrás</a>
 {% endif%}
 
 
@@ -52,5 +54,39 @@
 
 {% block aside %}
     {{ parent()}}
-    <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
+              <a title="Cierra la sesión actual" href="{{ path('usuario_logout') }}"><strong>Cerrar sesión</strong></a>
+{% endblock%}
+{% block javascripts %}
+{{ parent() }}
+
+              <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript"></script>
+              <script>
+              function validarcedula()
+              {
+              var i;
+              var cedula;
+              var acumulado;
+              cedula=acad_academicobundle_estudiante_cedula.value;
+              var instancia;
+              acumulado=0;
+              for (i=1;i<=9;i++)
+              {
+              if (i%2!=0)
+              {
+              instancia=cedula.substring(i-1,i)*2;
+              if (instancia>9) instancia-=9;
+              }
+              else instancia=cedula.substring(i-1,i);
+              acumulado+=parseInt(instancia);
+              }
+              while (acumulado>0)
+              acumulado-=10;
+              if (cedula.substring(9,10)!=(acumulado*-1))
+              {
+              alert("Cedula no valida!!");
+              document.formacedula.textocedula.setfocus();
+              }
+              }
+                  </script>
+
 {% endblock%}

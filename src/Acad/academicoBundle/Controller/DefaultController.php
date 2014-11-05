@@ -136,7 +136,7 @@ class DefaultController extends Controller {
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         return $this->render('academicoBundle:Default:registroestudiante.html.twig', array(
                     'periodo' => $periodo,
-                    'niveles'=>$niveles,
+                    'niveles' => $niveles,
                     'formulario' => $formulario->createView())
         );
     }
@@ -208,7 +208,7 @@ class DefaultController extends Controller {
                 if ($numreqxest == $numreqxper) {
                     $inscripcion = $em->getRepository('academicoBundle:Inscripcion')->find($codinsc);
                     $inscripcion->setEstado(1);
-                    $em->flush();                    
+                    $em->flush();
                     $this->get('session')->getFlashBag()->add('Info', 'Estudiante apto para matricularse');
                     $this->get('session')->getFlashBag()->add('Info', $estudiante);
                 } else {
@@ -225,7 +225,7 @@ class DefaultController extends Controller {
                 $redir = $url[0];
 
                 return $this->redirect($redir);
-                }
+            }
 
             $usuario = $this->get('security.context')->getToken()->getUser();
             $rol = strtolower($usuario->getRol());
@@ -237,7 +237,7 @@ class DefaultController extends Controller {
                     'estudiante' => $estudiante,
                     'requisitos' => $cumplerequisito,
                     'periodo' => $periodo,
-                    'niveles'=>$niveles,
+                    'niveles' => $niveles,
                     'form' => $form->createView()
                 ));
     }
@@ -287,8 +287,18 @@ class DefaultController extends Controller {
                         $this->get('session')->getFlashBag()->add('Info', 'No cumple aún todos los requisitos');
                         return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $cedula)));
                     } else {
-                        $this->get('session')->getFlashBag()->add('Info', $est);
-                        $this->get('session')->getFlashBag()->add('Info', 'Estudiante apto para matricularse');
+                        $est3 = $em->getRepository('academicoBundle:Matricula')->findOneBy(array(
+                            'periodo' => $periodo,
+                            'estudiante' => $est
+                                ));
+                        if ($est3) {
+                            $this->get('session')->getFlashBag()->add('Info', $est);
+                            $this->get('session')->getFlashBag()->add('Info', 'Estudiante ya está matriculado');
+                        } else {
+                            $this->get('session')->getFlashBag()->add('Info', $est);
+                            $this->get('session')->getFlashBag()->add('Info', 'Estudiante apto para matricularse');
+                        }
+
 
                         return $this->redirect($this->generateUrl('estudiante_busqueda'));
                     }
@@ -382,7 +392,7 @@ class DefaultController extends Controller {
                     'requisito' => $req,
                     'periodo' => $periodo,
                     'cedulaest' => $cedula,
-                    'niveles'=>$niveles,
+                    'niveles' => $niveles,
                     'formulario' => $formulario->createView()
                 ));
     }
@@ -402,20 +412,20 @@ class DefaultController extends Controller {
 //            $rol = strtolower($usuario->getRol());
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-         $mat = $em->getRepository('academicoBundle:Matricula')->getMaterias();
-        
+        $mat = $em->getRepository('academicoBundle:Matricula')->getMaterias();
+
         if (!$mat) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-        
+
         $matper = $em->getRepository('academicoBundle:Matricula')->getMateriaPeriodoActual();
-        
+
         if (!$matper) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar en subperiodos');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-        
+
         $dictadomateria = new Dictadomateria();
 
         $formulario = $this->createForm(new DictadomateriaType(), $dictadomateria);
@@ -511,48 +521,58 @@ class DefaultController extends Controller {
             $est = null;
 
             if ($estudiante != null) {
-                $est = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatricula($estudiante->getId());
+                $esti = $em->getRepository('academicoBundle:Inscripcion')->findOneBy(array(
+                    'periodo' => $periodo,
+                    'estudiante' => $estudiante
+                        ));
 
-                if ($est) {
+                if ($esti) {
+                    $est = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatricula($estudiante->getId());
 
-                    $repository = $this->getDoctrine()->getRepository('academicoBundle:CumpleRequisito');
-                    $qb = $repository->createQueryBuilder('p');
-                    $qb->select('count(p.id)');
-                    $qb->where('p.estado = 1 and p.inscripcion = :id_inscripcion');
-                    $qb->setParameter('id_inscripcion', $est->getId());
-                    $count = $qb->getQuery()->getSingleScalarResult();
+                    if ($est) {
 
-                    $repository2 = $this->getDoctrine()->getRepository('administrativoBundle:Requisito');
+                        $repository = $this->getDoctrine()->getRepository('academicoBundle:CumpleRequisito');
+                        $qb = $repository->createQueryBuilder('p');
+                        $qb->select('count(p.id)');
+                        $qb->where('p.estado = 1 and p.inscripcion = :id_inscripcion');
+                        $qb->setParameter('id_inscripcion', $est->getId());
+                        $count = $qb->getQuery()->getSingleScalarResult();
 
-                    $qb2 = $repository2->createQueryBuilder('r');
-                    $qb2->select('count(r.id)');
-                    $qb2->where('r.estado = 1');
-                    $count2 = $qb2->getQuery()->getSingleScalarResult();
+                        $repository2 = $this->getDoctrine()->getRepository('administrativoBundle:Requisito');
 
-                    $est2 = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
+                        $qb2 = $repository2->createQueryBuilder('r');
+                        $qb2->select('count(r.id)');
+                        $qb2->where('r.estado = 1');
+                        $count2 = $qb2->getQuery()->getSingleScalarResult();
+
+                        $est2 = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
 
 
-                    if (($count == $count2) and ($est2 == null)) {
+                        if (($count == $count2) and ($est2 == null)) {
+                            return $this->redirect($this->generateUrl('estudiante_matricula', array('cedula' => $estudiante->getCedula())));
+                        }
+                        if (($count == 0) or ($count2 == 0)) {
+                            $this->get('session')->getFlashBag()->add('Info', 'Estudiante no cumple todos los requisitos');
+                            return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $ci)));
+                        }
+                        if (($count != $count2)) {
+                            $this->get('session')->getFlashBag()->add('Info', 'Estudiante no cumple todos los requisitos');
+                            return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $ci)));
+                        }
+                    }
+                    $estm = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
+                    if ($estm != null) {
+                        $this->get('session')->getFlashBag()->add('Info', $estudiante);
+                        $this->get('session')->getFlashBag()->add('Info', 'Estudiante ya esta matriculado');
+                        return $this->redirect($this->generateUrl('estudiante_buscar'));
+                    }
+                    $estma = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculadoA($estudiante->getId());
+                    if ($estma != null) {
                         return $this->redirect($this->generateUrl('estudiante_matricula', array('cedula' => $estudiante->getCedula())));
                     }
-                    if (($count == 0) or ($count2 == 0)) {
-                        $this->get('session')->getFlashBag()->add('Info', 'Estudiante no cumple todos los requisitos');
-                        return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $ci)));
-                    }
-                    if (($count != $count2)) {
-                        $this->get('session')->getFlashBag()->add('Info', 'Estudiante no cumple todos los requisitos');
-                        return $this->redirect($this->generateUrl('estudiante_requisito', array('cedula' => $ci)));
-                    }
-                }
-                $estm = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculado($estudiante->getId());
-                if ($estm != null) {
-                    $this->get('session')->getFlashBag()->add('Info', $estudiante);
-                    $this->get('session')->getFlashBag()->add('Info', 'Estudiante ya esta matriculado');
+                } else {
+                    $this->get('session')->getFlashBag()->add('Info', 'Estudiante no está inscrito');
                     return $this->redirect($this->generateUrl('estudiante_buscar'));
-                }
-                $estma = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMatriculadoA($estudiante->getId());
-                if ($estma != null) {
-                    return $this->redirect($this->generateUrl('estudiante_matricula', array('cedula' => $estudiante->getCedula())));
                 }
             } else {
                 $this->get('session')->getFlashBag()->add('Info', 'Estudiante no encontrado');
@@ -568,7 +588,7 @@ class DefaultController extends Controller {
 
         $peticion = $this->getRequest();
         $usuario = $this->get('security.context')->getToken()->getUser();
-        
+
         $rol = strtolower($usuario->getRol());
         $em = $this->getDoctrine()->getManager();
         $matricula = new Matricula();
@@ -576,37 +596,37 @@ class DefaultController extends Controller {
         $periodo = $em->getRepository('administrativoBundle:Periodo')->findOneBy(array('estado' => 1));
         $mat = $em->getRepository('administrativoBundle:Materia')->findBy(array('estado' => 1));
         //$matper = $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodo($periodo);
-        $matper = $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodounoytres($periodo);        
+        $matper = $em->getRepository('administrativoBundle:Periodo')->getMateriasSubperiodounoytres($periodo);
         $subperiodo = $em->getRepository('administrativoBundle:Periodo')->getnumeroMateriasSubperiodo($periodo);
         $subperiodounoytres = $em->getRepository('administrativoBundle:Periodo')->getnumeroMateriasSubperiodounoytres($periodo);
-        
-       //valida que los subperiodos 1 y 3 tengas materias asignadas
+
+        //valida que los subperiodos 1 y 3 tengas materias asignadas
         //para proceder luego a matricular estudiantes
-        
+
         if (!$matper) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! Los subperiodos cuatrimestre y bimestre no poseen materias asignadas, contacte al Administrador del Sistema');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-        
-        
+
+
         if (!$mat) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No existe materias a cargar');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
 
-        if ($subperiodo < 2 or $subperiodo >2) {
-            
-                    $this->get('session')->getFlashBag()->add('Info', 'ADVERTENCIA!!! Contacte al administrador Sub Periodos no corresponden');
-                    return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
-                }
-                
-           if ($subperiodounoytres < 2 or $subperiodounoytres >2) {
-           
-                           
-                    $this->get('session')->getFlashBag()->add('Info', 'ADVERTENCIA!!! Contacte al administrador Sub Periodos no corresponden');
-                    return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
-                }     
-        
+        if ($subperiodo < 2 or $subperiodo > 2) {
+
+            $this->get('session')->getFlashBag()->add('Info', 'ADVERTENCIA!!! Contacte al administrador Sub Periodos no corresponden');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
+        if ($subperiodounoytres < 2 or $subperiodounoytres > 2) {
+
+
+            $this->get('session')->getFlashBag()->add('Info', 'ADVERTENCIA!!! Contacte al administrador Sub Periodos no corresponden');
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+
         $estudiante = $em->getRepository('academicoBundle:Estudiante')->findOneBy(array(
             'cedula' => $cedula
                 ));
@@ -637,11 +657,11 @@ class DefaultController extends Controller {
         $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'periodo' => $periodo->getId()
                 ));
-        
+
         //lista de evaluaciones en el cuatrimestre
         $listamesevaluacioncuatrimestre = $em->getRepository('administrativoBundle:Periodo')->getlistaEvSubpcuatrimestre($periodo->getId());
-        
-        
+
+
         if (!$listamesevaluacion) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No hay meses asignados para este periodo');
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
@@ -694,52 +714,51 @@ class DefaultController extends Controller {
                     $asistencia->setHorasmodulo($matasi1->getMateriaperiodo()->getMateria()->getNumerohoras());
                     $asistencia->setFaltasinjustificadas(0);
                     $asistencia->setFaltasjustificadas(0);
-                    $asistencia->setAtrasos(0);                    
+                    $asistencia->setAtrasos(0);
                     $em->persist($asistencia);
                     $em->flush();
 
                     //CONTROL INGRESO EVALUACIONES PARA CUATRIMESTRE
                     if ($matasi1->getMateriaperiodo()->getSubperiodo()->getTipo() == 1) {
-                        
-                    //LLENAR LA TABLA: EVALUACION
-                    foreach ($listamesevaluacioncuatrimestre as $meseva) {
-                        $evaluacion = new Evaluacion();
-                        $evaluacion->setDescripcion('');
-                        $evaluacion->setMateriaasignada($matasi1);
-                        $evaluacion->setMesevaluacion($meseva);
-                        $evaluacion->setNotatb(0);
-                        $evaluacion->setNotaec(0);
-                        $evaluacion->setNotapp(0);
-                        $evaluacion->setNotapt(0);
-                        $evaluacion->setPromedio(0);
 
-                        $em->persist($evaluacion);
-                        $em->flush();
+                        //LLENAR LA TABLA: EVALUACION
+                        foreach ($listamesevaluacioncuatrimestre as $meseva) {
+                            $evaluacion = new Evaluacion();
+                            $evaluacion->setDescripcion('');
+                            $evaluacion->setMateriaasignada($matasi1);
+                            $evaluacion->setMesevaluacion($meseva);
+                            $evaluacion->setNotatb(0);
+                            $evaluacion->setNotaec(0);
+                            $evaluacion->setNotapp(0);
+                            $evaluacion->setNotapt(0);
+                            $evaluacion->setPromedio(0);
+
+                            $em->persist($evaluacion);
+                            $em->flush();
+                        }
                     }
-                    }
-                    
-                  
-                    
-                   //CONTROL INGRESO EVALUACIONES GENERAL                    
+
+
+
+                    //CONTROL INGRESO EVALUACIONES GENERAL                    
                     if ($matasi1->getMateriaperiodo()->getSubperiodo()->getTipo() == 3) {
-                        
-                    //LLENAR LA TABLA: EVALUACION
-                    foreach ($listamesevaluacion as $meseva) {
-                        $evaluacion = new Evaluacion();
-                        $evaluacion->setDescripcion('');
-                        $evaluacion->setMateriaasignada($matasi1);
-                        $evaluacion->setMesevaluacion($meseva);
-                        $evaluacion->setNotatb(0);
-                        $evaluacion->setNotaec(0);
-                        $evaluacion->setNotapp(0);
-                        $evaluacion->setNotapt(0);
-                        $evaluacion->setPromedio(0);
 
-                        $em->persist($evaluacion);
-                        $em->flush();
+                        //LLENAR LA TABLA: EVALUACION
+                        foreach ($listamesevaluacion as $meseva) {
+                            $evaluacion = new Evaluacion();
+                            $evaluacion->setDescripcion('');
+                            $evaluacion->setMateriaasignada($matasi1);
+                            $evaluacion->setMesevaluacion($meseva);
+                            $evaluacion->setNotatb(0);
+                            $evaluacion->setNotaec(0);
+                            $evaluacion->setNotapp(0);
+                            $evaluacion->setNotapt(0);
+                            $evaluacion->setPromedio(0);
+
+                            $em->persist($evaluacion);
+                            $em->flush();
+                        }
                     }
-                   }
-
                 }
                 $em->getConnection()->commit();
             } catch (\Exception $e) {
@@ -760,15 +779,15 @@ class DefaultController extends Controller {
         }
 
         return $this->render('academicoBundle:Default:estudiantematriculado2.html.twig', array(
-            'periodo' => $periodo, 
-            'niveles'=>$niveles,            
-            'formulario' => $formulario->createView(),
-            'estudiante' => $estudiante));
+                    'periodo' => $periodo,
+                    'niveles' => $niveles,
+                    'formulario' => $formulario->createView(),
+                    'estudiante' => $estudiante));
     }
 
     //METODO PRA lISTAR LOS ESTUDIANTE DEL DOCENTE X MATERIA, NIVEL, SECCION
 
-    public function notasAction($mesid,$niv, $mat) {
+    public function notasAction($mesid, $niv, $mat) {
 
         $peticion = $this->getRequest();
         $em = $this->getDoctrine()->getEntityManager();
@@ -892,7 +911,7 @@ class DefaultController extends Controller {
 
         $em = $this->getDoctrine()->getEntityManager();
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
-        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();        
+        $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         if (!$periodo) {
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
@@ -914,7 +933,7 @@ class DefaultController extends Controller {
 
         return $this->render('academicoBundle:default:listaestudiantesinscritos.html.twig', array(
                     'periodo' => $periodo,
-                    'niveles'=>$niveles,
+                    'niveles' => $niveles,
                     'pagination' => $pagination
                 ));
     }
@@ -948,7 +967,7 @@ class DefaultController extends Controller {
 
         return $this->render('academicoBundle:default:modificarestudiante.html.twig', array(
                     'periodo' => $periodo,
-                    'niveles'=>$niveles,
+                    'niveles' => $niveles,
                     'cedula' => $cedula,
                     'formulario' => $formulario->createView()
                 ));
@@ -1065,7 +1084,7 @@ class DefaultController extends Controller {
         foreach ($secciones as $sec) {
             $cr = new Asistencia(); //creo un objeto nuevo: asistencia
             $cr->setId($sec->getId());
-            $cr->setHorasmodulo($sec->getHorasmodulo());            
+            $cr->setHorasmodulo($sec->getHorasmodulo());
             $cr->setFaltasjustificadas($sec->getFaltasjustificadas());
             $cr->setFaltasinjustificadas($sec->getFaltasinjustificadas());
             $cr->setAtrasos($sec->getAtrasos());
@@ -1130,12 +1149,12 @@ class DefaultController extends Controller {
     public function listamateriasxnivelAction($nivel) {
 
         $em = $this->getDoctrine()->getEntityManager();
-       // $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
+        // $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
         $periodo = $em->getRepository('administrativoBundle:Periodo')->getPeriodoActual();
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         $curso = $em->getRepository('administrativoBundle:Nivel')->find($nivel);
         $listamaterias = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasInspectorSubPeriodo($periodo->getId());
-               
+
         if (!$periodo) {
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
@@ -1203,7 +1222,7 @@ class DefaultController extends Controller {
         }
 
         $dicmat = $em->getRepository('academicoBundle:Estudiante')->getTodosDictadoMateria($periodo->getId());
-        
+
         if (!$dicmat) {
             //mensaje
             $this->get('session')->getFlashBag()->add('Info', 'Advertencia!. No se han asignado materias a los docentes');
@@ -1213,7 +1232,7 @@ class DefaultController extends Controller {
             $rol = strtolower($usuario->getRol());
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-        
+
         //paginacion
         $paginatorDM = $this->get('knp_paginator');
         $paginationDM = $paginatorDM->paginate(
@@ -1312,7 +1331,7 @@ class DefaultController extends Controller {
 
         return $this->render('academicoBundle:default:modificarestudiantematricula.html.twig', array(
                     'periodo' => $periodo,
-                    'niveles'=>$niveles,
+                    'niveles' => $niveles,
                     'mid' => $mid,
                     'formulario' => $formulario->createView(),
                     'matricula' => $matricula
@@ -1500,8 +1519,8 @@ class DefaultController extends Controller {
                     'evaest' => $pagination,
                     'mat' => $mat,
                     'niv' => $niv,
-                    'nivel2'=>$nivel2,
-                    'materia2'=>$materia2,
+                    'nivel2' => $nivel2,
+                    'materia2' => $materia2,
                     'materia' => $materia,
                     'cod' => $cod,
                     'nivel' => $nivel,
@@ -1512,17 +1531,17 @@ class DefaultController extends Controller {
     }
 
     public function sesionportadaAction($niv, $mat) {
-        
+
         $sesion = $this->getRequest()->getSession();
         $em = $this->getDoctrine()->getEntityManager();
         //obtengo el objeto autenticado: en este caso el docente
         $usuario = $this->get('security.context')->getToken()->getUser();
         $nivel = $em->getRepository('administrativoBundle:Nivel')->find($niv);
         $materia = $em->getRepository('administrativoBundle:Materia')->find($mat);
-        $nivel2= $sesion->get('nivel2');
-        $materia2= $sesion->get('materia2');
+        $nivel2 = $sesion->get('nivel2');
+        $materia2 = $sesion->get('materia2');
         //consulto periodo actual
-        
+
         $periodo = $sesion->get('periodo');
 
         $sesion->set('nivel', $nivel);
@@ -1545,7 +1564,7 @@ class DefaultController extends Controller {
                 ));
     }
 
-    public function notasparcialesxmesAction($codmes,$niv, $mat) {
+    public function notasparcialesxmesAction($codmes, $niv, $mat) {
 
         $sesion = $this->getRequest()->getSession();
         $em = $this->getDoctrine()->getEntityManager();
@@ -1553,14 +1572,14 @@ class DefaultController extends Controller {
         $usuario = $this->get('security.context')->getToken()->getUser();
         //variables de sesion activas
         $periodo = $sesion->get('periodo');
-        
+
         $nivel2 = $em->getRepository('administrativoBundle:Nivel')->find($niv);
         $materia2 = $em->getRepository('administrativoBundle:Materia')->find($mat);
         $sesion->set('nivel2', $nivel2);
         $sesion->set('materia2', $materia2);
-        
-        $nivel= $sesion->get('nivel');
-        $materia= $sesion->get('materia');
+
+        $nivel = $sesion->get('nivel');
+        $materia = $sesion->get('materia');
         $sesion->set('materia2', $materia2);
 
         $evaluacion = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($mat, $periodo->getId(), $niv, $codmes);
@@ -1587,8 +1606,8 @@ class DefaultController extends Controller {
                     'nivel2' => $nivel2,
                     'mesevac' => $listamesesEv,
                     'listames' => $mes,
-                    'codmes'=>$codmes,
-                    'cod'=>$cod,               
+                    'codmes' => $codmes,
+                    'cod' => $cod,
                     'mes' => $mesactual,
                     'materiasdoc' => $materiasdocente,
                     'listaeva' => $pagination
@@ -1607,20 +1626,20 @@ class DefaultController extends Controller {
         //'estado' => 1
         //  ));                
         $nivel2 = $em->getRepository('administrativoBundle:Nivel')->find($niv);
-        $codn = 0;        
+        $codn = 0;
         $materia2 = $em->getRepository('administrativoBundle:Materia')->find($mat);
         $cedula = $usuario->getCedula();
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
-                'estado' => true
-                    ));
+            'estado' => true
+                ));
         $mateperi = $em->getRepository('academicoBundle:MateriaPeriodo')->findOneBy(array('materia' => $mat));
-        $matper = new MateriaPeriodo();       
+        $matper = new MateriaPeriodo();
         $matper->setSubperiodo($mateperi->getSubperiodo());
-        
-        $subp1 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 1));       
-        $subp2 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 2));       
-        $subp3 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 3));       
-        
+
+        $subp1 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 1));
+        $subp2 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 2));
+        $subp3 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 3));
+
         if ($matper->getSubperiodo() == $subp1) {
             $mesconteo = 4;
         }
@@ -1630,17 +1649,16 @@ class DefaultController extends Controller {
         if ($matper->getSubperiodo() == $subp3) {
             $mesconteo = 6;
         }
-        
-        $sd = 0;               
-        
+
+        $sd = 0;
+
         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
         $materia = $sesion->get('materia');
         $nivel = $sesion->get('nivel');
         if (!$nivel2 && !$materia2) {
             $codn = 1;
-            
-            $paginationSS=null;
-            
+
+            $paginationSS = null;
         } else {
             $codn = 2;
             $sesion->set('nivel2', $nivel2);
@@ -1679,7 +1697,7 @@ class DefaultController extends Controller {
                     'materia2' => $materia2,
                     'listamaterias' => $materiasdocente,
                     'listames' => $mes,
-                    'codn'=>$codn,
+                    'codn' => $codn,
                     'estudiantes' => $paginationSS,
                     'materia' => $materia,
                     'sd' => $sd,
@@ -1779,10 +1797,10 @@ class DefaultController extends Controller {
         $nivel = $sesion->get('nivel');
         $nivel2 = $sesion->get('nivel2');
         $materia2 = $sesion->get('materia2');
-        
+
         //obtengo cedula del docente autenticado     
         $cedula = $usuario->getCedula();
-        
+
         //obtiene las materias del docente autenticado
         $docente = $em->getRepository('administrativoBundle:Docente')->findOneBy(array('cedula' => $cedula));
         $secciones = $em->getRepository('academicoBundle:Estudiante')->getHorarioDictadoMateria($cedula, $periodo);
@@ -1801,21 +1819,21 @@ class DefaultController extends Controller {
         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
         $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMateriasxNivel($nivel);
         $listahoras = $em->getRepository('administrativoBundle:Periodo')->getTodasHoras();
-        
+
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
                 ));
         return $this->render('academicoBundle:default:verdocentehorario2.html.twig', array(
                     'periodo' => $periodo,
                     'nivel' => $nivel,
-                    'nivel2' => $nivel2,            
+                    'nivel2' => $nivel2,
                     'materia' => $materia,
-                    'materia2' => $materia2,        
+                    'materia2' => $materia2,
                     'horarioclase' => $secciones,
                     'docente' => $docente,
                     'mesevac' => $listamesesEv,
                     'listamaterias' => $listamaterias,
-                    'listahoras' => $listahoras,                   
+                    'listahoras' => $listahoras,
                     'listames' => $mes,
                 ));
     }
@@ -1918,7 +1936,7 @@ class DefaultController extends Controller {
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
-               $url = explode("?", $_SERVER['HTTP_REFERER']);
+                $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
                 return $this->redirect($redir);
@@ -1970,7 +1988,7 @@ class DefaultController extends Controller {
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         return $this->render('academicoBundle:Default:requisito_listatodos.html.twig', array(
                     'periodo' => $periodoA,
-                    'niveles'=>$niveles,
+                    'niveles' => $niveles,
                     'lista' => $listarequisitos,
                 ));
     }
@@ -1999,7 +2017,7 @@ class DefaultController extends Controller {
             if ($formulario->isValid()) {
                 $em->getConnection()->beginTransaction(); // suspend auto-commit
                 try {
-                
+
                     if (null == $docente->getPassword()) {
                         // El docente no cambia su contraseña, utilizar la original
                         $docente->setPassword($passwordOriginal);
@@ -2032,15 +2050,15 @@ class DefaultController extends Controller {
 
                     $this->get('session')->getFlashBag()->add('Info', 'Perfil Docente actualizado correctamente '
                     );
-                       $em->getConnection()->commit();
-                    } catch (\Exception $e) {
-                        $em->getConnection()->rollback();
-                        $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
-                        $url = explode("?", $_SERVER['HTTP_REFERER']);
-                        $redir = $url[0];
+                    $em->getConnection()->commit();
+                } catch (\Exception $e) {
+                    $em->getConnection()->rollback();
+                    $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                    $url = explode("?", $_SERVER['HTTP_REFERER']);
+                    $redir = $url[0];
 
-                        return $this->redirect($redir);
-                    }
+                    return $this->redirect($redir);
+                }
 
                 return $this->redirect($this->generateUrl('portada', array('role' => strtolower($rol))));
             }
@@ -2186,7 +2204,6 @@ class DefaultController extends Controller {
         $periodo = $sesion->get('periodo'); //$em->getRepository('administrativoBundle:Periodo')->findOneBy(array(
         //'estado' => 1
         //  ));
-
         //$materia = $sesion->get('materia');
         $materia2 = $em->getRepository('administrativoBundle:Materia')->find($mat);
         $nivel = $sesion->get('nivel');
@@ -2207,12 +2224,12 @@ class DefaultController extends Controller {
 
         //mes conteo para calculo de promedio
         $mateperi = $em->getRepository('academicoBundle:MateriaPeriodo')->findOneBy(array('materia' => $mat));
-        $matper = new MateriaPeriodo();       
+        $matper = new MateriaPeriodo();
         $matper->setSubperiodo($mateperi->getSubperiodo());
-        
-        $subp1 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 1));       
-        $subp2 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 2));       
-        $subp3 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 3));               
+
+        $subp1 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 1));
+        $subp2 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 2));
+        $subp3 = $em->getRepository('administrativoBundle:SubPeriodo')->findOneBy(array('tipo' => 3));
 
         if ($matper->getSubperiodo() == $subp1) {
             $mesconteo = 4;
@@ -2222,8 +2239,8 @@ class DefaultController extends Controller {
         }
         if ($matper->getSubperiodo() == $subp3) {
             $mesconteo = 1;
-        }                
-        
+        }
+
         //obtiene lista de todos los niveles
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
@@ -2233,8 +2250,7 @@ class DefaultController extends Controller {
         $estudiantesv = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_seccionv($materia2, $nivel);
         $estudiantesn = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexActaGeneral_seccionn($materia2, $nivel);
 
-       // $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
-
+        // $mesconteo = $em->getRepository('academicoBundle:Estudiante')->getMesEvaluacionxPeriodoxActivo($periodo->getId());
         //estudiantes
         $paginatorSS = $this->get('knp_paginator');
         $paginationSS = $paginatorSS->paginate(
@@ -2288,7 +2304,6 @@ class DefaultController extends Controller {
             'estudiantes' => $paginationSS,
             'estudiantesv' => $paginationSSv,
             'estudiantesn' => $paginationSSn,
-            
             'sd' => $sd,
             'sv' => $sv,
             'sn' => $sn,
@@ -2317,15 +2332,15 @@ class DefaultController extends Controller {
         $listaEstSupletorios = $em->getRepository('academicoBundle:Dictadomateria')->getSuspensoEstudiantesxMateriaRPT($mid, $periodo->getId(), $nid);
 
         $format = $this->get('request')->get('_format');
-        $cod=0;
-         if($listaEstSupletorios){
-             $cod=1;
-         }   
+        $cod = 0;
+        if ($listaEstSupletorios) {
+            $cod = 1;
+        }
         $content = $this->render(sprintf('academicoBundle:reportes:docente_notassuspenso.%s.twig', $format), array(
             'periodo' => $periodo,
             'lista' => $listaEstSupletorios,
             'nivel' => $nivel,
-            'cod'=>$cod,
+            'cod' => $cod,
             'materia' => $materia,
             'docente' => $usuario
                 ));
@@ -2336,31 +2351,31 @@ class DefaultController extends Controller {
     /**
      * @Pdf()
      */
-    public function reportenotasparcialesxmesAction($mesid,$nid, $mid) {
+    public function reportenotasparcialesxmesAction($mesid, $nid, $mid) {
         $em = $this->getDoctrine()->getEntityManager();
         $sesion = $this->getRequest()->getSession();
         $usuario = $this->get('security.context')->getToken()->getUser();
-        $meseva=$em->getRepository('administrativoBundle:MesEvaluacion')->findOneBy(array('id'=>$mesid));
+        $meseva = $em->getRepository('administrativoBundle:MesEvaluacion')->findOneBy(array('id' => $mesid));
         $nivel = $em->getRepository('administrativoBundle:Nivel')->find($nid);
         $materia = $em->getRepository('administrativoBundle:Materia')->find($mid);
-                $fecha = $em->getRepository('administrativoBundle:MesEvaluacion')->find($mesid);
+        $fecha = $em->getRepository('administrativoBundle:MesEvaluacion')->find($mesid);
         $meseval = new MesEvaluacion();
-        $meseval->setFiniciomes($fecha->getFiniciomes());        
-        $meseval->setFfinmes($fecha->getFfinmes());        
-                
-         $mese = $meseval->getFiniciomes();
-            $formatter = new \IntlDateFormatter(\Locale::getDefault(), \IntlDateFormatter::NONE, \IntlDateFormatter::NONE);
-            $formatter->setPattern("MMMM");
-            $mesefin = $meseval->getFfinmes();
-            $formatterfin = new \IntlDateFormatter(\Locale::getDefault(), \IntlDateFormatter::NONE, \IntlDateFormatter::NONE);
-            $formatterfin->setPattern("MMMM");   
+        $meseval->setFiniciomes($fecha->getFiniciomes());
+        $meseval->setFfinmes($fecha->getFfinmes());
+
+        $mese = $meseval->getFiniciomes();
+        $formatter = new \IntlDateFormatter(\Locale::getDefault(), \IntlDateFormatter::NONE, \IntlDateFormatter::NONE);
+        $formatter->setPattern("MMMM");
+        $mesefin = $meseval->getFfinmes();
+        $formatterfin = new \IntlDateFormatter(\Locale::getDefault(), \IntlDateFormatter::NONE, \IntlDateFormatter::NONE);
+        $formatterfin->setPattern("MMMM");
 
         $periodo = $sesion->get('periodo');
 
         $listaEstudiantes = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($mid, $periodo->getId(), $nid, $mesid);
-        $cod=0;
-        if($listaEstudiantes){
-            $cod=1;
+        $cod = 0;
+        if ($listaEstudiantes) {
+            $cod = 1;
         }
 
         $format = $this->get('request')->get('_format');
@@ -2369,8 +2384,8 @@ class DefaultController extends Controller {
             'periodo' => $periodo,
             'lista' => $listaEstudiantes,
             'nivel' => $nivel,
-            'meseva'=>$meseva,
-            'cod'=>$cod,
+            'meseva' => $meseva,
+            'cod' => $cod,
             'materia' => $materia,
             'docente' => $usuario,
             'finicio' => $formatter->format($mese),
@@ -2379,10 +2394,8 @@ class DefaultController extends Controller {
 
         return $content;
     }
-    
 
-    
-     /**
+    /**
      * @Pdf()
      */
     public function reporteasistenciaAction($mid, $nid) {
@@ -2401,25 +2414,25 @@ class DefaultController extends Controller {
             $rol = strtolower($usuario->getRol());
             return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
         }
-                
+
         $mat = $em->getRepository('administrativoBundle:Materia')->find($mid);
-        
+
         $secciones = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionesd($mid, $nid);
         $seccionesv = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionesv($mid, $nid);
         $seccionesn = $em->getRepository('academicoBundle:Estudiante')->findEstudiantexMateriaxSeccionesn($mid, $nid);
-        
-        $sd=0;
-        $sv=0;
-        $sn=0;
-        if($secciones){
-             $sd=1;
-         }
-         if($seccionesv){
-             $sv=1;
-         }
-         if($seccionesn){
-             $sn=1;
-         }
+
+        $sd = 0;
+        $sv = 0;
+        $sn = 0;
+        if ($secciones) {
+            $sd = 1;
+        }
+        if ($seccionesv) {
+            $sv = 1;
+        }
+        if ($seccionesn) {
+            $sn = 1;
+        }
         $format = $this->get('request')->get('_format');
 
         $content = $this->render(sprintf('academicoBundle:reportes:actaasistencia.%s.twig', $format), array(
@@ -2433,9 +2446,7 @@ class DefaultController extends Controller {
             'sd' => $sd,
             'sv' => $sv,
             'sn' => $sn,
-
-            
-            ));
+                ));
 
         return $content;
     }
@@ -2458,15 +2469,15 @@ class DefaultController extends Controller {
         }
 
         //cantidad de materias del primer subperiodo
-        $numeromesevalprimerp = $em->getRepository('administrativoBundle:Periodo')->getnumeroMateriasSubperiodouno($periodo->getId()); 
-        
+        $numeromesevalprimerp = $em->getRepository('administrativoBundle:Periodo')->getnumeroMateriasSubperiodouno($periodo->getId());
+
         //obtengo la lista de notas parciales
 //        $listamesevaluacion = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
 //            'periodo' => $periodo->getId()
 //                ));
-        
         //lista devuelve las evaluaciones del bimestre
-        $listamesevaluacionbimestre = $em->getRepository('administrativoBundle:Periodo')->getlistaEvSubpbimestre($periodo->getId());;
+        $listamesevaluacionbimestre = $em->getRepository('administrativoBundle:Periodo')->getlistaEvSubpbimestre($periodo->getId());
+        ;
 
         if (!$listamesevaluacionbimestre) {
             $this->get('session')->getFlashBag()->add('Info', 'Error! No hay meses asignados para este periodo');
@@ -2525,8 +2536,8 @@ class DefaultController extends Controller {
                         $em->persist($asistencia);
                         $em->flush();
 
-                        
-                       
+
+
                         //LLENAR LA TABLA: EVALUACION
                         foreach ($listamesevaluacionbimestre as $meseva) {
                             $evaluacion = new Evaluacion();
@@ -2542,7 +2553,6 @@ class DefaultController extends Controller {
                             $em->persist($evaluacion);
                             $em->flush();
                         }
-                        
                     }
                     $em->getConnection()->commit();
                 } catch (\Exception $e) {
@@ -2561,5 +2571,5 @@ class DefaultController extends Controller {
 
         return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
     }
-    
+
 }
