@@ -18,6 +18,7 @@ use Acad\academicoBundle\Entity\MateriaPeriodo;
 use Acad\administrativoBundle\Entity\MesEvaluacion;
 use Acad\academicoBundle\Entity\RequisitoEstudiante;
 use Acad\academicoBundle\Entity\SuspensoEstudiante;
+use Acad\administrativoBundle\Entity\Nota;
 use Acad\academicoBundle\Form\AuxExamenGradoType;
 use Acad\academicoBundle\Form\DictadomateriaType;
 use Acad\academicoBundle\Form\EstudianteAsistenciaType;
@@ -360,7 +361,7 @@ class DefaultController extends Controller {
                 $em->getConnection()->commit();
             } catch (\Exception $e) {
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red, los valores que esta ingresando o el rango de fechas de inscripción ');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
@@ -1559,6 +1560,10 @@ class DefaultController extends Controller {
         $sesion->set('materia2', $materia2);
 
         $evaluacion = $em->getRepository('academicoBundle:Dictadomateria')->getEvaluacionEstudiantesxMateria($mat, $periodo->getId(), $niv, $codmes);
+        $cod = 0;
+        if ($evaluacion) {
+            $cod = 1;
+        }
         $listamesesEv = $em->getRepository('administrativoBundle:MesEvaluacion')->findAll();
         $mes = $em->getRepository('administrativoBundle:MesEvaluacion')->findBy(array(
             'estado' => true
@@ -1568,7 +1573,7 @@ class DefaultController extends Controller {
         $pagination = $paginator->paginate(
                 $evaluacion, $this->getRequest()->query->get('page', 1), 10
         );
-        $mesactual = $em->getRepository('administrativoBundle:Nota')->find($codmes);
+        $mesactual = $em->getRepository('administrativoBundle:MesEvaluacion')->find($codmes);
         $materiasdocente = $em->getRepository('academicoBundle:Dictadomateria')->getMateriasDocente($usuario->getCedula(), $periodo->getId());
         return $this->render('academicoBundle:default:notasparcialesxmes.html.twig', array(
                     'periodo' => $periodo,
@@ -1579,6 +1584,7 @@ class DefaultController extends Controller {
                     'mesevac' => $listamesesEv,
                     'listames' => $mes,
                     'codmes'=>$codmes,
+                    'cod'=>$cod,               
                     'mes' => $mesactual,
                     'materiasdoc' => $materiasdocente,
                     'listaeva' => $pagination
@@ -2330,10 +2336,7 @@ class DefaultController extends Controller {
         $em = $this->getDoctrine()->getEntityManager();
         $sesion = $this->getRequest()->getSession();
         $usuario = $this->get('security.context')->getToken()->getUser();
-        $nota=$em->getRepository('administrativoBundle:Nota')->find($mesid);
-        $meseva=$em->getRepository('administrativoBundle:MesEvaluacion')->findOneBy(array(
-            'nota'=>$nota
-        ));
+        $meseva=$em->getRepository('administrativoBundle:MesEvaluacion')->findOneBy(array('id'=>$mesid));
         $nivel = $em->getRepository('administrativoBundle:Nivel')->find($nid);
         $materia = $em->getRepository('administrativoBundle:Materia')->find($mid);
                 $fecha = $em->getRepository('administrativoBundle:MesEvaluacion')->find($mesid);
@@ -2344,7 +2347,7 @@ class DefaultController extends Controller {
          $mese = $meseval->getFiniciomes();
             $formatter = new \IntlDateFormatter(\Locale::getDefault(), \IntlDateFormatter::NONE, \IntlDateFormatter::NONE);
             $formatter->setPattern("MMMM");
-         $mesefin = $meseval->getFfinmes();
+            $mesefin = $meseval->getFfinmes();
             $formatterfin = new \IntlDateFormatter(\Locale::getDefault(), \IntlDateFormatter::NONE, \IntlDateFormatter::NONE);
             $formatterfin->setPattern("MMMM");   
 

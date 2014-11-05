@@ -7,6 +7,7 @@
     {% include 'academicoBundle:Default:menu_docente.html.twig'%}
 </section>    
 <div style="text-align: center ; color: #0035C7"><strong>CONSULTA DE NOTAS PARCIALES</strong></div>
+{% if cod==1%}
 <div style="text-align: right"><a  target="_blank" href="{{path('docente_reporte_notas_parciales_x_mes',{'mesid': mes.id, 'nid': nivel.id, 'mid':materia.id})}}" title="Imprimir reporte" ><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></div>
 <div id="dt_example">
     <div id="demo">
@@ -52,6 +53,9 @@
                      </div>
                </div>
     </div>
+ {%else%}
+        <h1>No hay estudiantes</h1>
+    {% endif%}
 <br><br>
 {% endblock%}
 {% block aside%}

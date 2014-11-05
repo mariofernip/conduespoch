@@ -1,7 +1,7 @@
 {% extends '::frontend.html.twig' %}
 
 {% block id 'usuario' %}
-{% block title %}Regístro de usuarios{% endblock %}
+{% block title %}Registro de usuarios{% endblock %}
 
 {% block article %}
 
@@ -19,7 +19,8 @@
         {{form_rest(formulario)}}        
         <input class="boton" type="submit" value="Registrar" />
     </form>
-    
+{%set admin='admin'%}
+<a href="{{path('portada',{'role':admin})}}">Atrás</a>
 {% endblock %}
     
 {% block aside %}

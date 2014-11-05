@@ -114,8 +114,11 @@ class DefaultController extends Controller {
 
             $this->get('session')->getFlashBag()->add('info', '¡Enhorabuena! Usuario registrado'
             );
-
-            return $this->redirect($this->generateUrl('_portada'));
+            $usuario = $this->get('security.context')->getToken()->getUser();   
+            $role = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $role)));
+            
+            
         }
 
         $periodo = '';
@@ -197,6 +200,11 @@ class DefaultController extends Controller {
             $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
             $listamaterias = $em->getRepository('academicoBundle:Estudiante')->getMaterias();
             if ($role == 'secretaria') {
+                if (!$periodo) {
+                    $this->get('session')->getFlashBag()->add('Info', 'URGENTE!!! Contacte al administrador no existe Periodo actual');
+                    return $this->render('academicoBundle:Default:portada_docente_sinmaterias.html.twig', array(
+                                'periodo' => ' ',));
+                }
                 $sp2= $em->getRepository('administrativoBundle:SubPeriodo')->findBy(array(
                     'periodo'=>$periodo,
                     'tipo'=>'2',

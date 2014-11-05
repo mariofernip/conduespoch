@@ -4,7 +4,7 @@ imports:
 
 framework:
     #esi:             ~
-    translator:      { fallback: %locale% }
+    translator:      { fallback: es_Es }
     secret:          %secret%
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -15,7 +15,7 @@ framework:
     templating:
         engines: ['twig']
         #assets_version: SomeVersionScheme
-    default_locale:  "%locale%"
+    default_locale:  es_Es
     trusted_proxies: ~
     session:         ~
     fragments:       ~
@@ -80,7 +80,7 @@ knp_paginator:
         
 
 services:
-    
+            
     twig.extension.intl:
         class: Twig_Extensions_Extension_Intl
         tags:
@@ -89,7 +89,9 @@ services:
     twig.extension.text:
         class: Twig_Extensions_Extension_Text
         tags:
-            - { name: twig.extension }        
+            - { name: twig.extension }   
+            
+            
 
 #reportes         
 ps_pdf:
