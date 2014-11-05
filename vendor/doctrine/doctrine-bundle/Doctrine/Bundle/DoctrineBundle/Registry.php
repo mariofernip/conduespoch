@@ -68,7 +68,8 @@ class Registry extends ManagerRegistry implements RegistryInterface
      */
     public function getEntityManager($name = null)
     {
-        trigger_error('getEntityManager is deprecated since Symfony 2.1. Use getManager instead', E_USER_DEPRECATED);
+        error_reporting(E_ALL ^ E_DEPRECATED);
+        //trigger_error('getEntityManager is deprecated since Symfony 2.1. Use getManager instead', E_USER_DEPRECATED);
 
         return $this->getManager($name);
     }
