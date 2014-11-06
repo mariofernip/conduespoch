@@ -109,11 +109,16 @@ secretaria_examengrado_registro_notas:
 secretaria_requisito_listar_todos:    
     pattern:  /secretaria/consulta/requisitos/lista
     defaults: { _controller: academicoBundle:default:listatodosrequisitos }            
-    
+
+secretaria_acta_general_estudiantes_cursos:
+    pattern:  /secretaria/acta/general/reporte/{codniv}
+    defaults: { _controller: academicoBundle:default:secretariaactageneralcalificaciones, _format: pdf}   
+    requirements:
+        _format: html|pdf
+  
 modificar_perfil:
     pattern:  /{rol}/modificar/perfil
-    defaults: { _controller: academicoBundle:default:modificarperfildocente}    
-    
+    defaults: { _controller: academicoBundle:default:modificarperfildocente}        
     
 acta_general_calificaciones_reporte:
     pattern:  /docente/acta/general/reporte/{mat}

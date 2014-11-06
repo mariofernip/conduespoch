@@ -2572,4 +2572,68 @@ class DefaultController extends Controller {
         return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
     }
 
+    /**
+     * @Pdf()
+     */
+    public function secretariaactageneralcalificacionesAction($codniv){
+        
+        $em = $this->getDoctrine()->getManager();
+
+        //obtengo el objeto autenticado: en este caso el docente
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        //consulto periodo actual
+        $sesion = $this->getRequest()->getSession();
+        $periodo = $sesion->get('periodo'); 
+        $nivel = $em->getRepository('administrativoBundle:Nivel')->find($codniv);
+        $estudiantes = $em->getRepository('academicoBundle:Estudiante')->findsecretariaEstudiantexActaGeneral_secciond($codniv);
+        $estudiantesv = $em->getRepository('academicoBundle:Estudiante')->findsecretariaEstudiantexActaGeneral_seccionv($codniv);
+        $estudiantesn = $em->getRepository('academicoBundle:Estudiante')->findsecretariaEstudiantexActaGeneral_seccionn($codniv);
+        
+        if (!$periodo) {
+            //mensaje
+            $this->get('session')->getFlashBag()->add('Info', 'Periodo no encontrado');
+
+            //codigo para hacer que retorne a la pagina principal del usuario autenticado
+
+            $rol = strtolower($usuario->getRol());
+            return $this->redirect($this->generateUrl('portada', array('role' => $rol)));
+        }
+        
+        
+        $sd = 0;
+
+        if ($estudiantes) {
+            $sd = 1;
+        }
+        $sv = 0;
+
+        if ($estudiantesv) {
+            $sv = 1;
+        }
+        $sn = 0;
+
+        if ($estudiantesn) {
+            $sn = 1;
+        }
+
+        $format = $this->get('request')->get('_format');
+
+        $content = $this->render(sprintf('academicoBundle:reportes:secretariaactageneralcalificaciones.%s.twig', $format), array(
+            'periodo' => $periodo,
+            'nivel' => $nivel,
+            'codniv' => $codniv,
+            'estudiantes' => $estudiantes,
+            'estudiantesv' => $estudiantesv,
+            'estudiantesn' => $estudiantesn,
+            
+            'sd' => $sd,
+            'sv' => $sn,
+            'sn' => $sn,
+            
+                ));
+
+
+        return $content;
+    }
+    
 }

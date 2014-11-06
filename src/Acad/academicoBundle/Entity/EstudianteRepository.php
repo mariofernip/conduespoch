@@ -463,6 +463,73 @@ public function findEstudiantexActaGeneral($materias, $nivel) {
     }
 
     
+    public function findsecretariaEstudiantexActaGeneral_secciond($nivel) {
+        
+        $em = $this->getEntityManager();
+        $seccion='Diurna';
+        $dql =  'SELECT p, m, e, n  FROM academicoBundle:Promedio p
+                join p.matricula m
+                join m.estudiante e
+                join m.nivel n
+                WHERE m.estado = 1 
+                AND n.id =:nid 
+                AND m.seccion = :sec 
+                ORDER BY e.apellido
+                ';   
+        
+        
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('sec', $seccion);
+        $estudiante->setParameter('nid', $nivel);
+        
+        return $estudiante->getResult();        
+    }
+    
+    public function findsecretariaEstudiantexActaGeneral_seccionv($nivel) {
+        
+        $em = $this->getEntityManager();
+        $seccion='Vespertina';
+        $dql =  'SELECT p, m, e, n  FROM academicoBundle:Promedio p
+                join p.matricula m
+                join m.estudiante e
+                join m.nivel n
+                WHERE m.estado = 1 
+                AND n.id =:nid 
+                AND m.seccion = :sec 
+                ORDER BY e.apellido
+                ';   
+        
+        
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('sec', $seccion);
+        $estudiante->setParameter('nid', $nivel);
+        
+        return $estudiante->getResult();        
+    }
+    
+    public function findsecretariaEstudiantexActaGeneral_seccionn($nivel) {
+        
+        $em = $this->getEntityManager();
+        $seccion='Nocturna';
+        $dql =  'SELECT p, m, e, n  FROM academicoBundle:Promedio p
+                join p.matricula m
+                join m.estudiante e
+                join m.nivel n
+                WHERE m.estado = 1 
+                AND n.id =:nid 
+                AND m.seccion = :sec 
+                ORDER BY e.apellido
+                ';   
+        
+        
+        $estudiante = $em->createQuery($dql);
+        $estudiante->setParameter('sec', $seccion);
+        $estudiante->setParameter('nid', $nivel);
+        
+        return $estudiante->getResult();        
+    }
+    
+    
     
 //     public function findEstudiantexActaGeneral_secciond($materias, $nivel) {
 //        

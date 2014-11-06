@@ -147,7 +147,7 @@ class DefaultController extends Controller {
             $sesion->set('periodo', $periodo);
             if ($role == 'docente') {
                 if ($subperiodo < 2 or $subperiodo >2) {
-                    $this->get('session')->getFlashBag()->add('Info', 'URGENTE!!! Contacte al administrador Sub Periodos no corresponden');
+                    $this->get('session')->getFlashBag()->add('Info', 'URGENTE!!! Contacte al administrador del sitio las posibles fallas pueden ser que existen mas de 2 Sub Periodos activos o menos de 2 Sub periodos');
                     return $this->render('academicoBundle:Default:portada_docente_sinmaterias.html.twig', array(
                                 'periodo' => $periodo,));
                 }
