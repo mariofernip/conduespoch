@@ -25,7 +25,7 @@
                     <th>{{'Prom. Pra.'}}</th>
                     <th>{{'Prom. Teo.'}}</th>
                     <th>{{'Prom. Tot.'}}</th>                    
-                    <th>{{'Sus.'}}</th>                                       
+        
                     <th>{{'Equi.'}}</th>
                    
                  </tr>
@@ -40,7 +40,7 @@
         <td ALIGN="CENTER" style="vertical-align:middle">{{'%.2f'|format((est.notapp/mesconteo))}}</td>
         <td ALIGN="CENTER" style="vertical-align:middle">{{'%.2f'|format((est.notapt/mesconteo))}}</td>
         <td ALIGN="CENTER" style="vertical-align:middle">{{'%.0f'|format((est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4)}}</td>
-        <td ALIGN="CENTER" style="vertical-align:middle">{#{{est.promedio}}#}</td>
+        
         <td ALIGN="CENTER" style="vertical-align:middle">
         {% if (est.notatb/mesconteo+est.notaec/mesconteo+est.notapp/mesconteo+est.notapt/mesconteo)/4 < 16 %}
             <strong>Reprobado</strong>
