@@ -51,6 +51,11 @@ class MateriaAsignada {
      * @ORM\Column(type="float", nullable=true)          
      */
     protected $promediofinal;
+    
+    /**
+     * @ORM\Column(type="float", nullable=true)          
+     */
+    protected $promedioanterior;
 
     public function setId($id) {
         $this->id = $id;
@@ -190,5 +195,28 @@ class MateriaAsignada {
     public function getMateriaperiodo()
     {
         return $this->materiaperiodo;
+    }
+
+    /**
+     * Set promedioanterior
+     *
+     * @param float $promedioanterior
+     * @return MateriaAsignada
+     */
+    public function setPromedioanterior($promedioanterior)
+    {
+        $this->promedioanterior = $promedioanterior;
+    
+        return $this;
+    }
+
+    /**
+     * Get promedioanterior
+     *
+     * @return float 
+     */
+    public function getPromedioanterior()
+    {
+        return $this->promedioanterior;
     }
 }
