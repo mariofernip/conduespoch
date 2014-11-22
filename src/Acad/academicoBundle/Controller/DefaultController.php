@@ -2330,6 +2330,7 @@ class DefaultController extends Controller {
         $periodo = $sesion->get('periodo');
 
         $listaEstSupletorios = $em->getRepository('academicoBundle:Dictadomateria')->getSuspensoEstudiantesxMateriaRPT($mid, $periodo->getId(), $nid);
+        $listaEstSupletorios_seccion = $em->getRepository('academicoBundle:Dictadomateria')->getSuspensoEstudiantesxMateriaRPT_seccion($mid, $periodo->getId(), $nid);
 
         $format = $this->get('request')->get('_format');
         $cod = 0;
@@ -2342,7 +2343,8 @@ class DefaultController extends Controller {
             'nivel' => $nivel,
             'cod' => $cod,
             'materia' => $materia,
-            'docente' => $usuario
+            'docente' => $usuario,
+            'listaseccion' => $listaEstSupletorios_seccion,
                 ));
 
         return $content;

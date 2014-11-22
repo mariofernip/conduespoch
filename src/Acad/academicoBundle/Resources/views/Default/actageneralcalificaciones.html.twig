@@ -10,7 +10,7 @@
         {% include 'academicoBundle:Default:menu_docente.html.twig' with {'mesevac': mesevac, 'listamaterias': listamaterias}%}
 </section>
         
-<p style="text-align: center; color: #0063DC; font-size: large; "><strong>ACTA GENERAL DE CALIFICACIONES</strong></p>
+<p style="text-align: center; color: #0063DC; font-size: large; "><strong>ACTA GENERAL DE CALIFICACIONES PARCIALES</strong></p>
 <div style="color: #090"><strong>{{nivel2.curso.nombre | upper }}&nbsp;&nbsp;{{nivel2.paralelo.nombre | upper}}:&nbsp;&nbsp;{{materia2.nombre | upper }}</strong></div>
 <div style="text-align: right"><a  target="_blank" href="{{path('acta_general_calificaciones_reporte' ,{'mat': materia2.id} )}}"><img  src="{{asset('uploads/iconos/pdf.gif')}}" alt="imprimir" width="30" height="30" ></a></div>
 <div id="dt_example">
@@ -19,7 +19,7 @@
         <table class="display" id="itsthetable">
             <thead>
                 <tr >
-                    <th>{{'Seccion- Cedula- Nombre Completo'}}</th>
+                    <th>{{'Sección- Cédula- Nombre Completo'}}</th>
                     <th>{{'Prom. Tra. Gru'}}</th>
                     <th>{{'Prom. Est. Cas'}}</th>
                     <th>{{'Prom. Pra.'}}</th>

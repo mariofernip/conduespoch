@@ -17,9 +17,9 @@ class MateriaType extends AbstractType
         $builder
             ->add('nombre', 'text', array(
              'attr' => array('style' => 'width: 250px; text-align: left'),'required'=>true))   
-            ->add('numerohoras', 'integer', array(
+            ->add('numerohoras', 'number', array(
              'attr' => array('style' => 'width: 50px; text-align: center'),'required'=>true))   
-            ->add('numerocreditos', 'integer', array(
+            ->add('numerocreditos', 'number', array(
              'attr' => array('style' => 'width: 50px; text-align: center'),'required'=>false))   
             ->add('descripcion')
             ->add('estado','checkbox',array('required'=>false))

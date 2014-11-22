@@ -16,8 +16,8 @@
         {{ form_errors(formulario) }}
           <fieldset>
                   {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}                  
-                  {{form_label(formulario.numerocreditos,'Créditos:')}}{{form_errors(formulario.numerocreditos)}}{{form_widget(formulario.numerocreditos, { 'attr': {'autocomplete' : 'off' , 'size': 30} }) }}<br>
-                  {{form_label(formulario.numerohoras,'Horas:')}}{{form_errors(formulario.numerohoras)}}{{form_widget(formulario.numerohoras, { 'attr': {'autocomplete' : 'off' , 'size': 30} }) }}<br>
+                  {{form_label(formulario.numerocreditos,'Créditos:')}}{{form_errors(formulario.numerocreditos)}}{{form_widget(formulario.numerocreditos, { 'attr': {'autocomplete' : 'off', 'onchange' : 'check_cantidad(this)' , 'size': 30} }) }}<br>
+                  {{form_label(formulario.numerohoras,'Horas:')}}{{form_errors(formulario.numerohoras)}}{{form_widget(formulario.numerohoras, { 'attr': {'autocomplete' : 'off', 'onchange' : 'check_cantidad(this)' , 'size': 30} }) }}<br>
                   {{form_label(formulario.descripcion,'Descripción:')}}{{form_errors(formulario.descripcion)}}{{form_widget(formulario.descripcion, { 'attr': {'autocomplete' : 'off' } }) }}                                  
                   {{form_row(formulario.estado, { 'attr': {'autocomplete' : 'off' } }) }}
            </fieldset>   
@@ -31,4 +31,43 @@
 {% block aside %}
     {{ parent()}}
     <a href="{{ path('usuario_logout') }}" title="Cerrar sesión actual"><strong>Cerrar sesión</strong></a>
+{% endblock%}
+    
+    {% block javascripts %}
+    {{ parent() }}
+  <script>   
+      function check_cantidad(element)
+ {
+ var cant = element.value;
+ var cant_es_flotante = isFloat(cant);
+ // alert('Valor introducido: '+cant+' \n\n ID: '+element.id+' | Es flotante? '+cant_es_flotante);
+ // descomentar si quieres revisar los valores del id, value y si es flotante
+ 
+ if (isNaN(cant))
+ {
+ alert('Valor introducido:       '+cant+' \n\n Introduce solo valores numéricos');
+ document.getElementById(element.id).value = "";
+ }
+ else if (cant < 1 )
+ {
+ alert('Valor introducido:       '+cant+' \n\n Introduce numéros enteros mayores que 0');
+ document.getElementById(element.id).value = "";
+ }
+ else if (cant_es_flotante == true)	
+ {
+ alert('Valor introducido:       '+cant+' \n\n El valor es decimal.  Será¡ convertido a entero.');
+ cant = parseInt(cant);
+ document.getElementById(element.id).value = cant;
+ }
+ }
+ function isFloat(myNum) 
+ {
+ // es true si es 1, osea si es flotante
+ var myMod = myNum % 1;
+ 
+ if (myMod == 0) 
+ { return false; } 
+ else { return true; }
+ }
+    </script>
 {% endblock%}

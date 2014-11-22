@@ -31,8 +31,8 @@
 <tbody>
     <tr>            
         <td style="vertical-align:middle; width: 230px">{{ form_widget(mat.nombre) }}</td>                
-        <td style="vertical-align:middle; width: 30px">{{ form_widget(mat.numerohoras ) }} </td>
-        <td style="vertical-align:middle; width: 30px">{{ form_widget(mat.numerocreditos)}}</td>
+        <td style="vertical-align:middle; width: 30px">{{ form_widget(mat.numerohoras, { 'attr': {'autocomplete' : 'off' , 'size': 30, 'onchange' : 'check_cantidad(this)'  } }) }} </td>
+        <td style="vertical-align:middle; width: 30px">{{ form_widget(mat.numerocreditos, { 'attr': {'autocomplete' : 'off' , 'size': 30, 'onchange' : 'check_cantidad(this)'  } }) }}</td>
         <td style="vertical-align:middle; width: 30px">{{ form_widget(mat.descripcion) }}</td>
         <td ALIGN="CENTER" style="vertical-align:middle; width: 35px">{{ form_widget(mat.estado) }}</td>        
     </tr>
@@ -62,7 +62,42 @@
           
 {% block javascripts %}
     {{ parent() }}
+<script> 
+               function check_cantidad(element)
+ {
+ var cant = element.value;
+ var cant_es_flotante = isFloat(cant);
+ // alert('Valor introducido: '+cant+' \n\n ID: '+element.id+' | Es flotante? '+cant_es_flotante);
+ // descomentar si quieres revisar los valores del id, value y si es flotante
+ 
+ if (isNaN(cant))
+ {
+ alert('Valor introducido:       '+cant+' \n\n Introduce solo valores numéricos');
+ document.getElementById(element.id).value = "";
+ }
+ else if (cant < 1 )
+ {
+ alert('Valor introducido:       '+cant+' \n\n Introduce numéros enteros mayores que 0');
+ document.getElementById(element.id).value = "";
+ }
+ else if (cant_es_flotante == true)	
+ {
+ alert('Valor introducido:       '+cant+' \n\n El valor es decimal.  Será¡ convertido a entero.');
+ cant = parseInt(cant);
+ document.getElementById(element.id).value = cant;
+ }
+ }
+ function isFloat(myNum) 
+ {
+ // es true si es 1, osea si es flotante
+ var myMod = myNum % 1;
+ 
+ if (myMod == 0) 
+ { return false; } 
+ else { return true; }
+ }
 
+                   </script>  
 {% endblock%}
 
 

@@ -18,7 +18,7 @@
                             <tr><td text-align="left" > DOCENTE:</td><td text-align="left" >{{docente | title}}</td></tr>
                             <tr><td text-align="left" > CURSO:</td><td text-align="left" >FORMACIÓN Y CAPACITACIÓN PROFESIONAL</td></tr>
                             <tr><td text-align="left" > PARALELO:</td><td text-align="left" >{{nivel.paralelo | upper}}</td></tr>
-                            <tr><td text-align="left" > SECCIÓN:</td><td text-align="left" >DIURNA</td></tr>
+                            <tr><td text-align="left" > SECCIÓN:</td><td text-align="left" >{% for ms in listaseccion %}{{ms.matricula.seccion | upper}}{% endfor%}</td></tr>
                             <tr><td text-align="left" > PERIODO:</td><td text-align="left" >{{periodo | upper}}</td></tr>
                             
                         </table>                        
