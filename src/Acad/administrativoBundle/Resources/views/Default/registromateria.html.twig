@@ -17,8 +17,8 @@
           <fieldset>
                   {{form_row(formulario.nombre, { 'attr': {'autocomplete' : 'off' } }) }}                  
                   {{form_label(formulario.numerocreditos,'Créditos:')}}{{form_errors(formulario.numerocreditos)}}{{form_widget(formulario.numerocreditos, { 'attr': {'autocomplete' : 'off' , 'size': 30} }) }}<br>
-                  {{form_label(formulario.numerohoras,'Horas:')}}{{form_errors(formulario.numerohoras)}}{{form_widget(formulario.numerohoras, { 'attr': {'autocomplete' : 'off' , 'size': 30} }) }}
-                  {{form_row(formulario.descripcion, { 'attr': {'autocomplete' : 'off' } }) }}                                  
+                  {{form_label(formulario.numerohoras,'Horas:')}}{{form_errors(formulario.numerohoras)}}{{form_widget(formulario.numerohoras, { 'attr': {'autocomplete' : 'off' , 'size': 30} }) }}<br>
+                  {{form_label(formulario.descripcion,'Descripción:')}}{{form_errors(formulario.descripcion)}}{{form_widget(formulario.descripcion, { 'attr': {'autocomplete' : 'off' } }) }}                                  
                   {{form_row(formulario.estado, { 'attr': {'autocomplete' : 'off' } }) }}
            </fieldset>   
          {{form_rest(formulario)}}                   

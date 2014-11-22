@@ -209,7 +209,7 @@ class DefaultController extends Controller {
                 $em->getConnection()->commit();
             } catch (Exception $e) {
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 return $this->redirect($this->generateUrl('admin_portada'));
             }
 
@@ -290,7 +290,7 @@ class DefaultController extends Controller {
                 $em->getConnection()->commit();
             } catch (Exception $e) {
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
@@ -901,7 +901,7 @@ class DefaultController extends Controller {
                 $em->getConnection()->commit();
             } catch (Exception $e) {
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
@@ -976,7 +976,7 @@ class DefaultController extends Controller {
                 $em->getConnection()->commit();
             } catch (Exception $e) {
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
@@ -1072,7 +1072,7 @@ class DefaultController extends Controller {
                 $em->getConnection()->commit();
             } catch (Exception $e) {
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
@@ -1531,7 +1531,7 @@ class DefaultController extends Controller {
                 $em->getConnection()->commit();
             } catch (Exception $e) {
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
@@ -1734,7 +1734,7 @@ class DefaultController extends Controller {
                 $em->getConnection()->commit();
             } catch (Exception $e) {
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
@@ -1782,7 +1782,7 @@ class DefaultController extends Controller {
                 $em->getConnection()->commit();
             } catch (Exception $e) {
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 
@@ -1884,7 +1884,7 @@ class DefaultController extends Controller {
                 $em->getConnection()->commit();
             } catch (Exception $e) {
                 $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('Info', 'Transaccion no se hizo verifique la red o los valores que esta ingresando');
+                $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
                 $redir = $url[0];
 

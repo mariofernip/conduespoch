@@ -18,7 +18,8 @@
           <fieldset>
                  {{form_row(formulario.hora_inicio, { 'attr': {'autocomplete' : 'off' } }) }}  
                  {{form_row(formulario.hora_fin, { 'attr': {'autocomplete' : 'off' } }) }}  
-                 {{form_row(formulario.descripcion, { 'attr': {'autocomplete' : 'off' } }) }}                      
+                 {{form_label(formulario.descripcion,'Descripción:')}}{{form_errors(formulario.descripcion)}}{{form_widget(formulario.descripcion, { 'attr': {'autocomplete' : 'off' } }) }}                                  
+                   
               </fieldset>   
          {{form_rest(formulario)}}                   
           <input class="boton" type="submit" value="Guardar" />
