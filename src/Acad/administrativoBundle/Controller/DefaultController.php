@@ -983,7 +983,7 @@ class DefaultController extends Controller {
                 return $this->redirect($redir);
             }
 
-            $this->get('session')->getFlashBag()->add('Info', 'Materias han sido actualizada');
+            $this->get('session')->getFlashBag()->add('Info', 'Materias han sido actualizadas');
 
             return $this->redirect($this->generateUrl('admin_portada'));
         }
