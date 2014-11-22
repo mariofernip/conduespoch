@@ -20,7 +20,7 @@ class MateriasType extends AbstractType
             ->add('nombre', 'text', array(
              'attr' => array('style' => 'width: 300px; border: none; text-align: left')))   
             ->add('numerohoras', 'number', array(
-             'attr' => array('style' => 'width: 50px; text-align: center'),'required'=>false))   
+             'attr' => array('style' => 'width: 50px; text-align: center'),'required'=>true))   
             ->add('numerocreditos', 'number', array(
              'attr' => array('style' => 'width: 50px; text-align: center'),'required'=>false))  
             ->add('descripcion')   
