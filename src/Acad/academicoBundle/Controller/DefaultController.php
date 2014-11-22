@@ -1428,7 +1428,7 @@ class DefaultController extends Controller {
             $ma->setMatricula($req->getMatricula());
             $ma->setNotasuspenso($req->getNotasuspenso());
             $ma->setPromediofinal($req->getPromediofinal());
-
+            $ma->setPromedioanterior($req->getPromedioanterior());
 
             //lleno el objto tarea con varios objetos materiaasignada
             $suspensoestudiante->getEvaEst()->add($ma);
@@ -1445,13 +1445,13 @@ class DefaultController extends Controller {
             try {
 
                 foreach ($suspensoestudiante->getEvaEst() as $req) {// recorro lista de objetos: MA
-                    if ($req->getPromediofinal() < 16) {
+                    if ($req->getPromedioanterior() < 16) {
                         $cod = $req->getId(); // ontengo el id de cada objeto
                         $suspenso = $req->getNotasuspenso();
-                        $pf = $req->getPromediofinal();
-                        $examens = round(32 - ($pf));
+                        $pf = $req->getPromedioanterior();
+                        $examens = round(32 - ($pf),2);
                         if ($suspenso >= $examens) {
-                            $npf = round(($suspenso + $pf) / 2);
+                            $npf = round(($suspenso + $pf) / 2,2);
                             $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
                             if ($asistencia->getPromediofinal() < 80) {
                                 $eq = 'Reprobado';
@@ -1459,7 +1459,7 @@ class DefaultController extends Controller {
                                 $eq = 'Aprobado';
                             }
                         } else {
-                            $npf = round(($suspenso + $pf) / 2);
+                            $npf = round(($suspenso + $pf) / 2,2);
                             $eq = 'Reprobado';
                         }
 
@@ -1471,7 +1471,7 @@ class DefaultController extends Controller {
                         $em->flush(); // envio a guardar/actualizar el estado de cada objeto
                     } else {
                         $cod = $req->getId(); // ontengo el id de cada objeto                    
-                        $pf = $req->getPromediofinal();
+                        $pf = $req->getPromedioanterior();
                         $asistencia = $em->getRepository('academicoBundle:Asistencia')->findOneBy(array('materiaasignada' => $req->getId()));
                         if (($asistencia->getPromediofinal() < 80)) {
                             $eq = 'Reprobado';

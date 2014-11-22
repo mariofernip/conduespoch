@@ -600,7 +600,7 @@ class DefaultController extends Controller {
             $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia ingresada'
             );
             //llamo al la vista requisito estudiante
-            return $this->redirect($this->generateUrl('admin_portada'));
+            return $this->redirect($this->generateUrl('materia_ingresar'));
         }
 
         return $this->render('administrativoBundle:Default:registromateria.html.twig', array(

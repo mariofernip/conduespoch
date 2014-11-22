@@ -112,11 +112,11 @@ class DefaultController extends Controller {
                 return $this->redirect($redir);
             }
 
-            $this->get('session')->getFlashBag()->add('info', '¡Enhorabuena! Usuario registrado'
-            );
+            $this->get('session')->getFlashBag()->add('Info', '¡Enhorabuena! Usuario registrado');
             $usuario = $this->get('security.context')->getToken()->getUser();   
             $role = strtolower($usuario->getRol());
-            return $this->redirect($this->generateUrl('portada', array('role' => $role)));
+            //return $this->redirect($this->generateUrl('portada', array('role' => $role)));
+            return $this->redirect($this->generateUrl('usuario_registro'));
             
             
         }

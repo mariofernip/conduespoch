@@ -26,7 +26,7 @@
             <tbody>{% for usu in listausuarios %}
                 <tr>
                         <td  ALIGN="CENTER" style="vertical-align:middle">{{usu.cedula}}</td> 
-                        <td  ALIGN="CENTER" style="vertical-align:middle">{{usu.apellidos}}{{' '}}{{usu.nombre}}</td>   
+                        <td  ALIGN="CENTER" style="vertical-align:middle">{{usu.nombre}}{{' '}}{{usu.apellidos}}</td>   
                         <td  ALIGN="CENTER" style="vertical-align:middle">{{usu.email}}</td> 
                         <td  ALIGN="CENTER" style="vertical-align:middle">{{usu.rol}}</td>                                                
                         <td  ALIGN="CENTER" style="vertical-align:middle">{% if (usu.estado) ==1 %}
