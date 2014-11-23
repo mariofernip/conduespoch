@@ -13,12 +13,10 @@ use Acad\academicoBundle\Entity\EvaluacionEstudiante;
 use Acad\academicoBundle\Entity\ExamenGrado;
 use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Entity\MateriaAsignada;
-use Acad\academicoBundle\Entity\Matricula;
 use Acad\academicoBundle\Entity\MateriaPeriodo;
-use Acad\administrativoBundle\Entity\MesEvaluacion;
+use Acad\academicoBundle\Entity\Matricula;
 use Acad\academicoBundle\Entity\RequisitoEstudiante;
 use Acad\academicoBundle\Entity\SuspensoEstudiante;
-use Acad\administrativoBundle\Entity\Nota;
 use Acad\academicoBundle\Form\AuxExamenGradoType;
 use Acad\academicoBundle\Form\DictadomateriaType;
 use Acad\academicoBundle\Form\EstudianteAsistenciaType;
@@ -26,19 +24,25 @@ use Acad\academicoBundle\Form\EstudianteType;
 use Acad\academicoBundle\Form\EvaluacionEstudianteType;
 use Acad\academicoBundle\Form\MatriculaAntiguosType;
 use Acad\academicoBundle\Form\MatriculaType;
-use Acad\seguridadBundle\Form\PerfilInspectorType;
-use Acad\administrativoBundle\Form\PerfilDocenteType;
 use Acad\academicoBundle\Form\RequisitoEstudianteType;
 use Acad\academicoBundle\Form\SuspensoEstudianteType;
 use Acad\administrativoBundle\Entity\AuxHorarioClase;
 use Acad\administrativoBundle\Entity\Docente;
 use Acad\administrativoBundle\Entity\HorarioClase;
+use Acad\administrativoBundle\Entity\Materia;
+use Acad\administrativoBundle\Entity\MesEvaluacion;
+use Acad\administrativoBundle\Entity\Nota;
 use Acad\administrativoBundle\Form\AuxHorarioClaseType;
+use Acad\administrativoBundle\Form\PerfilDocenteType;
+use Acad\seguridadBundle\Form\PerfilInspectorType;
 use DateTime;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Exception;
+use IntlDateFormatter;
+use Locale;
 use PHPPdf\Core\FacadeBuilder;
 use Ps\PdfBundle\Annotation\Pdf;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class DefaultController extends Controller {
 
@@ -118,7 +122,7 @@ class DefaultController extends Controller {
                     $em->flush();
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -218,7 +222,7 @@ class DefaultController extends Controller {
                     $this->get('session')->getFlashBag()->add('Info', 'requisitos ingresados');
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -372,7 +376,7 @@ class DefaultController extends Controller {
                     $em->flush();
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red, los valores que esta ingresando o el rango de fechas de inscripción ');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -459,11 +463,10 @@ class DefaultController extends Controller {
 
                 $em->persist($dictadomateria);
                 $em->flush();
-                $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia asignada al docente'
-                );
-                
+                $codmat= $dictadomateria->getMateriaperiodo()->getMateria()->getId();
+                $materia= $em->getRepository('administrativoBundle:Materia')->find($codmat);
                 //LLENO LA TABLA HORARIOCLASE
-                for ($i = 1; $i < 3; $i++) {
+                for ($i = 1; $i <= $materia->getNumerocreditos() ; $i++) {
                     $horarioclase = new HorarioClase();
                     $horarioclase->setDictadomateria($dictadomateria);
                     $dia = $em->getRepository('administrativoBundle:Dia')->find($i);
@@ -474,7 +477,7 @@ class DefaultController extends Controller {
                     $em->flush();
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -482,7 +485,7 @@ class DefaultController extends Controller {
 
                 return $this->redirect($redir);
             }
-
+            $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia asignada al docente');
             return $this->redirect($this->generateUrl('amaterias_dictadomateria'));
         }
 
@@ -762,7 +765,7 @@ class DefaultController extends Controller {
                     }
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -865,7 +868,7 @@ class DefaultController extends Controller {
                     $em->flush(); // envio a guardar/actualizar el estado de cada objeto
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -1117,7 +1120,7 @@ class DefaultController extends Controller {
                     $em->flush();
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -1489,7 +1492,7 @@ class DefaultController extends Controller {
                     }
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -1754,7 +1757,7 @@ class DefaultController extends Controller {
                     $em->flush(); // envio a guardar/actualizar el estado de cada objeto
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -1934,7 +1937,7 @@ class DefaultController extends Controller {
                     $em->flush(); // envio a guardar/actualizar el estado de cada objeto
                 }
                 $em->getConnection()->commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                 $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -2052,7 +2055,7 @@ class DefaultController extends Controller {
                     $this->get('session')->getFlashBag()->add('Info', 'Perfil Docente actualizado correctamente '
                     );
                     $em->getConnection()->commit();
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $em->getConnection()->rollback();
                     $this->get('session')->getFlashBag()->add('Info', 'Transacción no se hizo verifique la red o los valores que esta ingresando');
                     $url = explode("?", $_SERVER['HTTP_REFERER']);
@@ -2367,10 +2370,10 @@ class DefaultController extends Controller {
         $meseval->setFfinmes($fecha->getFfinmes());
 
         $mese = $meseval->getFiniciomes();
-        $formatter = new \IntlDateFormatter(\Locale::getDefault(), \IntlDateFormatter::NONE, \IntlDateFormatter::NONE);
+        $formatter = new IntlDateFormatter(Locale::getDefault(), IntlDateFormatter::NONE, IntlDateFormatter::NONE);
         $formatter->setPattern("MMMM");
         $mesefin = $meseval->getFfinmes();
-        $formatterfin = new \IntlDateFormatter(\Locale::getDefault(), \IntlDateFormatter::NONE, \IntlDateFormatter::NONE);
+        $formatterfin = new IntlDateFormatter(Locale::getDefault(), IntlDateFormatter::NONE, IntlDateFormatter::NONE);
         $formatterfin->setPattern("MMMM");
 
         $periodo = $sesion->get('periodo');
@@ -2558,7 +2561,7 @@ class DefaultController extends Controller {
                         }
                     }
                     $em->getConnection()->commit();
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $em->getConnection()->rollback();
                     $this->get('session')->getFlashBag()->add('Info', 'Error! Estudiantes no fueron matriculado, consulte al administrador');
                     $url = explode("?", $_SERVER['HTTP_REFERER']);
