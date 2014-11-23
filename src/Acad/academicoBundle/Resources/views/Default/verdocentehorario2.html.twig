@@ -49,7 +49,7 @@
                                 </td> 
                     {#MIERCOLES#}                                         
                                 <td ALIGN="CENTER" style="vertical-align:middle">                   
-                                     {% for mat in horarioclase %}  {% if  (mat.dia | upper) == 'MIERCOLES' %}{% if  (mat.hora) == ma %} <strong>{{mat.dictadomateria.materiaperiodo.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
+                                     {% for mat in horarioclase %}  {% if  (mat.dia | upper) == 'MIÉRCOLES' %}{% if  (mat.hora) == ma %} <strong>{{mat.dictadomateria.materiaperiodo.materia.nombre}}</strong>{{' '}}{{mat.dictadomateria.nivel.curso}}{{' '}}{{mat.dictadomateria.nivel.paralelo}}
                                 {% endif %}  
                                 {% endif %}{% endfor%}                                      
                                 </td>  
