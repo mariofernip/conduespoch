@@ -53,7 +53,7 @@
 {% endblock%}
 
 {% block aside %}
-
+{{ parent()}}
 <div id="demo">
 <table class="display" id="itsthetable">
     <thead>
@@ -71,7 +71,7 @@
 </table>
     </div>
 
-    {{ parent()}}
+ <br>
         <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
 {% endblock%}
 {% block stylesheets %}

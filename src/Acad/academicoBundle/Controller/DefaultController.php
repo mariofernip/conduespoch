@@ -461,7 +461,8 @@ class DefaultController extends Controller {
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('Info', 'Éxito! Materia asignada al docente'
                 );
-
+                
+                //LLENO LA TABLA HORARIOCLASE
                 for ($i = 1; $i < 3; $i++) {
                     $horarioclase = new HorarioClase();
                     $horarioclase->setDictadomateria($dictadomateria);
@@ -1762,7 +1763,7 @@ class DefaultController extends Controller {
                 return $this->redirect($redir);
             }
 
-
+            $this->get('session')->getFlashBag()->add('Info', 'Horario de clase actualizado..!!');
             return $this->redirect($this->generateUrl('inspector_horario_asignar', array('did' => $did)));
         }
         $niveles = $em->getRepository('academicoBundle:Matricula')->getTodosNiveles();
@@ -2495,7 +2496,7 @@ class DefaultController extends Controller {
 
         //recorro lista de estudiantes matriculados
         foreach ($matriculados as $matricula) {
-            //inicializo contado de numero de materias aprobadas
+            //inicializo conteo de numero de materias aprobadas
             $cont = 0;
             //obtengo la lista de materiasasignadas mediante el filtro de id matrocula
             $listaMA = $em->getRepository('academicoBundle:MateriaAsignada')->findBy(array(
@@ -2509,8 +2510,8 @@ class DefaultController extends Controller {
                     $cont++;
                 }
             }
-            //compruebo si las materias aprobadas con igual al numero de materias del 1 subperiodo
-            if ($cont >= $numeromesevalprimerp) {
+            //compruebo si las materias aprobadas son igual al numero de materias del 1 subperiodo
+            if ($cont == $numeromesevalprimerp) {
                 $em->getConnection()->beginTransaction(); // suspend auto-commit
                 try {
                     //recorro la lista de materias del segundo subperiodo
