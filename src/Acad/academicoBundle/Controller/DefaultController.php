@@ -15,6 +15,7 @@ use Acad\academicoBundle\Entity\Inscripcion;
 use Acad\academicoBundle\Entity\MateriaAsignada;
 use Acad\academicoBundle\Entity\MateriaPeriodo;
 use Acad\academicoBundle\Entity\Matricula;
+use Acad\academicoBundle\Entity\Promedio;
 use Acad\academicoBundle\Entity\RequisitoEstudiante;
 use Acad\academicoBundle\Entity\SuspensoEstudiante;
 use Acad\academicoBundle\Form\AuxExamenGradoType;
@@ -685,6 +686,18 @@ class DefaultController extends Controller {
                 $em->flush();
 
 
+                //LENAR LA TABLA: PROMEDIO
+                
+                    $promedio = new Promedio();
+                    $promedio->setMatricula($matricula);
+                    $promedio->setEquivalencia('null');
+                    $promedio->setPgeneral(0);
+                    $promedio->setPgrado(0);
+                    $promedio->setPmodulos(0);
+                    $em->persist($promedio);
+                    $em->flush();
+                
+                
                 //LENAR LA TABLA: EXAMENGRADO
                 foreach ($listamateriagrado as $matgrado) {
                     $examengrado = new ExamenGrado();
