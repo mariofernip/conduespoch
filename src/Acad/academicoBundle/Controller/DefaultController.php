@@ -2527,7 +2527,7 @@ class DefaultController extends Controller {
                 }
             }
             //compruebo si las materias aprobadas son igual al numero de materias del 1 subperiodo
-            if ($cont == $numeromesevalprimerp) {
+            if ($cont >= $numeromesevalprimerp) {
                 $em->getConnection()->beginTransaction(); // suspend auto-commit
                 try {
                     //recorro la lista de materias del segundo subperiodo
